@@ -10,6 +10,7 @@ public class Conviction {
 	private final Date date;
 	private final Date endDate;
 	private final String type;
+	private final Case caze;
 
 	public Date getDate() {
 		return date;
@@ -22,12 +23,17 @@ public class Conviction {
 	public String getType() {
 		return type;
 	}
+	
+	public String getCaze() {
+		return caze.getTitle();
+	}
 
 	
-	public Conviction(final Date date, final Date endDate, final String type) {
+	public Conviction(final Date date, final Date endDate, final String type, final Case caze) {
 		this.date = date;
 		this.endDate = endDate;
 		this.type = type;
+		this.caze = caze;
 	}
 
 		

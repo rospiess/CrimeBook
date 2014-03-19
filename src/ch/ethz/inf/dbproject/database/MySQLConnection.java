@@ -21,7 +21,7 @@ public final class MySQLConnection {
 	public static final String PASSWORD = "1234";
 	public static final String HOSTNAME = "localhost";
 	public static final int PORT = 3306;
-	public static final String DATABASE = "dmdb2014";
+	public static final String DATABASE = "crimedatabase";
 
 	private final Connection connection;
 

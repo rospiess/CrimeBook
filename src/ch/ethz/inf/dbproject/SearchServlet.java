@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import ch.ethz.inf.dbproject.model.Case;
+import ch.ethz.inf.dbproject.model.DatastoreInterface;
 import ch.ethz.inf.dbproject.util.html.BeanTableHelper;
 
 /**
@@ -19,6 +20,7 @@ import ch.ethz.inf.dbproject.util.html.BeanTableHelper;
 public final class SearchServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
+	private final DatastoreInterface dbInterface = new DatastoreInterface();
 		
     /**
      * @see HttpServlet#HttpServlet()
@@ -43,19 +45,14 @@ public final class SearchServlet extends HttpServlet {
 				Case.class 	/* The class of the objects (rows) that will bedisplayed */
 		);
 
-		// Add columns to the new table
-
-		/*
-		 * Column 1: The name of the item (This will probably have to be changed)
-		 */
-		table.addBeanColumn("Case Description", "description");
-
-		/*
-		 * Columns 2 & 3: Some random fields. These should be replaced by i.e. funding progress, or time remaining
-		 */
-		table.addBeanColumn("Test Field2", "field2");
-		table.addBeanColumn("Test Integer Field 3", "field3");
-
+		table.addBeanColumn("Case ID", "idcase");
+		table.addBeanColumn("Title", "title");
+		table.addBeanColumn("Case Description", "descr");
+		table.addBeanColumn("Date", "date");
+		table.addBeanColumn("Time", "time");
+		table.addBeanColumn("Location", "loc");
+		table.addBeanColumn("Category", "cat");
+		table.addBeanColumn("Open", "open");
 		/*
 		 * Column 4: This is a special column. It adds a link to view the
 		 * Case. We need to pass the case identifier to the url.
@@ -63,7 +60,7 @@ public final class SearchServlet extends HttpServlet {
 		table.addLinkColumn(""	/* The header. We will leave it empty */,
 				"View Case" 	/* What should be displayed in every row */,
 				"Case?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
-				"id" 			/* For every case displayed, the ID will be retrieved and will be attached to the url base above */);
+				"idcase" 			/* For every case displayed, the ID will be retrieved and will be attached to the url base above */);
 
 		// Pass the table to the session. This will allow the respective jsp page to display the table.
 		session.setAttribute("results", table);
@@ -75,15 +72,13 @@ public final class SearchServlet extends HttpServlet {
 		
 			if(filter.equals("description")) {
 
-				// TODO implement this!
-				//final String name = request.getParameter("name");
-				//table.addObjects(this.dbInterface.searchByName(name));
+				final String name = request.getParameter("description");
+				table.addObjects(this.dbInterface.searchByName(name));
 
 			} else if (filter.equals("category")) {
 
-				// TODO implement this!
-				//final String name = request.getParameter("category");
-				// table.addObjects(this.dbInterface.searchByCategory(category));
+				final String name = request.getParameter("category");
+				table.addObjects(this.dbInterface.searchByCategory(name));
 
 			} else if (filter.equals("anotherattribute")) {
 

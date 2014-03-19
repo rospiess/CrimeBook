@@ -12,7 +12,7 @@ public final class Address {
 	private final int zipCode;
 
 
-	public Address(final String city, final String country, final String street, final int streetNo, final int zipCode) {
+	public Address(final String country, final String city, final String street, final int zipCode, final int streetNo) {
 		super();
 		this.city = city;
 		this.country = country;

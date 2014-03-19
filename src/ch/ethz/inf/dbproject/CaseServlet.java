@@ -40,7 +40,7 @@ public final class CaseServlet extends HttpServlet {
 
 		final HttpSession session = request.getSession(true);
 
-		final String idString = request.getParameter("id");
+		final String idString = request.getParameter("idcase");
 		if (idString == null) {
 			this.getServletContext().getRequestDispatcher("/Cases").forward(request, response);
 		}
@@ -48,7 +48,7 @@ public final class CaseServlet extends HttpServlet {
 		try {
 
 			final Integer id = Integer.parseInt(idString);
-			final Case aCase = this.dbInterface.getCaseById(id);
+			final Case aCase = this.dbInterface.getCaseById(1);
 
 			
 			/*******************************************************
@@ -62,16 +62,16 @@ public final class CaseServlet extends HttpServlet {
 
 			// Add columns to the new table
 
-			/*
-			 * Column 1: The name of the item (This will probably have to be changed)
-			 */
-			table.addBeanColumn("Case Description", "description");
-
-			/*
-			 * Columns 2 & 3: Some random fields. These should be replaced by i.e. funding progress, or time remaining
-			 */
-			table.addBeanColumn("Test Field2", "field2");
-			table.addBeanColumn("Test Integer Field 3", "field3");
+			
+			table.addBeanColumn("Case ID", "idcase");
+			table.addBeanColumn("Title", "title");
+			table.addBeanColumn("Case Description", "descr");
+			table.addBeanColumn("Date", "date");
+			table.addBeanColumn("Time", "time");
+			table.addBeanColumn("Location", "loc");
+			table.addBeanColumn("Category", "cat");
+			table.addBeanColumn("Open", "open");
+			
 
 			table.addObject(aCase);
 			table.setVertical(true);			
