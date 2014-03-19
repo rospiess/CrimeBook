@@ -150,7 +150,7 @@ public final class DatastoreInterface {
 			  if(category.equals("other"))
 					 rs  = stmt.executeQuery("Select * from Cases where catname <> 'Assault' "
 					 		+ "and catname <> 'Theft' and catname <> 'Murder' "
-					 		+ "and catname <> 'Fraud');
+					 		+ "and catname <> 'Fraud'");
 			  else
 					  rs = stmt.executeQuery("Select * from Cases where catname = '" + category+"'");
 			  
