@@ -11,7 +11,7 @@ Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Bertrand
 
 Insert into noteperson(idPersonOfInterest,text) values ('2', 'Höchstgefährlich');
 
-Insert into cases(Title,Description,open,date,time,location,CatName) values ('Entwendung einer Schreibmaschine', 'Auf einmal war sie weg...', true, '2010-10-30', '13:45:00', 'Rämistrasse 101', 'Theft');
+Insert into cases(Title,Description,open,date,time,location,CatName) values ('Entwendung einer Schreibmaschine', 'Auf einmal war sie weg...', false, '2010-10-30', '13:45:00', 'Rämistrasse 101', 'Theft');
 Insert into cases(Title,Description,open,date,time,location,CatName) values ('Mord an der ETH', 'Brutal mit Schreibmaschine erschlagen', true, '2010-10-31', '23:55:00', 'Rämistrasse 101', 'Murder');
 
 Insert into notecase(idCase,text) values ('2', 'Opfer war bekannt dafür, Witze über die Programmiersprache Eiffel zu reissen.');
