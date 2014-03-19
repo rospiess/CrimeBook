@@ -9,4 +9,4 @@
 
 <hr/>
 
-<%@ include file="Footer.jsp" 
+<%@ include file="Footer.jsp" %>
