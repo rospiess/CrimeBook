@@ -17,7 +17,7 @@
 			<tr>
 				<th id="masterHeader" colspan="2">
 					<h1>Law Enforcement Project</h1>
-					Project by Crimebook; 
+					Project by Crimebook 
 				</th>
 			</tr>
 			<tr id="masterContent">
@@ -38,6 +38,7 @@
 					<div class="menuDiv3"><a href="Cases?category=other">Other</a></div>
 					<div class="menuDiv2"><a href="Cases?category=property">Property Crimes</a></div>
 					<div class="menuDiv3"><a href="Cases?category=theft">Theft</a></div>
+					<div class="menuDiv3"><a href="Cases?category=fraud">Fraud</a></div>
 					<div class="menuDiv3"><a href="Cases?category=other">Other</a></div>
 					<div class="menuDiv1"><a href="Search">Search</a></div>
 					<div class="menuDiv1"><a href="User">User Profile</a></div>
