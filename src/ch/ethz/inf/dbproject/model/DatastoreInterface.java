@@ -1,11 +1,9 @@
 package ch.ethz.inf.dbproject.model;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +17,7 @@ import ch.ethz.inf.dbproject.database.MySQLConnection;
 public final class DatastoreInterface {
 
 	private final static Case[] staticCases = new Case[] { 
-//		new Case(0, "Noise pollution", "blablabla", new Date(1324512000000l), new Time(	12, 42, 35), new Address("Switzerland", "Zürich","Rämistrasse", 8000, 142), new Category("Murder", null),true)
+//		new Case(0, "Noise pollution", "blablabla", new Date(1324512000000l), new Time(	12, 42, 35), new Address("Switzerland", "ZÃ¼rich","RÃ¤mistrasse", 8000, 142), new Category("Murder", null),true)
 
 	};
 	private final static List<Case> staticCaseList = new ArrayList<Case>();
@@ -166,38 +164,56 @@ public final class DatastoreInterface {
 			  }
 	}
 	
-	public final List<Case> searchByCategory(String category) {
+	public final List<Conviction> searchByCategory(String category) {
 		try {
 			  
 			  final Statement stmt = this.sqlConnection.createStatement();
-			  final ResultSet  rs = stmt.executeQuery("Select * from Cases where catname like '%" + category+"%'");
+			  final ResultSet  rs = stmt.executeQuery("Select * from Conviction where type like '%" + category+"%'");
 			  
-			  final List<Case> cases = new ArrayList<Case>(); while (rs.next()) {
-			  cases.add(new Case(rs)); }
+			  final List<Conviction> conv = new ArrayList<Conviction>(); while (rs.next()) {
+			  conv.add(new Conviction(rs)); }
 			  
 			  rs.close(); stmt.close();
 			  
-			  return cases;
+			  return conv;
 			  
 			  } catch (final SQLException ex) { ex.printStackTrace(); return null;
 			  }
 	}
 	
-	public final List<Case> searchByName(String name) {
+	public final List<PersonOfInterest> searchByName(String name) {
 		try {
 			  
 			  final Statement stmt = this.sqlConnection.createStatement();
-			  final ResultSet   rs = stmt.executeQuery("Select * from Cases where title like '%" + name+"%'");
+			  final ResultSet   rs = stmt.executeQuery("Select * from personofinterest where firstname like '%" + name+"%'"
+					  + "or lastname like '%" + name+"%'");
 			  
-			  final List<Case> cases = new ArrayList<Case>(); while (rs.next()) {
-			  cases.add(new Case(rs)); }
+			  final List<PersonOfInterest> persons = new ArrayList<PersonOfInterest>(); while (rs.next()) {
+			  persons.add(new PersonOfInterest(rs)); }
 			  
 			  rs.close(); stmt.close();
 			  
-			  return cases;
+			  return persons;
 			  
 			  } catch (final SQLException ex) { ex.printStackTrace(); return null;
 			  }
 	}
 
+	
+	public final List<PersonOfInterest> getAllPersons() {
+		try {
+			  
+			  final Statement stmt = this.sqlConnection.createStatement();
+			  final ResultSet  rs = stmt.executeQuery("Select * from personofinterest");
+			  
+			  final List<PersonOfInterest> persons = new ArrayList<PersonOfInterest>(); while (rs.next()) {
+			  persons.add(new PersonOfInterest(rs)); }
+			  
+			  rs.close(); stmt.close();
+			  
+			  return persons;
+			  
+			  } catch (final SQLException ex) { ex.printStackTrace(); return null;
+			  }
+	}
 }
