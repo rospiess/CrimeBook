@@ -13,7 +13,7 @@ Insert into noteperson(idPersonOfInterest,text) values ('2', 'Höchstgefährlich
 
 Insert into cases(Title,Description,open,date,time,location,CatName) values ('Entwendung einer Schreibmaschine', 'Auf einmal war sie weg...', false, '2010-10-30', '13:45:00', 'Rämistrasse 101', 'Theft');
 Insert into cases(Title,Description,open,date,time,location,CatName) values ('Mord an der ETH', 'Brutal mit Schreibmaschine erschlagen', true, '2010-10-31', '23:55:00', 'Rämistrasse 101', 'Murder');
-Insert into cases(Title,Description,open,date,time,location,CatName) values ('Schwere Körperverletzung', 'Älterer Mann von Auto mit französischem Kennzeichen angefahren', false, '2010-11-01', '09:32:13', 'Rämistrasse 101', 'Assault');
+Insert into cases(Title,Description,open,date,time,location,CatName) values ('Schwere Körperverletzung', 'Älterer Mann von Auto mit französischem Kennzeichen angefahren', true, '2010-11-01', '09:32:13', 'Rämistrasse 101', 'Assault');
 
 Insert into notecase(idCase,text) values ('2', 'Opfer war bekannt dafür, Witze über die Programmiersprache Eiffel zu reissen.');
 
