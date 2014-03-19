@@ -9,8 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import ch.ethz.inf.dbproject.model.Case;
+import ch.ethz.inf.dbproject.model.Conviction;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
+import ch.ethz.inf.dbproject.model.PersonOfInterest;
 import ch.ethz.inf.dbproject.util.html.BeanTableHelper;
 
 /**
@@ -39,46 +40,52 @@ public final class SearchServlet extends HttpServlet {
 		/*******************************************************
 		 * Construct a table to present all our search results
 		 *******************************************************/
-		final BeanTableHelper<Case> table = new BeanTableHelper<Case>(
-				"cases" 		/* The table html id property */,
+		final BeanTableHelper<PersonOfInterest> ptable = new BeanTableHelper<PersonOfInterest>(
+				"persons" 		/* The table html id property */,
 				"casesTable" /* The table html class property */,
-				Case.class 	/* The class of the objects (rows) that will bedisplayed */
+				PersonOfInterest.class 	/* The class of the objects (rows) that will bedisplayed */
 		);
 
-		table.addBeanColumn("Case ID", "idcase");
-		table.addBeanColumn("Title", "title");
-		table.addBeanColumn("Case Description", "descr");
-		table.addBeanColumn("Date", "date");
-		table.addBeanColumn("Time", "time");
-		table.addBeanColumn("Location", "loc");
-		table.addBeanColumn("Category", "cat");
-		table.addBeanColumn("Open", "open");
-		/*
-		 * Column 4: This is a special column. It adds a link to view the
-		 * Case. We need to pass the case identifier to the url.
-		 */
-		table.addLinkColumn(""	/* The header. We will leave it empty */,
-				"View Case" 	/* What should be displayed in every row */,
-				"Case?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
-				"idcase" 			/* For every case displayed, the ID will be retrieved and will be attached to the url base above */);
 
-		// Pass the table to the session. This will allow the respective jsp page to display the table.
-		session.setAttribute("results", table);
+		
+		final BeanTableHelper<Conviction> ctable = new BeanTableHelper<Conviction>(
+				"conviction" 		/* The table html id property */,
+				"casesTable" /* The table html class property */,
+				Conviction.class 	/* The class of the objects (rows) that will bedisplayed */
+		);
 
-		// The filter parameter defines what to show on the cases page
+		
+		
 		final String filter = request.getParameter("filter");
 
 		if (filter != null) {
 		
 			if(filter.equals("description")) {
 
-				final String name = request.getParameter("description");
-				table.addObjects(this.dbInterface.searchByName(name));
-
+				session.setAttribute("results", ptable);
+				final String name = request.getParameter("description");				
+				ptable.addBeanColumn("Person ID", "idpoi");
+				ptable.addBeanColumn("First Name", "firstname");
+				ptable.addBeanColumn("Last Name", "lastname");
+				ptable.addBeanColumn("Date of Birth", "bdate");
+				ptable.addLinkColumn(""	/* The header. We will leave it empty */,
+						"View Person" 	/* What should be displayed in every row */,
+						"Person?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
+						"idpoi" 			/* For every case displayed, the ID will be retrieved and will be attached to the url base above */);
+				ptable.addObjects(this.dbInterface.searchByName(name));
+				
 			} else if (filter.equals("category")) {
 
+				session.setAttribute("results", ctable);
 				final String name = request.getParameter("category");
-				table.addObjects(this.dbInterface.searchByCategory(name));
+				ctable.addBeanColumn("Conviction ID", "idcon");
+				ctable.addBeanColumn("Type", "type");
+				ctable.addBeanColumn("Start Date", "date");
+				ctable.addBeanColumn("End Date", "enddate");
+				ctable.addBeanColumn("Case ID", "idcase");
+				ctable.addBeanColumn("Convict ID", "idpoi");
+				ctable.addObjects(this.dbInterface.searchByCategory(name));
+				
 
 			} else if (filter.equals("anotherattribute")) {
 
