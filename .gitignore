@@ -1,0 +1,17 @@
+# Ignore everything...
+*
+
+# ...except directories
+!*/
+
+
+# ...and interesting files
+
+# Java source
+!*.java
+
+# Databasemodel
+!*.mwb
+
+!.txt
+!.gitignore
