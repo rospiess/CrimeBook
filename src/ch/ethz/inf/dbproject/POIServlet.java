@@ -40,7 +40,7 @@ public final class POIServlet extends HttpServlet {
 		 *******************************************************/
 		final BeanTableHelper<PersonOfInterest> table = new BeanTableHelper<PersonOfInterest>(
 				"persons" 		/* The table html id property */,
-				"casesTable" /* The table html class property */,
+				"personsTable" /* The table html class property */,
 				PersonOfInterest.class 	/* The class of the objects (rows) that will bedisplayed */
 		);
 
