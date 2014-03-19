@@ -12,6 +12,7 @@
 
 # Databasemodel
 !*.mwb
+!*.sql
 
 !.txt
 !.gitignore
