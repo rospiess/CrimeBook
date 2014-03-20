@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import ch.ethz.inf.dbproject.model.Conviction;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
-import ch.ethz.inf.dbproject.model.PersonOfInterest;
+import ch.ethz.inf.dbproject.model.Person;
 import ch.ethz.inf.dbproject.util.html.BeanTableHelper;
 
 /**
@@ -40,10 +40,10 @@ public final class SearchServlet extends HttpServlet {
 		/*******************************************************
 		 * Construct a table to present all our search results
 		 *******************************************************/
-		final BeanTableHelper<PersonOfInterest> ptable = new BeanTableHelper<PersonOfInterest>(
+		final BeanTableHelper<Person> ptable = new BeanTableHelper<Person>(
 				"persons" 		/* The table html id property */,
 				"casesTable" /* The table html class property */,
-				PersonOfInterest.class 	/* The class of the objects (rows) that will bedisplayed */
+				Person.class 	/* The class of the objects (rows) that will bedisplayed */
 		);
 
 
@@ -64,14 +64,14 @@ public final class SearchServlet extends HttpServlet {
 
 				session.setAttribute("results", ptable);
 				final String name = request.getParameter("description");				
-				ptable.addBeanColumn("Person ID", "idpoi");
+				ptable.addBeanColumn("Person ID", "idperson");
 				ptable.addBeanColumn("First Name", "firstname");
 				ptable.addBeanColumn("Last Name", "lastname");
 				ptable.addBeanColumn("Date of Birth", "bdate");
 				ptable.addLinkColumn(""	/* The header. We will leave it empty */,
 						"View Person" 	/* What should be displayed in every row */,
 						"Person?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
-						"idpoi" 			/* For every case displayed, the ID will be retrieved and will be attached to the url base above */);
+						"idperson" 			/* For every case displayed, the ID will be retrieved and will be attached to the url base above */);
 				ptable.addObjects(this.dbInterface.searchByName(name));
 				
 			} else if (filter.equals("category")) {
@@ -83,7 +83,8 @@ public final class SearchServlet extends HttpServlet {
 				ctable.addBeanColumn("Start Date", "date");
 				ctable.addBeanColumn("End Date", "enddate");
 				ctable.addBeanColumn("Case ID", "idcase");
-				ctable.addBeanColumn("Convict ID", "idpoi");
+				ctable.addBeanColumn("Convict First Name", "firstname");
+				ctable.addBeanColumn("Convict Last Name", "lastname");
 				ctable.addObjects(this.dbInterface.searchByCategory(name));
 				
 
