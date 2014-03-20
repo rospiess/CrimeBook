@@ -14,7 +14,7 @@ public class Conviction {
 	private final Date enddate;
 	private final String type;
 	private final int idcase;
-	private final int idpoi;
+	private final Person person;
 
 	public Date getDate() {
 		return date;
@@ -37,17 +37,21 @@ public class Conviction {
 		return idcon;
 	}
 
-	public int getIdpoi() {
-		return idpoi;
+	public String getFirstname() {
+		return person.getFirstname();
+	}
+	
+	public String getLastname() {
+		return person.getLastname();
 	}
 
-	public Conviction(final int idcon, final Date date, final Date enddate, final String type, final int idcase, final int idpoi) {
+	public Conviction(final int idcon, final Date date, final Date enddate, final String type, final int idcase, final Person person) {
 		this.idcon = idcon;
 		this.date = date;
 		this.enddate = enddate;
 		this.type = type;
 		this.idcase = idcase;
-		this.idpoi = idpoi;
+		this.person = person;
 	}
 	
 	public Conviction(final ResultSet rs) throws SQLException {
@@ -56,8 +60,10 @@ public class Conviction {
 		this.enddate = rs.getDate("enddate");
 		this.type = rs.getString("type");
 		this.idcase = rs.getInt("idcase");
-		this.idpoi = rs.getInt("idpersonofinterest");
+		this.person = new Person(0,rs.getString("firstname"),rs.getString("lastname"),null);
 	}
+
+
 
 		
 }
