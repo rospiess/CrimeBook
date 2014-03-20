@@ -40,7 +40,7 @@ public final class CaseServlet extends HttpServlet {
 
 		final HttpSession session = request.getSession(true);
 
-		final String idString = request.getParameter("idcase");
+		final String idString = request.getParameter("id");
 		if (idString == null) {
 			this.getServletContext().getRequestDispatcher("/Cases").forward(request, response);
 		}
@@ -48,20 +48,17 @@ public final class CaseServlet extends HttpServlet {
 		try {
 
 			final Integer id = Integer.parseInt(idString);
-			final Case aCase = this.dbInterface.getCaseById(1);
-
+			final Case aCase = this.dbInterface.getCaseById(id);
+			final List<Comment> clist = this.dbInterface.getCommentsById(id,"case");
 			
 			/*******************************************************
 			 * Construct a table to present all properties of a case
 			 *******************************************************/
 			final BeanTableHelper<Case> table = new BeanTableHelper<Case>(
-					"cases" 		/* The table html id property */,
+					"case" 		/* The table html id property */,
 					"casesTable" /* The table html class property */,
 					Case.class 	/* The class of the objects (rows) that will be displayed */
 			);
-
-			// Add columns to the new table
-
 			
 			table.addBeanColumn("Case ID", "idcase");
 			table.addBeanColumn("Title", "title");
@@ -72,11 +69,24 @@ public final class CaseServlet extends HttpServlet {
 			table.addBeanColumn("Category", "cat");
 			table.addBeanColumn("Open", "open");
 			
-
 			table.addObject(aCase);
 			table.setVertical(true);			
 
-			session.setAttribute("caseTable", table);			
+			session.setAttribute("caseTable", table);
+			
+			final BeanTableHelper<Comment> ctable = new BeanTableHelper<Comment>(
+					"comment" 		/* The table html id property */,
+					"casesTable" /* The table html class property */,
+					Comment.class 	/* The class of the objects (rows) that will be displayed */
+			);
+			
+			ctable.addBeanColumn("Note ID", "idnote");
+			ctable.addBeanColumn("Text", "comment");
+			ctable.addBeanColumn("Submitted by", "username");
+			
+			ctable.addObjects(clist);		
+
+			session.setAttribute("commentTable", ctable);	
 			
 		} catch (final Exception ex) {
 			ex.printStackTrace();
