@@ -4,17 +4,17 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class PersonOfInterest {
+public class Person {
 
-	private final int idpoi;
+	private final int idperson;
 	private final String firstname;
 	private final String lastname;
 	private final Date bdate;
 
-	public PersonOfInterest( final int idpoi, final String firstname, final String lastname, final Date bdate
+	public Person( final int idperson, final String firstname, final String lastname, final Date bdate
 			) {
 
-		this.idpoi = idpoi;
+		this.idperson = idperson;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.bdate = bdate;
@@ -22,9 +22,9 @@ public class PersonOfInterest {
 		
 	}
 	
-	public PersonOfInterest(final ResultSet rs) throws SQLException {
+	public Person(final ResultSet rs) throws SQLException {
 		
-		this.idpoi = rs.getInt("idpersonofinterest");
+		this.idperson = rs.getInt("idpersonofinterest");
 		this.firstname = rs.getString("firstname");
 		this.lastname = rs.getString("lastname");
 		this.bdate = rs.getDate("dateofbirth");
@@ -36,8 +36,8 @@ public class PersonOfInterest {
 	 * the getters. 
 	 */	
 
-	public int getIdpoi() {
-		return idpoi;
+	public int getIdperson() {
+		return idperson;
 	}
 
 	public String getFirstname() {
