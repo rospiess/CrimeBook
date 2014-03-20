@@ -21,7 +21,7 @@ import ch.ethz.inf.dbproject.util.html.BeanTableHelper;
 /**
  * Servlet implementation class of Case Details Page
  */
-@WebServlet(description = "Displays a specific case.", urlPatterns = { "/Person" })
+@WebServlet(description = "Displays a specific Person.", urlPatterns = { "/Person" })
 public final class PersonServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
