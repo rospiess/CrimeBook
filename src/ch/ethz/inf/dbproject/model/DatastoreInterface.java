@@ -16,8 +16,10 @@ import ch.ethz.inf.dbproject.database.MySQLConnection;
  */
 public final class DatastoreInterface {
 
-	private final static Case[] staticCases = new Case[] { 
-//		new Case(0, "Noise pollution", "blablabla", new Date(1324512000000l), new Time(	12, 42, 35), new Address("Switzerland", "Zürich","Rämistrasse", 8000, 142), new Category("Murder", null),true)
+	private final static Case[] staticCases = new Case[] {
+	// new Case(0, "Noise pollution", "blablabla", new Date(1324512000000l), new
+	// Time( 12, 42, 35), new Address("Switzerland", "ZÃ¼rich","RÃ¤mistrasse",
+	// 8000, 142), new Category("Murder", null),true)
 
 	};
 	private final static List<Case> staticCaseList = new ArrayList<Case>();
@@ -26,195 +28,339 @@ public final class DatastoreInterface {
 			staticCaseList.add(staticCases[i]);
 		}
 	}
-	
+
 	private Connection sqlConnection;
 
 	public DatastoreInterface() {
-		 this.sqlConnection = MySQLConnection.getInstance().getConnection();
+		this.sqlConnection = MySQLConnection.getInstance().getConnection();
 	}
 
 	public final Case getCaseById(final int id) {
 
 		try {
-			  
-			  final Statement stmt = this.sqlConnection.createStatement(); 
-			  final ResultSet rs = stmt.executeQuery("Select * from Cases where idcase = " + id);
-			  rs.next();
-			  final Case caze = new Case(rs); 
-			  
-			  rs.close(); stmt.close();
-			  
-			  return caze;
-			  
-			  } catch (final SQLException ex) { ex.printStackTrace(); return null;
-			  }
 
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select * from Cases where idcase = " + id);
+			rs.next();
+			final Case caze = new Case(rs);
+
+			rs.close();
+			stmt.close();
+
+			return caze;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+
+	}
+
+	public final Person getPersonById(final int id) {
+
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select * from Personofinterest where idpersonofinterest = "
+							+ id);
+			rs.next();
+			final Person person = new Person(rs);
+
+			rs.close();
+			stmt.close();
+
+			return person;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+
+	}
+
+	
+	public final List<Comment> getCommentsById(final int id, String type) {
+
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs;
+			if(type.equals("case"))
+				rs = stmt
+					.executeQuery("Select * from notecase where idcase = "
+							+ id);
+			else rs = stmt
+					.executeQuery("Select * from noteperson where idpersonofinterest = "
+							+ id);
+			final List<Comment> clist = new ArrayList<Comment>();
+			while (rs.next()) {
+				clist.add(new Comment(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return clist;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+
+	}
+	
+	public final List<Conviction> getConvictionsById(final int id) {
+
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs= stmt
+					.executeQuery("Select * from conviction, personofinterest where conviction.idpersonofinterest = "
+							+ id + " and personofinterest.idpersonofinterest = " + id);
+			final List<Conviction> clist = new ArrayList<Conviction>();
+			while (rs.next()) {
+				clist.add(new Conviction(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return clist;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
 
 	}
 
 	public final List<Case> getAllCases() {
-		
-		   try {
-		  
-		  final Statement stmt = this.sqlConnection.createStatement(); final
-		  ResultSet rs = stmt.executeQuery("Select * from Cases");
-		  
-		  final List<Case> cases = new ArrayList<Case>(); while (rs.next()) {
-		  cases.add(new Case(rs)); }
-		  
-		  rs.close(); stmt.close();
-		  
-		  return cases;
-		  
-		  } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		  }
+
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt.executeQuery("Select * from Cases");
+
+			final List<Case> cases = new ArrayList<Case>();
+			while (rs.next()) {
+				cases.add(new Case(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return cases;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
 
 	}
 
-
 	public final List<Case> getOpenCases() {
 		try {
-			  
-			  final Statement stmt = this.sqlConnection.createStatement(); final
-			  ResultSet rs = stmt.executeQuery("Select * from Cases where open = 1");
-			  
-			  final List<Case> cases = new ArrayList<Case>(); while (rs.next()) {
-			  cases.add(new Case(rs)); }
-			  
-			  rs.close(); stmt.close();
-			  
-			  return cases;
-			  
-			  } catch (final SQLException ex) { ex.printStackTrace(); return null;
-			  }
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select * from Cases where open = 1");
+
+			final List<Case> cases = new ArrayList<Case>();
+			while (rs.next()) {
+				cases.add(new Case(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return cases;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
 
 	}
 
 	public final List<Case> getClosedCases() {
 		try {
-			  
-			  final Statement stmt = this.sqlConnection.createStatement(); final
-			  ResultSet rs = stmt.executeQuery("Select * from Cases where open = 0");
-			  
-			  final List<Case> cases = new ArrayList<Case>(); while (rs.next()) {
-			  cases.add(new Case(rs)); }
-			  
-			  rs.close(); stmt.close();
-			  
-			  return cases;
-			  
-			  } catch (final SQLException ex) { ex.printStackTrace(); return null;
-			  }
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select * from Cases where open = 0");
+
+			final List<Case> cases = new ArrayList<Case>();
+			while (rs.next()) {
+				cases.add(new Case(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return cases;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
 
 	}
 
 	public final List<Case> getMostRecentCases() {
 		try {
-			  
-			  final Statement stmt = this.sqlConnection.createStatement(); final
-			  ResultSet rs = stmt.executeQuery("Select * from Cases order by date desc");
-			  
-			  final List<Case> cases = new ArrayList<Case>(); while (rs.next()) {
-			  cases.add(new Case(rs)); }
-			  
-			  rs.close(); stmt.close();
-			  
-			  return cases;
-			  
-			  } catch (final SQLException ex) { ex.printStackTrace(); return null;
-			  }
-	}
-	public final List<Case> getOldestUnsolvedCases() {
-		try {
-			  
-			  final Statement stmt = this.sqlConnection.createStatement(); final
-			  ResultSet rs = stmt.executeQuery("Select * from Cases where open = 1 order by date asc");
-			  
-			  final List<Case> cases = new ArrayList<Case>(); while (rs.next()) {
-			  cases.add(new Case(rs)); }
-			  
-			  rs.close(); stmt.close();
-			  
-			  return cases;
-			  
-			  } catch (final SQLException ex) { ex.printStackTrace(); return null;
-			  }
-	}
-	
-	
-	public final List<Case> getProjectsByCategory(String category) {
-		try {
-			  
-			  final Statement stmt = this.sqlConnection.createStatement();
-			  final ResultSet rs;
-			  if(category.equals("other"))
-					 rs  = stmt.executeQuery("Select * from Cases where catname <> 'Assault' "
-					 		+ "and catname <> 'Theft' and catname <> 'Murder' "
-					 		+ "and catname <> 'Fraud'");
-			  else
-					  rs = stmt.executeQuery("Select * from Cases where catname = '" + category+"'");
-			  
-			  final List<Case> cases = new ArrayList<Case>(); while (rs.next()) {
-			  cases.add(new Case(rs)); }
-			  
-			  rs.close(); stmt.close();
-			  
-			  return cases;
-			  
-			  } catch (final SQLException ex) { ex.printStackTrace(); return null;
-			  }
-	}
-	
-	public final List<Conviction> searchByCategory(String category) {
-		try {
-			  
-			  final Statement stmt = this.sqlConnection.createStatement();
-			  final ResultSet  rs = stmt.executeQuery("Select * from Conviction where type like '%" + category+"%'");
-			  
-			  final List<Conviction> conv = new ArrayList<Conviction>(); while (rs.next()) {
-			  conv.add(new Conviction(rs)); }
-			  
-			  rs.close(); stmt.close();
-			  
-			  return conv;
-			  
-			  } catch (final SQLException ex) { ex.printStackTrace(); return null;
-			  }
-	}
-	
-	public final List<PersonOfInterest> searchByName(String name) {
-		try {
-			  
-			  final Statement stmt = this.sqlConnection.createStatement();
-			  final ResultSet   rs = stmt.executeQuery("Select * from personofinterest where firstname like '%" + name+"%'"
-					  + "or lastname like '%" + name+"%'");
-			  
-			  final List<PersonOfInterest> persons = new ArrayList<PersonOfInterest>(); while (rs.next()) {
-			  persons.add(new PersonOfInterest(rs)); }
-			  
-			  rs.close(); stmt.close();
-			  
-			  return persons;
-			  
-			  } catch (final SQLException ex) { ex.printStackTrace(); return null;
-			  }
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select * from Cases order by date desc");
+
+			final List<Case> cases = new ArrayList<Case>();
+			while (rs.next()) {
+				cases.add(new Case(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return cases;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
 	}
 
-	
-	public final List<PersonOfInterest> getAllPersons() {
+	public final List<Case> getOldestUnsolvedCases() {
 		try {
-			  
-			  final Statement stmt = this.sqlConnection.createStatement();
-			  final ResultSet  rs = stmt.executeQuery("Select * from personofinterest");
-			  
-			  final List<PersonOfInterest> persons = new ArrayList<PersonOfInterest>(); while (rs.next()) {
-			  persons.add(new PersonOfInterest(rs)); }
-			  
-			  rs.close(); stmt.close();
-			  
-			  return persons;
-			  
-			  } catch (final SQLException ex) { ex.printStackTrace(); return null;
-			  }
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select * from Cases where open = 1 order by date asc");
+
+			final List<Case> cases = new ArrayList<Case>();
+			while (rs.next()) {
+				cases.add(new Case(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return cases;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+
+	public final List<Case> getProjectsByCategory(String category) {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs;
+			if (category.equals("personal"))
+				rs = stmt
+						.executeQuery("Select * from Cases,Category where cases.catname"
+								+ " = category.catname and supercat = 'personal crime'");
+			else if (category.equals("property"))
+				rs = stmt
+						.executeQuery("Select * from Cases,Category where cases.catname"
+								+ " = category.catname and  supercat = 'property crime'");
+			else if (category.equals("other"))
+				rs = stmt
+						.executeQuery("Select * from Cases where catname <> 'Assault' "
+								+ "and catname <> 'Theft' and catname <> 'Murder'");
+			else
+				rs = stmt.executeQuery("Select * from Cases where catname = '"
+						+ category + "'");
+
+			final List<Case> cases = new ArrayList<Case>();
+			while (rs.next()) {
+				cases.add(new Case(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return cases;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+
+	public final List<Conviction> searchByCategory(String category) {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select * from Conviction,personofinterest where type "
+							+ "like '%"
+							+ category
+							+ "%' and personofinterest.idpersonofinterest = conviction.idpersonofinterest");
+
+			final List<Conviction> conv = new ArrayList<Conviction>();
+			while (rs.next()) {
+				conv.add(new Conviction(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return conv;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+
+	public final List<Person> searchByName(String name) {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select * from personofinterest where firstname like '%"
+							+ name + "%'" + "or lastname like '%" + name + "%'");
+
+			final List<Person> persons = new ArrayList<Person>();
+			while (rs.next()) {
+				persons.add(new Person(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return persons;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+
+	public final List<Person> getAllPersons() {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select * from personofinterest");
+
+			final List<Person> persons = new ArrayList<Person>();
+			while (rs.next()) {
+				persons.add(new Person(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return persons;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
 	}
 }
