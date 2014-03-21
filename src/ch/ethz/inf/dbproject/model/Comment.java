@@ -19,7 +19,7 @@ public class Comment {
 	}
 	
 	public Comment(final ResultSet rs) throws SQLException{
-		this.username = "not working yet";//rs.getString("username");
+		this.username = rs.getString("username");
 		this.comment = rs.getString("text");
 		this.idnote = rs.getInt("nr");
 	}

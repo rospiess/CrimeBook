@@ -31,23 +31,29 @@ public final class UserServlet extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
 	protected final void doGet(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException,
 			IOException {
 
 		final HttpSession session = request.getSession(true);
-		final User loggedUser = UserManagement.getCurrentlyLoggedInUser(session);
+		final User loggedUser = UserManagement
+				.getCurrentlyLoggedInUser(session);
+
+		session.setAttribute("FailedLogin", "");
 
 		if (loggedUser == null) {
 			// Not logged in!
 			session.setAttribute(SESSION_USER_LOGGED_IN, false);
 		} else {
 			// Logged in
-			final BeanTableHelper<User> userDetails = new BeanTableHelper<User>("userDetails", "userDetails", User.class);
+			final BeanTableHelper<User> userDetails = new BeanTableHelper<User>(
+					"userDetails", "userDetails", User.class);
 			userDetails.addBeanColumn("Username", "username");
 			userDetails.addBeanColumn("Name", "name");
+			userDetails.addObject(loggedUser);
 
 			session.setAttribute(SESSION_USER_LOGGED_IN, true);
 			session.setAttribute(SESSION_USER_DETAILS, userDetails);
@@ -56,22 +62,39 @@ public final class UserServlet extends HttpServlet {
 		// TODO display registration
 
 		final String action = request.getParameter("action");
-		if (action != null && action.trim().equals("login") 	&& loggedUser == null) {
+		if (action != null && action.trim().equals("login")
+				&& loggedUser == null) {
 
 			final String username = request.getParameter("username");
-			// Note: It is really not safe to use HTML get method to send passwords.
+			// Note: It is really not safe to use HTML get method to send
+			// passwords.
 			// However for this project, security is not a requirement.
 			final String password = request.getParameter("password");
+			if (dbInterface.identify(username,password)) {
+				User u = new User(1, username, password);
+//				final BeanTableHelper<User> userDetails = new BeanTableHelper<User>(
+//						"userDetails", "casesTable", User.class);
+//				userDetails.addBeanColumn("Username", "username");
+//				userDetails.addObject(u);
+				session.setAttribute("FailedLogin", "");
+				session.setAttribute(SESSION_USER_LOGGED_IN, true);
+				session.setAttribute(SESSION_USER_DETAILS, username);
+				session.setAttribute(UserManagement.SESSION_USER, u);
+			}
+			else //wrong password
+				session.setAttribute("FailedLogin", "Invalid Username or Password");
 
-			// TODO
-			// Ask the data store interface if it knows this user
-			// Retrieve User
-			// Store this user into the session
-
+		}
+		else if  (action != null && action.trim().equals("logout")
+				&& loggedUser != null) {
+			session.setAttribute(SESSION_USER_LOGGED_IN, false);
+			session.setAttribute(SESSION_USER_DETAILS, null);
+			session.setAttribute(UserManagement.SESSION_USER, null);
 		}
 
 		// Finally, proceed to the User.jsp page which will renden the profile
-		this.getServletContext().getRequestDispatcher("/User.jsp").forward(request, response);
+		this.getServletContext().getRequestDispatcher("/User.jsp")
+				.forward(request, response);
 
 	}
 

@@ -2,16 +2,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="Header.jsp" %>
 
-<h2>Your Account</h2>
 
 <% 
 if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 	// User is logged in. Display the details:
 %>
+	<h2>Authentication successfull</h2> <br> 
+Welcome <%= session.getAttribute(UserServlet.SESSION_USER_DETAILS) %> <br> <br> <br> 
 	
-<%= session.getAttribute(UserServlet.SESSION_USER_DETAILS) %>
-	
-
+<form action="User" method="get">
+	<input type="hidden" name="action" value="logout" />
+	<table>
+		<tr>
+			<th colspan="2">
+				<input type="submit" value="Logout" />
+			</th>
+		</tr>
+	</table>
+	</form>
 
 <%
 //TODO: Display cases opened by the user
@@ -19,8 +27,8 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 //TODO: Add possibility to create new case (requires a form) 
 	
 } else {
-	// User not logged in. Display the login form.
-%>
+	%> <%=session.getAttribute("FailedLogin")
+	%> 
 
 	<form action="User" method="get">
 	<input type="hidden" name="action" value="login" />

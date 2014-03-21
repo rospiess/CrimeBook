@@ -13,8 +13,8 @@ import javax.servlet.http.HttpSession;
 import ch.ethz.inf.dbproject.model.Conviction;
 import ch.ethz.inf.dbproject.model.Comment;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
-import ch.ethz.inf.dbproject.model.Case;
 import ch.ethz.inf.dbproject.model.Person;
+import ch.ethz.inf.dbproject.model.User;
 import ch.ethz.inf.dbproject.util.UserManagement;
 import ch.ethz.inf.dbproject.util.html.BeanTableHelper;
 
@@ -41,17 +41,20 @@ public final class PersonServlet extends HttpServlet {
 
 		final HttpSession session = request.getSession(true);
 
-		final String idString = request.getParameter("id");
+		 String idString = request.getParameter("id");
 		if (idString == null) {
-			this.getServletContext().getRequestDispatcher("/Persons").forward(request, response);
-		}
+			idString = (String)session.getAttribute("Last Case");
+			}
 
 		try {
 
+			session.setAttribute("Last Case", idString);
 			final Integer id = Integer.parseInt(idString);
 			final Person aPerson = this.dbInterface.getPersonById(id);
 			final List<Comment> comlist = this.dbInterface.getCommentsById(id,"person");
 			final List<Conviction> conlist = this.dbInterface.getConvictionsById(id);
+			final User loggedUser = UserManagement
+					.getCurrentlyLoggedInUser(session);
 
 			
 			/*******************************************************
@@ -104,6 +107,11 @@ public final class PersonServlet extends HttpServlet {
 			contable.addObjects(conlist);	
 
 			session.setAttribute("convictionTable", contable);
+			
+			final String comment = request.getParameter("comment");
+			final String action = request.getParameter("action");
+			if(action != null && action.equals("add_comment")&& comment  != null && !comment.isEmpty())
+				this.dbInterface.insertComment(id, comment, loggedUser.getUsername(), "person");
 			
 		} catch (final Exception ex) {
 			ex.printStackTrace();

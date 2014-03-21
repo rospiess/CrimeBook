@@ -13,7 +13,7 @@
 if (user != null) {
 	// User is logged in. He can add a comment
 %>
-	<form action="Case" method="get">
+	<form action="Person" method="get">
 		<input type="hidden" name="action" value="add_comment" />
 		<input type="hidden" name="user_id" value="<%= user.getUserid() %>" />
 		Add Comment

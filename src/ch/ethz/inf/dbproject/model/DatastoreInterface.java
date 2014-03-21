@@ -1,6 +1,7 @@
 package ch.ethz.inf.dbproject.model;
 
 import java.sql.Connection;
+import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,19 +17,6 @@ import ch.ethz.inf.dbproject.database.MySQLConnection;
  */
 public final class DatastoreInterface {
 
-	private final static Case[] staticCases = new Case[] {
-	// new Case(0, "Noise pollution", "blablabla", new Date(1324512000000l), new
-	// Time( 12, 42, 35), new Address("Switzerland", "ZÃ¼rich","RÃ¤mistrasse",
-	// 8000, 142), new Category("Murder", null),true)
-
-	};
-	private final static List<Case> staticCaseList = new ArrayList<Case>();
-	static {
-		for (int i = 0; i < staticCases.length; i++) {
-			staticCaseList.add(staticCases[i]);
-		}
-	}
-
 	private Connection sqlConnection;
 
 	public DatastoreInterface() {
@@ -42,7 +30,7 @@ public final class DatastoreInterface {
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
 					.executeQuery("Select * from Cases c, Address a where "
-							+" c.idAddress = a.idAddress and idcase = " + id);
+							+ " c.idAddress = a.idAddress and idcase = " + id);
 			rs.next();
 			final Case caze = new Case(rs);
 
@@ -81,20 +69,19 @@ public final class DatastoreInterface {
 
 	}
 
-	
 	public final List<Comment> getCommentsById(final int id, String type) {
 
 		try {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs;
-			if(type.equals("case"))
+			if (type.equals("case"))
+				rs = stmt.executeQuery("Select * from notecase where idcase = "
+						+ id);
+			else
 				rs = stmt
-					.executeQuery("Select * from notecase where idcase = "
-							+ id);
-			else rs = stmt
-					.executeQuery("Select * from noteperson where idpersonofinterest = "
-							+ id);
+						.executeQuery("Select * from noteperson where idpersonofinterest = "
+								+ id);
 			final List<Comment> clist = new ArrayList<Comment>();
 			while (rs.next()) {
 				clist.add(new Comment(rs));
@@ -111,15 +98,39 @@ public final class DatastoreInterface {
 		}
 
 	}
-	
+
+	public void insertComment(final int id, final String text,
+			final String username, String type) {
+
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+
+			if (type.equals("case"))
+				stmt.execute("Insert into notecase(idCase, text, username) values ('"
+						+ id + "', '" + text + "', '" + username + "')");
+
+			else
+				stmt.execute("Insert into noteperson(idpersonofinterest, text, username) values ('"
+						+ id + "', '" + text + "', '" + username + "')");
+			stmt.close();
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+		}
+
+	}
+
 	public final List<Conviction> getConvictionsById(final int id) {
 
 		try {
 
 			final Statement stmt = this.sqlConnection.createStatement();
-			final ResultSet rs= stmt
+			final ResultSet rs = stmt
 					.executeQuery("Select * from conviction, personofinterest where conviction.idpersonofinterest = "
-							+ id + " and personofinterest.idpersonofinterest = " + id);
+							+ id
+							+ " and personofinterest.idpersonofinterest = "
+							+ id);
 			final List<Conviction> clist = new ArrayList<Conviction>();
 			while (rs.next()) {
 				clist.add(new Conviction(rs));
@@ -142,7 +153,8 @@ public final class DatastoreInterface {
 		try {
 
 			final Statement stmt = this.sqlConnection.createStatement();
-			final ResultSet rs = stmt.executeQuery("Select * from Cases c, Address a where c.idAddress = a.idAddress");
+			final ResultSet rs = stmt
+					.executeQuery("Select * from Cases c, Address a where c.idAddress = a.idAddress");
 
 			final List<Case> cases = new ArrayList<Case>();
 			while (rs.next()) {
@@ -263,23 +275,29 @@ public final class DatastoreInterface {
 			final ResultSet rs;
 			if (category.equals("personal"))
 				rs = stmt
-						.executeQuery("Select * from Cases c,Category, Address a where "
+						.executeQuery("Select * from Cases c, Category, Address a where "
 								+ "c.idAddress = a.idAddress and c.catname"
 								+ " = category.catname and supercat = 'personal crime'");
 			else if (category.equals("property"))
 				rs = stmt
-						.executeQuery("Select * from Cases c,Category , Address a where "
+						.executeQuery("Select * from Cases c, Category , Address a where "
 								+ " c.idAddress = a.idAddress and c.catname"
 								+ " = category.catname and  supercat = 'property crime'");
-			else if (category.equals("other"))
+			else if (category.equals("otherper"))
+				rs = stmt
+						.executeQuery("Select * from Cases c, Address a, category ca where "
+								+ "c.idAddress = a.idAddress and ca.supercat = 'personal crime' "
+								+ "and c.catname <> 'Assault' and c.catname <> 'Murder' and c.catname = ca.catname");
+			else if (category.equals("otherpro"))
+				rs = stmt
+						.executeQuery("Select * from Cases c, Address a, category ca where "
+								+ "c.idAddress = a.idAddress and ca.supercat = 'property crime' "
+								+ "and c.catname <> 'Theft' and c.catname <> 'Fraud' and c.catname = ca.catname");
+			else
 				rs = stmt
 						.executeQuery("Select * from Cases c, Address a where "
-								+ "c.idAddress = a.idAddress and catname <> 'Assault' "
-								+ "and catname <> 'Theft' and catname <> 'Murder'");
-			else
-				rs = stmt.executeQuery("Select * from Cases c, Address a where "
-						+ "c.idAddress = a.idAddress and catname = '"
-						+ category + "'");
+								+ "c.idAddress = a.idAddress and catname = '"
+								+ category + "'");
 
 			final List<Case> cases = new ArrayList<Case>();
 			while (rs.next()) {
@@ -306,6 +324,31 @@ public final class DatastoreInterface {
 							+ "like '%"
 							+ category
 							+ "%' and personofinterest.idpersonofinterest = conviction.idpersonofinterest");
+
+			final List<Conviction> conv = new ArrayList<Conviction>();
+			while (rs.next()) {
+				conv.add(new Conviction(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return conv;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+	
+	public final List<Conviction> searchByDate(String date) {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select * from Conviction c,personofinterest p where (beginDate = '" + date 
+							+"' or endDate = '" + date
+							+ "') and p.idpersonofinterest = c.idpersonofinterest");
 
 			final List<Conviction> conv = new ArrayList<Conviction>();
 			while (rs.next()) {
@@ -367,6 +410,31 @@ public final class DatastoreInterface {
 		} catch (final SQLException ex) {
 			ex.printStackTrace();
 			return null;
+		}
+	}
+
+	public final boolean identify(String username, String password) {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select password from user u where u.username = '"
+							+ username + "'");
+			final String correctpassword;
+
+			if (!rs.next()) { //user not found
+				rs.close();
+				stmt.close();
+				return false;
+			} else
+				correctpassword = rs.getString("password");
+
+			rs.close();
+			stmt.close();
+			return password.equals(correctpassword);
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return false;
 		}
 	}
 }

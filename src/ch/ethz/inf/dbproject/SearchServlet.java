@@ -1,6 +1,9 @@
 package ch.ethz.inf.dbproject;
 
 import java.io.IOException;
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -88,10 +91,17 @@ public final class SearchServlet extends HttpServlet {
 				ctable.addObjects(this.dbInterface.searchByCategory(name));
 				
 
-			} else if (filter.equals("anotherattribute")) {
+			} else if (filter.equals("date")) {
 
-				// TODO implement this!		
-
+				session.setAttribute("results", ctable);
+				ctable.addBeanColumn("Conviction ID", "idcon");
+				ctable.addBeanColumn("Type", "type");
+				ctable.addBeanColumn("Start Date", "date");
+				ctable.addBeanColumn("End Date", "enddate");
+				ctable.addBeanColumn("Case ID", "idcase");
+				ctable.addBeanColumn("Convict First Name", "firstname");
+				ctable.addBeanColumn("Convict Last Name", "lastname");
+				ctable.addObjects(this.dbInterface.searchByDate(request.getParameter("date")));
 			}			
 		}
 

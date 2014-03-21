@@ -19,9 +19,9 @@
 <form method="get" action="Search">
 <div>
 	<input type="hidden" name="filter" value="category" />
-	Search By Category:
+	Search By Type of Conviction:
 	<input type="text" name="category" />
-	<input type="submit" value="Search" title="Search by Category" />
+	<input type="submit" value="Search" title="Search by Type of Conviction" />
 </div>
 </form>
 
@@ -29,10 +29,10 @@
 
 <form method="get" action="Search">
 <div>
-	<input type="hidden" name="filter" value="attribute" />
-	Search By Attribute:
-	<input type="text" name="attribute" />
-	<input type="submit" value="Search" title="Search by Attribute" />
+	<input type="hidden" name="filter" value="date" />
+	Search By Date of Conviction(yyyy-mm-dd):
+	<input type="text" name="date" />
+	<input type="submit" value="Search" title="Search by Date of Conviction" />
 </div>
 </form>
 

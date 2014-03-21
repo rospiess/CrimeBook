@@ -1,4 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="ch.ethz.inf.dbproject.model.User"%>
+<%@page import="ch.ethz.inf.dbproject.util.UserManagement"%>
+<%@page import="ch.ethz.inf.dbproject.UserServlet"%>
+
+<% final User u = (User) session.getAttribute(UserManagement.SESSION_USER); %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
@@ -17,8 +23,17 @@
 			<tr>
 				<th id="masterHeader" colspan="2">
 					<h1>Law Enforcement Project</h1>
-					Project by Crimebook 
+					Project by Crimebook <br> <br> &nbsp;
+					<%
+if (u != null) {
+	// User is logged in. He can add a comment
+%>
+					You are currently logged in as 
+				<%= session.getAttribute(UserServlet.SESSION_USER_DETAILS) %> <%
+}
+%>
 				</th>
+
 			</tr>
 			<tr id="masterContent">
 			
@@ -35,11 +50,11 @@
 					<div class="menuDiv2"><a href="Cases?category=personal">Personal Crimes</a></div>
 					<div class="menuDiv3"><a href="Cases?category=assault">Assault</a></div>
 					<div class="menuDiv3"><a href="Cases?category=murder">Murder</a></div>
-					<div class="menuDiv3"><a href="Cases?category=other">Other</a></div>
+					<div class="menuDiv3"><a href="Cases?category=otherper">Other</a></div>
 					<div class="menuDiv2"><a href="Cases?category=property">Property Crimes</a></div>
 					<div class="menuDiv3"><a href="Cases?category=theft">Theft</a></div>
 					<div class="menuDiv3"><a href="Cases?category=fraud">Fraud</a></div>
-					<div class="menuDiv3"><a href="Cases?category=other">Other</a></div>
+					<div class="menuDiv3"><a href="Cases?category=otherpro">Other</a></div>
 					<div class="menuDiv1"><a href="PersonsOfInterest">Persons of Interest</a></div>
 					<div class="menuDiv1"><a href="Search">Search</a></div>
 					<div class="menuDiv1"><a href="User">User Profile</a></div>

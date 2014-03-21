@@ -10,7 +10,7 @@ final User user = (User) session.getAttribute(UserManagement.SESSION_USER);
 if (user != null) {
 	// There is a user logged in! Display a greeting!
 %>
-	Welcome back <%=user.getName()%>
+	Welcome back <%=user.getUsername()%>
 <%
 } else {
 	// No user logged in.%>

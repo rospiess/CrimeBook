@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import ch.ethz.inf.dbproject.model.Conviction;
 import ch.ethz.inf.dbproject.model.Comment;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
 import ch.ethz.inf.dbproject.model.Case;
+import ch.ethz.inf.dbproject.model.User;
 import ch.ethz.inf.dbproject.util.UserManagement;
 import ch.ethz.inf.dbproject.util.html.BeanTableHelper;
 
@@ -40,16 +40,19 @@ public final class CaseServlet extends HttpServlet {
 
 		final HttpSession session = request.getSession(true);
 
-		final String idString = request.getParameter("id");
+		String idString = request.getParameter("id");
 		if (idString == null) {
-			this.getServletContext().getRequestDispatcher("/Cases").forward(request, response);
+			idString = (String)session.getAttribute("Last Case");
 		}
 
 		try {
 
+			session.setAttribute("Last Case", idString);
 			final Integer id = Integer.parseInt(idString);
 			final Case aCase = this.dbInterface.getCaseById(id);
 			final List<Comment> clist = this.dbInterface.getCommentsById(id,"case");
+			final User loggedUser = UserManagement
+					.getCurrentlyLoggedInUser(session);
 			
 			/*******************************************************
 			 * Construct a table to present all properties of a case
@@ -87,6 +90,11 @@ public final class CaseServlet extends HttpServlet {
 			ctable.addObjects(clist);		
 
 			session.setAttribute("commentTable", ctable);	
+			
+			final String comment = request.getParameter("comment");
+			final String action = request.getParameter("action");
+			if(action != null && action.equals("add_comment")&& comment  != null && !comment.isEmpty())
+				this.dbInterface.insertComment(id, comment, loggedUser.getUsername(), "case");
 			
 		} catch (final Exception ex) {
 			ex.printStackTrace();
