@@ -45,7 +45,7 @@ public final class Case {
 		this.title = rs.getString("title");
 		this.date = rs.getDate("date");
 		this.time = rs.getTime("time");
-		this.loc = new Address("Switzerland","Zurich", rs.getString("location"),8000,4);
+		this.loc = new Address(rs);
 		this.cat = new Category(rs.getString("catname"),null);
 		this.open = rs.getBoolean("open");
 	}

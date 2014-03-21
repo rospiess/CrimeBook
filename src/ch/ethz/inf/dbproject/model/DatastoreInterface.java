@@ -41,7 +41,8 @@ public final class DatastoreInterface {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
-					.executeQuery("Select * from Cases where idcase = " + id);
+					.executeQuery("Select * from Cases c, Address a where "
+							+" c.idAddress = a.idAddress and idcase = " + id);
 			rs.next();
 			final Case caze = new Case(rs);
 
@@ -141,7 +142,7 @@ public final class DatastoreInterface {
 		try {
 
 			final Statement stmt = this.sqlConnection.createStatement();
-			final ResultSet rs = stmt.executeQuery("Select * from Cases");
+			final ResultSet rs = stmt.executeQuery("Select * from Cases c, Address a where c.idAddress = a.idAddress");
 
 			final List<Case> cases = new ArrayList<Case>();
 			while (rs.next()) {
@@ -165,7 +166,7 @@ public final class DatastoreInterface {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
-					.executeQuery("Select * from Cases where open = 1");
+					.executeQuery("Select * from Cases c, Address a where c.idAddress = a.idAddress and open = 1");
 
 			final List<Case> cases = new ArrayList<Case>();
 			while (rs.next()) {
@@ -189,7 +190,7 @@ public final class DatastoreInterface {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
-					.executeQuery("Select * from Cases where open = 0");
+					.executeQuery("Select * from Cases c, Address a where c.idAddress = a.idAddress and open = 0");
 
 			final List<Case> cases = new ArrayList<Case>();
 			while (rs.next()) {
@@ -213,7 +214,7 @@ public final class DatastoreInterface {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
-					.executeQuery("Select * from Cases order by date desc");
+					.executeQuery("Select * from Cases c, Address a where c.idAddress = a.idAddress order by date desc");
 
 			final List<Case> cases = new ArrayList<Case>();
 			while (rs.next()) {
@@ -236,7 +237,8 @@ public final class DatastoreInterface {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
-					.executeQuery("Select * from Cases where open = 1 order by date asc");
+					.executeQuery("Select * from Cases c, Address a where c.idAddress = a.idAddress and "
+							+ "open = 1 order by date asc");
 
 			final List<Case> cases = new ArrayList<Case>();
 			while (rs.next()) {
@@ -261,18 +263,22 @@ public final class DatastoreInterface {
 			final ResultSet rs;
 			if (category.equals("personal"))
 				rs = stmt
-						.executeQuery("Select * from Cases,Category where cases.catname"
+						.executeQuery("Select * from Cases c,Category, Address a where "
+								+ "c.idAddress = a.idAddress and c.catname"
 								+ " = category.catname and supercat = 'personal crime'");
 			else if (category.equals("property"))
 				rs = stmt
-						.executeQuery("Select * from Cases,Category where cases.catname"
+						.executeQuery("Select * from Cases c,Category , Address a where "
+								+ " c.idAddress = a.idAddress and c.catname"
 								+ " = category.catname and  supercat = 'property crime'");
 			else if (category.equals("other"))
 				rs = stmt
-						.executeQuery("Select * from Cases where catname <> 'Assault' "
+						.executeQuery("Select * from Cases c, Address a where "
+								+ "c.idAddress = a.idAddress and catname <> 'Assault' "
 								+ "and catname <> 'Theft' and catname <> 'Murder'");
 			else
-				rs = stmt.executeQuery("Select * from Cases where catname = '"
+				rs = stmt.executeQuery("Select * from Cases c, Address a where "
+						+ "c.idAddress = a.idAddress and catname = '"
 						+ category + "'");
 
 			final List<Case> cases = new ArrayList<Case>();
