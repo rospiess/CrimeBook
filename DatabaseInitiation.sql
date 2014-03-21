@@ -16,7 +16,8 @@ Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Bertrand
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Frank', 'Gürkaynak', '1967-9-2');
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Emo', 'Welzl', '1971-3-25');
 
-Insert into noteperson(idPersonOfInterest,text,username) values ('1', 'Sehr kräftig gebaut"','Max Muster');
+Insert into noteperson(idPersonOfInterest,text,username) values ('1', 'Sehr kräftig gebaut','Max Muster');
+Insert into noteperson(idPersonOfInterest,text,username) values ('1', 'Besitzt eine Vorliebe für Fastfood','Max Muster');
 Insert into noteperson(idPersonOfInterest,text,username) values ('2', 'Höchstgefährlich','Max Muster');
 Insert into noteperson(idPersonOfInterest,text,username) values ('3', 'Auch bekannt als "Der Witwenmacher"','Max Muster');
 
