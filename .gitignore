@@ -10,6 +10,9 @@
 # Java source
 !*.java
 
+!*.jsp
+!*.css
+
 # Databasemodel
 !*.mwb
 !*.sql
