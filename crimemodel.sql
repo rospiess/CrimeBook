@@ -22,6 +22,20 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `CrimeDatabase`.`Address`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`Address` (
+  `idAddress` INT NOT NULL AUTO_INCREMENT,
+  `country` VARCHAR(45) NULL,
+  `zipCode` INT NULL,
+  `city` VARCHAR(45) NULL,
+  `street` VARCHAR(45) NULL,
+  `streetNo` INT NULL,
+  PRIMARY KEY (`idAddress`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `CrimeDatabase`.`Cases`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`Cases` (
@@ -31,13 +45,19 @@ CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`Cases` (
   `open` TINYINT(1) NULL,
   `date` DATE NULL,
   `time` TIME NULL,
-  `location` VARCHAR(45) NULL,
   `CatName` VARCHAR(45) NOT NULL,
+  `idAddress` INT NULL,
   PRIMARY KEY (`idCase`),
   INDEX `fk_Cases_Category1_idx` (`CatName` ASC),
+  INDEX `fk_Cases_Address1_idx` (`idAddress` ASC),
   CONSTRAINT `fk_Cases_Category1`
     FOREIGN KEY (`CatName`)
     REFERENCES `CrimeDatabase`.`Category` (`CatName`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Cases_Address1`
+    FOREIGN KEY (`idAddress`)
+    REFERENCES `CrimeDatabase`.`Address` (`idAddress`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
