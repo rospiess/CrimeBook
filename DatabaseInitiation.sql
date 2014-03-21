@@ -1,3 +1,5 @@
+insert into user(username, password) values('Max Muster', '12345');
+
 Insert into category(CatName) values ('Personal Crime');
 Insert into category(CatName, SuperCat) values ('Assault', 'Personal Crime');
 Insert into category(CatName, SuperCat) values ('Murder', 'Personal Crime');
@@ -11,9 +13,9 @@ Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Bertrand
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Frank', 'Gürkaynak', '1967-9-2');
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Emo', 'Welzl', '1971-3-25');
 
-Insert into noteperson(idPersonOfInterest,text) values ('1', 'Sehr kräftig gebaut"');
-Insert into noteperson(idPersonOfInterest,text) values ('2', 'Höchstgefährlich');
-Insert into noteperson(idPersonOfInterest,text) values ('3', 'Auch bekannt als "Der Witwenmacher"');
+Insert into noteperson(idPersonOfInterest,text,username) values ('1', 'Sehr kräftig gebaut"','Max Muster');
+Insert into noteperson(idPersonOfInterest,text,username) values ('2', 'Höchstgefährlich','Max Muster');
+Insert into noteperson(idPersonOfInterest,text,username) values ('3', 'Auch bekannt als "Der Witwenmacher"','Max Muster');
 
 insert into address(country, zipCode, city, street, streetNo) values ('Switzerland',8000,'Zürich','Rämistrasse',101);
 
@@ -21,7 +23,7 @@ Insert into cases(Title,Description,open,date,time,CatName,idAddress) values ('E
 Insert into cases(Title,Description,open,date,time,CatName,idAddress) values ('Mord an der ETH', 'Brutal mit Schreibmaschine erschlagen', true, '2010-10-31', '23:55:00', 'Murder', 1);
 Insert into cases(Title,Description,open,date,time,CatName,idAddress) values ('Schwere Körperverletzung', 'Älterer Mann von Auto mit französischem Kennzeichen angefahren', true, '2010-11-01', '09:32:13', 'Assault', 1);
 
-Insert into notecase(idCase,text) values ('2', 'Opfer war bekannt dafür, Witze über die Programmiersprache Eiffel zu reissen.');
+Insert into notecase(idCase,text,username) values ('2', 'Opfer war bekannt dafür, Witze über die Programmiersprache Eiffel zu reissen.','Max Muster');
 
 Insert into conviction(type,beginDate,endDate,idCase,idPersonOfInterest) values ('Diebstahl','2010-11-2','2010-12-2',1,3);
 
