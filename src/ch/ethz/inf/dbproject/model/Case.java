@@ -78,7 +78,7 @@ public final class Case {
 
 	public String getLoc() {
 		return loc.getStreet() +
-//				" " + loc.getStreetNo()+
+				" " + loc.getStreetNo()+
 				", " +	loc.getZipCode() + " " + loc.getCity()+ ", " + loc.getCountry();
 	}
 
