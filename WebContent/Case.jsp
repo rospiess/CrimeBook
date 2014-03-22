@@ -16,7 +16,7 @@
 <%
 if (user != null) {
 	// User is logged in. He can add a comment
-%>
+%> <br>
 	<form action="Case" method="get">
 		<input type="hidden" name="action" value="add_comment" />
 		<input type="hidden" name="user_id" value="<%= user.getUserid() %>" />
@@ -31,6 +31,12 @@ if (user != null) {
 %>
 <h1>Comments</h1>
 <%=session.getAttribute("commentTable")
+%>
+<h1>Suspects</h1>
+<%=session.getAttribute("suspectTable")
+%>
+<h1>Witnesses</h1>
+<%=session.getAttribute("witnessTable")
 %>
 
 <%@ include file="Footer.jsp"%>

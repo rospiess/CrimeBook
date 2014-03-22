@@ -8,7 +8,7 @@
 <form method="get" action="Search">
 <div>
 	<input type="hidden" name="filter" value="description" />
-	Search By Name:
+	Search By Person Name:
 	<input type="text" name="description" />
 	<input type="submit" value="Search" title="Search by Description" />
 </div>
@@ -30,18 +30,18 @@
 <form method="get" action="Search">
 <div>
 	<input type="hidden" name="filter" value="date" />
-	Search By Date of Conviction(yyyy-mm-dd):
+	Search By Date of Conviction (yyyy-mm-dd):
 	<input type="text" name="date" />
 	<input type="submit" value="Search" title="Search by Date of Conviction" />
 </div>
 </form>
 
 <hr/>
-
+<%if (session.getAttribute("results")!=null){ %>
 <%= 
 session.getAttribute("results") 
 %>
+<%} %>
 
-<hr/>
 
 <%@ include file="Footer.jsp" %>
