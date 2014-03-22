@@ -10,7 +10,7 @@ To-Do List
 - Register new users.
 
 - Case detail view: Show all associated convictions / persons of interest with links to their detailed view.
-- Person detail view: Show all associated convictions (implemented) / open cases (with role) with links to their detailed view.
+- Person detail view: Show all associated convictions / open cases (with role) (implemented) with links to their detailed view.
 
 
 
@@ -36,6 +36,5 @@ When logged in:
 Ideas and Nice-to-have:
 -----------
 
-- Log out button.
 - Bounty
 
