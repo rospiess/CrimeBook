@@ -147,6 +147,37 @@ public final class DatastoreInterface {
 		}
 
 	}
+	
+	public final List<Involved> getInvolvedByPersonId(final int pid) {		
+		// Returns list of involvement of a person by their id. 
+		// The Involved class contains information about the case and the person.
+		
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select * from involved, cases, personofinterest"
+							+ " where involved.idperson = "
+							+ pid
+							+ " and personofinterest.idpersonofinterest = "
+							+ pid
+							+ " and cases.idCase = involved.idcase");
+			final List<Involved> invlist = new ArrayList<Involved>();
+			while (rs.next()) {
+				invlist.add(new Involved(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return invlist;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+
+	}
 
 	public final List<Case> getAllCases() {
 
@@ -437,4 +468,6 @@ public final class DatastoreInterface {
 			return false;
 		}
 	}
+
+	
 }
