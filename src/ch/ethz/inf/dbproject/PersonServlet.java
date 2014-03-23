@@ -100,11 +100,11 @@ public final class PersonServlet extends HttpServlet {
 					"casesTable" /* The table html class property */,
 					Conviction.class 	/* The class of the objects (rows) that will be displayed */
 			);
-			contable.addBeanColumn("Conviction ID", "idcon");
+			contable.addBeanColumn("Case", "caseTitle");
 			contable.addBeanColumn("Type", "type");
 			contable.addBeanColumn("Start Date", "date");
 			contable.addBeanColumn("End Date", "enddate");
-			contable.addBeanColumn("Case ID", "idcase");
+			contable.addLinkColumn("", "View Case", "Case?id=", "idcase");
 			
 			contable.addObjects(conlist);	
 

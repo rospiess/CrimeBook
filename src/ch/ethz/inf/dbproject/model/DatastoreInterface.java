@@ -127,10 +127,11 @@ public final class DatastoreInterface {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
-					.executeQuery("Select * from conviction, personofinterest where conviction.idpersonofinterest = "
+					.executeQuery("Select * from conviction, personofinterest, cases where conviction.idpersonofinterest = "
 							+ id
 							+ " and personofinterest.idpersonofinterest = "
-							+ id);
+							+ id
+							+ " and cases.idcase = conviction.idcase");
 			final List<Conviction> clist = new ArrayList<Conviction>();
 			while (rs.next()) {
 				clist.add(new Conviction(rs));
