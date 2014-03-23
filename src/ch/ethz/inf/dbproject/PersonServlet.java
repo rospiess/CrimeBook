@@ -119,7 +119,8 @@ public final class PersonServlet extends HttpServlet {
 			);
 			invtable.addBeanColumn("Case", "caseTitle");
 			invtable.addBeanColumn("Role", "role");
-			
+			invtable.addLinkColumn("", "View Case", "Case?id=", "idcase");
+
 			invtable.addObjects(invlist);	
 
 			session.setAttribute("involvedTable", invtable);
