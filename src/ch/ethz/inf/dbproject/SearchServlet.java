@@ -39,6 +39,7 @@ public final class SearchServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		final HttpSession session = request.getSession(true);
+		session.setAttribute("results", null);
 		
 		/*******************************************************
 		 * Construct a table to present all our search results

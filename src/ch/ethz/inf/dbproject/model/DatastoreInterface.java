@@ -371,14 +371,16 @@ public final class DatastoreInterface {
 			return null;
 		}
 	}
-	
+
 	public final List<Conviction> searchByDate(String date) {
 		try {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
-					.executeQuery("Select * from Conviction c,personofinterest p where (beginDate = '" + date 
-							+"' or endDate = '" + date
+					.executeQuery("Select * from Conviction c,personofinterest p where (beginDate = '"
+							+ date
+							+ "' or endDate = '"
+							+ date
 							+ "') and p.idpersonofinterest = c.idpersonofinterest");
 
 			final List<Conviction> conv = new ArrayList<Conviction>();
@@ -444,6 +446,58 @@ public final class DatastoreInterface {
 		}
 	}
 
+	public final List<Person> getSuspectsById(int id) {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select idpersonofinterest,firstname,lastname, dateofbirth from personofinterest p, involved i "
+							+ "where i.role = 'Suspect' and i.idCase = '"
+							+ id
+							+ "' and i.idperson = p.idpersonofinterest");
+
+			final List<Person> persons = new ArrayList<Person>();
+			while (rs.next()) {
+				persons.add(new Person(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return persons;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+	
+	public final List<Person> getWitnessesById(int id) {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select idpersonofinterest,firstname,lastname, dateofbirth from personofinterest p, involved i "
+							+ "where i.role = 'Witness' and i.idCase = '"
+							+ id
+							+ "' and i.idperson = p.idpersonofinterest");
+
+			final List<Person> persons = new ArrayList<Person>();
+			while (rs.next()) {
+				persons.add(new Person(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return persons;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+
 	public final boolean identify(String username, String password) {
 		try {
 
@@ -453,7 +507,7 @@ public final class DatastoreInterface {
 							+ username + "'");
 			final String correctpassword;
 
-			if (!rs.next()) { //user not found
+			if (!rs.next()) { // user not found
 				rs.close();
 				stmt.close();
 				return false;
