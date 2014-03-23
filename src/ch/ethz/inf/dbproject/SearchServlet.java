@@ -87,6 +87,7 @@ public final class SearchServlet extends HttpServlet {
 				ctable.addBeanColumn("Start Date", "date");
 				ctable.addBeanColumn("End Date", "enddate");
 				ctable.addBeanColumn("Case ID", "idcase");
+				ctable.addBeanColumn("Case Title", "caseTitle");
 				ctable.addLinkColumn(""	/* The header. We will leave it empty */,
 						"View Case" 	/* What should be displayed in every row */,
 						"Case?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
@@ -109,6 +110,7 @@ public final class SearchServlet extends HttpServlet {
 				ctable.addBeanColumn("Start Date", "date");
 				ctable.addBeanColumn("End Date", "enddate");
 				ctable.addBeanColumn("Case ID", "idcase");
+				ctable.addBeanColumn("Case Title", "caseTitle");
 				ctable.addLinkColumn(""	/* The header. We will leave it empty */,
 						"View Case" 	/* What should be displayed in every row */,
 						"Case?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
