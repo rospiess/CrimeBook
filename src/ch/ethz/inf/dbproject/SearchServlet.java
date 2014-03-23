@@ -87,8 +87,17 @@ public final class SearchServlet extends HttpServlet {
 				ctable.addBeanColumn("Start Date", "date");
 				ctable.addBeanColumn("End Date", "enddate");
 				ctable.addBeanColumn("Case ID", "idcase");
+				ctable.addLinkColumn(""	/* The header. We will leave it empty */,
+						"View Case" 	/* What should be displayed in every row */,
+						"Case?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
+						"idcase");
+				ctable.addBeanColumn("Person ID", "idperson");
 				ctable.addBeanColumn("Convict First Name", "firstname");
-				ctable.addBeanColumn("Convict Last Name", "lastname");
+				ctable.addBeanColumn("Convict Last Name", "lastname");				 
+				ctable.addLinkColumn(""	/* The header. We will leave it empty */,
+						"View Person" 	/* What should be displayed in every row */,
+						"Person?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
+						"idperson");
 				ctable.addObjects(this.dbInterface.searchByCategory(name));
 				
 
@@ -100,8 +109,17 @@ public final class SearchServlet extends HttpServlet {
 				ctable.addBeanColumn("Start Date", "date");
 				ctable.addBeanColumn("End Date", "enddate");
 				ctable.addBeanColumn("Case ID", "idcase");
+				ctable.addLinkColumn(""	/* The header. We will leave it empty */,
+						"View Case" 	/* What should be displayed in every row */,
+						"Case?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
+						"idcase");
+				ctable.addBeanColumn("Person ID", "idperson");
 				ctable.addBeanColumn("Convict First Name", "firstname");
 				ctable.addBeanColumn("Convict Last Name", "lastname");
+				ctable.addLinkColumn(""	/* The header. We will leave it empty */,
+						"View Person" 	/* What should be displayed in every row */,
+						"Person?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
+						"idperson");
 				ctable.addObjects(this.dbInterface.searchByDate(request.getParameter("date")));
 			}			
 		}

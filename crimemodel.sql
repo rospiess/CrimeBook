@@ -131,6 +131,7 @@ CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`NoteCase` (
   `idCase` INT NOT NULL,
   `Nr` INT NOT NULL AUTO_INCREMENT,
   `text` LONGTEXT NULL,
+  `UserName` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`Nr`),
   CONSTRAINT `fk_Note_Cases1`
     FOREIGN KEY (`idCase`)
@@ -147,6 +148,7 @@ CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`NotePerson` (
   `idPersonOfInterest` INT NOT NULL,
   `Nr` INT NOT NULL AUTO_INCREMENT,
   `text` LONGTEXT NULL,
+  `UserName` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`Nr`),
   INDEX `fk_Note_copy1_PersonOfInterest1_idx` (`idPersonOfInterest` ASC),
   CONSTRAINT `fk_Note_copy1_PersonOfInterest1`

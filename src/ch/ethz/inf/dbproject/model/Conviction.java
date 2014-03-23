@@ -36,6 +36,11 @@ public class Conviction {
 	public int getIdcon() {
 		return idcon;
 	}
+	
+	public int getIdperson() {
+		return person.getIdperson();
+	}
+
 
 	public String getFirstname() {
 		return person.getFirstname();
@@ -60,7 +65,8 @@ public class Conviction {
 		this.enddate = rs.getDate("enddate");
 		this.type = rs.getString("type");
 		this.idcase = rs.getInt("idcase");
-		this.person = new Person(0,rs.getString("firstname"),rs.getString("lastname"),null);
+//		this.person = new Person(rs.getInt("idpersonofinterest"),rs.getString("firstname"),rs.getString("lastname"),null);
+		this.person = new Person(rs);
 	}
 
 
