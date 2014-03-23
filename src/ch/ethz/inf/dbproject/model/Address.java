@@ -25,7 +25,6 @@ public final class Address {
 	}
 	
 	public Address(final ResultSet rs) throws SQLException {
-		
 		this.city = rs.getString("city");
 		this.country = rs.getString("country");
 		this.street = rs.getString("street");
