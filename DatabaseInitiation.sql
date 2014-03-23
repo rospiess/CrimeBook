@@ -1,3 +1,5 @@
+USE crimedatabase;
+
 insert into user(username, password) values('Max Muster', '12345');
 insert into user(username, password) values('Test', '1');
 
