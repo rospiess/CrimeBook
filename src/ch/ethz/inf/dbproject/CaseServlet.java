@@ -84,7 +84,7 @@ public final class CaseServlet extends HttpServlet {
 																				 */
 			);
 
-			table.addBeanColumn("Case ID", "idcase");
+			//table.addBeanColumn("Case ID", "idcase");
 			table.addBeanColumn("Title", "title");
 			table.addBeanColumn("Case Description", "descr");
 			table.addBeanColumn("Date", "date");
@@ -118,7 +118,7 @@ public final class CaseServlet extends HttpServlet {
 			final BeanTableHelper<Person> ptable = new BeanTableHelper<Person>(
 					"person", "casesTable", Person.class);
 
-			ptable.addBeanColumn("Person ID", "idperson");
+			//ptable.addBeanColumn("Person ID", "idperson");
 			ptable.addBeanColumn("First Name", "firstname");
 			ptable.addBeanColumn("Last Name", "lastname");
 			ptable.addBeanColumn("Date of Birth", "bdate");
@@ -131,7 +131,7 @@ public final class CaseServlet extends HttpServlet {
 			final BeanTableHelper<Person> wtable = new BeanTableHelper<Person>(
 					"person", "casesTable", Person.class);
 
-			wtable.addBeanColumn("Person ID", "idperson");
+			//wtable.addBeanColumn("Person ID", "idperson");
 			wtable.addBeanColumn("First Name", "firstname");
 			wtable.addBeanColumn("Last Name", "lastname");
 			wtable.addBeanColumn("Date of Birth", "bdate");

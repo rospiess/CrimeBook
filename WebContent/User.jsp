@@ -7,7 +7,7 @@
 if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 	// User is logged in. Display the details:
 %>
-	<h2>Authentication successfull</h2> <hr/> 
+	Authentication successfull <hr/> 
 Welcome <%= session.getAttribute(UserServlet.SESSION_USER_DETAILS) %> <br> <br> <br> <br> <br> 
 	
 <form action="User" method="get">

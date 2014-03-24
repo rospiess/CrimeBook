@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import ch.ethz.inf.dbproject.model.Conviction;
 import ch.ethz.inf.dbproject.model.Comment;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
+import ch.ethz.inf.dbproject.model.Involved;
 import ch.ethz.inf.dbproject.model.Person;
 import ch.ethz.inf.dbproject.model.User;
 import ch.ethz.inf.dbproject.util.UserManagement;
@@ -53,6 +54,8 @@ public final class PersonServlet extends HttpServlet {
 			final Person aPerson = this.dbInterface.getPersonById(id);
 			final List<Comment> comlist = this.dbInterface.getCommentsById(id,"person");
 			final List<Conviction> conlist = this.dbInterface.getConvictionsById(id);
+			final List<Involved> invlist = this.dbInterface.getInvolvedByPersonId(id);
+			//final List<Involved> invlist = this.dbInterface.getInvolvedByPersonId(id);
 			final User loggedUser = UserManagement
 					.getCurrentlyLoggedInUser(session);
 
@@ -69,7 +72,7 @@ public final class PersonServlet extends HttpServlet {
 			// Add columns to the new table
 
 			
-			table.addBeanColumn("Person ID", "idperson");
+			//table.addBeanColumn("Person ID", "idperson");
 			table.addBeanColumn("First Name", "firstname");
 			table.addBeanColumn("Last Name", "lastname");
 			table.addBeanColumn("Date of Birth", "bdate");			
@@ -98,15 +101,32 @@ public final class PersonServlet extends HttpServlet {
 					"casesTable" /* The table html class property */,
 					Conviction.class 	/* The class of the objects (rows) that will be displayed */
 			);
-			contable.addBeanColumn("Conviction ID", "idcon");
+			contable.addBeanColumn("Case", "casetitle");
 			contable.addBeanColumn("Type", "type");
 			contable.addBeanColumn("Start Date", "date");
 			contable.addBeanColumn("End Date", "enddate");
-			contable.addBeanColumn("Case ID", "idcase");
+			contable.addLinkColumn("", "View Case", "Case?id=", "idcase");
 			
 			contable.addObjects(conlist);	
 
 			session.setAttribute("convictionTable", contable);
+			
+			
+			//Create Involved Table
+			final BeanTableHelper<Involved> invtable = new BeanTableHelper<Involved>(
+					"involved" 		/* The table html id property */,
+					"casesTable" /* The table html class property */,
+					Involved.class 	/* The class of the objects (rows) that will be displayed */
+			);
+			invtable.addBeanColumn("Case", "casetitle");
+			invtable.addBeanColumn("Role", "role");
+			invtable.addLinkColumn("", "View Case", "Case?id=", "idcase");
+
+			invtable.addObjects(invlist);	
+
+			session.setAttribute("involvedTable", invtable);
+			
+			
 			
 			final String comment = request.getParameter("comment");
 			final String action = request.getParameter("action");

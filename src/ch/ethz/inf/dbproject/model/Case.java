@@ -45,7 +45,17 @@ public final class Case {
 		this.title = rs.getString("title");
 		this.date = rs.getDate("date");
 		this.time = rs.getTime("time");
-		this.loc = new Address(rs);
+		
+		//Address information might not always be provided
+		Address addr;
+		try{
+			addr = new Address(rs);
+		}
+		catch(SQLException e){
+			addr = new Address("Unbekannt","???","???",0,0);
+		}
+		this.loc = addr;
+		
 		this.cat = new Category(rs.getString("catname"),null);
 		this.open = rs.getBoolean("open");
 	}

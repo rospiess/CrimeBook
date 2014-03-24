@@ -12,8 +12,7 @@ public class Conviction {
 	private final int idcon;
 	private final Date date;
 	private final Date enddate;
-	private final String type;
-	private final int idcase;
+	private final Case caze;
 	private final Person person;
 
 	public Date getDate() {
@@ -25,17 +24,26 @@ public class Conviction {
 	}
 
 	public String getType() {
-		return type;
+		return caze.getCat();
 	}
 	
-	public int getIdcase() {
-		return idcase;
+	public String getCasetitle() {
+		return caze.getTitle();
+	}
+	
+	public int getIdcase(){
+		return caze.getIdcase();
 	}
 
 	
 	public int getIdcon() {
 		return idcon;
 	}
+	
+	public int getIdperson() {
+		return person.getIdperson();
+	}
+
 
 	public String getFirstname() {
 		return person.getFirstname();
@@ -45,12 +53,11 @@ public class Conviction {
 		return person.getLastname();
 	}
 
-	public Conviction(final int idcon, final Date date, final Date enddate, final String type, final int idcase, final Person person) {
+	public Conviction(final int idcon, final Date date, final Date enddate, final String type, final Case caze, final Person person) {
 		this.idcon = idcon;
 		this.date = date;
 		this.enddate = enddate;
-		this.type = type;
-		this.idcase = idcase;
+		this.caze = caze;
 		this.person = person;
 	}
 	
@@ -58,9 +65,8 @@ public class Conviction {
 		this.idcon = rs.getInt("idconviction");
 		this.date = rs.getDate("begindate");
 		this.enddate = rs.getDate("enddate");
-		this.type = rs.getString("type");
-		this.idcase = rs.getInt("idcase");
-		this.person = new Person(0,rs.getString("firstname"),rs.getString("lastname"),null);
+		this.caze = new Case(rs);
+		this.person = new Person(rs);
 	}
 
 
