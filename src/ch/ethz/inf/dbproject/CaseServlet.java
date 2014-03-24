@@ -59,7 +59,7 @@ public final class CaseServlet extends HttpServlet {
 					"case");
 			final List<Person> plist = this.dbInterface.getSuspectsById(id);
 			final List<Person> wlist = this.dbInterface.getWitnessesById(id);
-			final List<Conviction> convlist = this.dbInterface.getConvictionsByCaseId(id);
+			final List<Conviction> convlist = this.dbInterface.getConvictionsById(id,"case");
 			final User loggedUser = UserManagement
 					.getCurrentlyLoggedInUser(session);
 
