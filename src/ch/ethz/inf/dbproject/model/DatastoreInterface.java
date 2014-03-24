@@ -121,43 +121,23 @@ public final class DatastoreInterface {
 
 	}
 
-	public final List<Conviction> getConvictionsById(final int id) {
+	public final List<Conviction> getConvictionsById(final int id, String type) {
 
 		try {
 
 			final Statement stmt = this.sqlConnection.createStatement();
-			final ResultSet rs = stmt
-					.executeQuery("Select * from conviction, personofinterest, cases where conviction.idpersonofinterest = "
+			final ResultSet rs;
+			if(type.equals("case"))
+			rs = stmt
+					.executeQuery("Select * from conviction co, personofinterest p, cases ca where co.idcase = "
 							+ id
-							+ " and personofinterest.idpersonofinterest = "
-							+ id
-							+ " and cases.idcase = conviction.idcase");
-			final List<Conviction> clist = new ArrayList<Conviction>();
-			while (rs.next()) {
-				clist.add(new Conviction(rs));
-			}
-
-			rs.close();
-			stmt.close();
-
-			return clist;
-
-		} catch (final SQLException ex) {
-			ex.printStackTrace();
-			return null;
-		}
-
-	}
-	
-		public final List<Conviction> getConvictionsByCaseId(final int id) {
-
-		try {
-
-			final Statement stmt = this.sqlConnection.createStatement();
-			final ResultSet rs = stmt
-					.executeQuery("Select * from conviction, personofinterest, cases where conviction.idconviction = "
-							+ id + " and conviction.idpersonofinterest = personofinterest.idpersonofinterest "
-							+ " and conviction.idcase = cases.idcase");
+							+ " and p.idpersonofinterest = co.idpersonofinterest"
+							+ " and ca.idcase = co.idcase");
+			else
+				rs = stmt
+				.executeQuery("Select * from conviction co, personofinterest p, cases ca where co.idpersonofinterest = "
+						+ id + " and co.idpersonofinterest = p.idpersonofinterest "
+						+ " and co.idcase = ca.idcase");
 			final List<Conviction> clist = new ArrayList<Conviction>();
 			while (rs.next()) {
 				clist.add(new Conviction(rs));
