@@ -3,15 +3,21 @@ CrimeBook
 
 Database Project 2014
 
+DONE
+-----------
+(needing code review)
+
+- Case detail view: Show all associated convictions with links to their detailed view.
+
+- (Distinction between association and conviction is not yet made) Person detail view: Show all associated convictions / open cases (with role) (implemented) with links to their detailed view.
+
 
 To-Do List
 -----------
 
 - Register new users.
 
-- Case detail view: Show all associated convictions with links to their detailed view.
-- Person detail view: Show all associated convictions / open cases (with role) (implemented) with links to their detailed view.
-
+- Add distinction between association to a case and conviction, manage transition opened/closed case and case reopening.
 
 When logged in:
   - Open new cases

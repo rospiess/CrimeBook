@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import ch.ethz.inf.dbproject.model.Comment;
+import ch.ethz.inf.dbproject.model.Conviction;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
 import ch.ethz.inf.dbproject.model.Case;
 import ch.ethz.inf.dbproject.model.Person;
@@ -58,6 +59,7 @@ public final class CaseServlet extends HttpServlet {
 					"case");
 			final List<Person> plist = this.dbInterface.getSuspectsById(id);
 			final List<Person> wlist = this.dbInterface.getWitnessesById(id);
+			final List<Conviction> convlist = this.dbInterface.getConvictionsByCaseId(id);
 			final User loggedUser = UserManagement
 					.getCurrentlyLoggedInUser(session);
 
@@ -139,6 +141,24 @@ public final class CaseServlet extends HttpServlet {
 
 			session.setAttribute("witnessTable", wtable);
 			
+			//
+			
+			
+			final BeanTableHelper<Conviction> convtable = new BeanTableHelper<Conviction>(
+					"conviction", "convictionTable", Conviction.class);
+
+			convtable.addBeanColumn("Conviction ID", "idcon");
+			convtable.addBeanColumn("Type", "type");
+			convtable.addBeanColumn("Begin Date", "date");
+			convtable.addBeanColumn("End Date", "enddate");
+			convtable.addBeanColumn("Convicted lastname", "lastname");
+			convtable.addLinkColumn("", "View conviction", "Case?id=", "idcase");
+
+			convtable.addObjects(convlist);
+
+			session.setAttribute("convictionTable", convtable);
+			
+			//
 
 			final String comment = request.getParameter("comment");
 			final String action = request.getParameter("action");

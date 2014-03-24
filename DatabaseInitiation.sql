@@ -34,9 +34,10 @@ Insert into cases(Title,Description,open,date,time,CatName,idAddress) values ('B
 
 Insert into notecase(idCase,text,username) values ('2', 'Opfer war bekannt dafür, Witze über die Programmiersprache Eiffel zu reissen.','Max Muster');
 
-Insert into conviction(type,beginDate,endDate,idCase,idPersonOfInterest) values ('Diebstahl','2010-11-2','2010-12-2',1,3);
-Insert into conviction(type,beginDate,endDate,idCase,idPersonOfInterest) values ('Betrug','2000-3-5','2000-9-13',6,5);
-Insert into conviction(type,beginDate,endDate,idCase,idPersonOfInterest) values ('Freiheitsberaubung','2008-7-5','2013-4-28',5,4);
+Insert into conviction(type,beginDate,endDate,idCase,idPersonOfInterest) values ('Theft','2010-11-2','2010-12-2',1,3);
+Insert into conviction(type,beginDate,endDate,idCase,idPersonOfInterest) values ('Fraud','2000-3-5','2000-9-13',6,5);
+Insert into conviction(type,beginDate,endDate,idCase,idPersonOfInterest) values ('Assault','2008-7-5','2013-4-28',5,4);
+Insert into conviction(type,beginDate,endDate,idCase,idPersonOfInterest) values ('Murder','2006-9-3','2012-3-22',1,1);
 
 
 

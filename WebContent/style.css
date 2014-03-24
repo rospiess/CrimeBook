@@ -152,3 +152,46 @@ table.personsTable th {
 	background: #66CCFF;
 	text-align: right;	
 }
+
+
+//
+table.convictionTable {
+	width: 100%;	
+	border-bottom: 2px solid black;
+	border-right: 2px solid black;
+	border-left: 1px solid black;
+}
+
+table.convictionTable td, table.convictionTable th {
+	border-left: 1px solid black;
+	border-top: 1px solid black;
+	text-align: center;
+}
+
+table.convictionTable th {
+	border-top: 2px solid black;
+	border-bottom: 1px solid black;
+	background: #66CCFF;	
+}
+
+table.convictionTable {
+	width: 300px;	
+	border-bottom: 2px solid black;
+	border-right: 1px solid black;
+	border-top: 1px solid black;
+}
+
+table.convictionTable td, table.convictionTable th {
+	padding: 5px 5px 5px 5px;
+	border-right: 1px solid black;
+	border-top: 1px solid black;
+	text-align: center;
+}
+
+table.convictionTable th {
+	border-top: 1px solid black;
+	border-left: 2px solid black;
+	border-right: 1px solid black;
+	background: #66CCFF;
+	text-align: right;	
+}

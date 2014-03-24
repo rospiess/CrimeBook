@@ -149,6 +149,32 @@ public final class DatastoreInterface {
 
 	}
 	
+		public final List<Conviction> getConvictionsByCaseId(final int id) {
+
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select * from conviction, personofinterest where conviction.idconviction = "
+							+ id + " and conviction.idpersonofinterest = personofinterest.idpersonofinterest");
+			final List<Conviction> clist = new ArrayList<Conviction>();
+			while (rs.next()) {
+				clist.add(new Conviction(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return clist;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+
+	}
+
+	
 	public final List<Involved> getInvolvedByPersonId(final int pid) {		
 		// Returns list of involvement of a person by their id. 
 		// The Involved class contains information about the case and the person.

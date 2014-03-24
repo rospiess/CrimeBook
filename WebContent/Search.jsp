@@ -19,8 +19,21 @@
 <form method="get" action="Search">
 <div>
 	<input type="hidden" name="filter" value="category" />
-	Search By Type of Conviction:
-	<input type="text" name="category" />
+	<label>Search By Type of Conviction:</label>
+	<select name="category">
+		<optgroup label="Personal Crimes">
+			<option value = "Assault">Assault</option>
+			<option value = "Murder">Murder</option>
+			<option value = "Kidnapping">Murder</option>
+			<option value = "%">Other personal crimes</option>
+		</optgroup>
+		<optgroup label="Property Crimes">
+			<option value = "Theft">Theft</option>
+			<option value = "Fraud">Fraud</option>
+			<option value = "Burglary">Burglary</option>
+			<option value = "%">Other property crimes</option>
+		</optgroup>
+	</select>
 	<input type="submit" value="Search" title="Search by Type of Conviction" />
 </div>
 </form>
