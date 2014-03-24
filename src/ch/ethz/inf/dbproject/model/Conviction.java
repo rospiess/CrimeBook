@@ -28,7 +28,7 @@ public class Conviction {
 		return type;
 	}
 	
-	public String getCaseTitle() {
+	public String getCasetitle() {
 		return caze.getTitle();
 	}
 	

@@ -45,7 +45,7 @@ public final class PersonsServlet extends HttpServlet {
 		);
 
 
-		table.addBeanColumn("Person ID", "idperson");
+		//table.addBeanColumn("Person ID", "idperson");
 		table.addBeanColumn("First Name", "firstname");
 		table.addBeanColumn("Last Name", "lastname");
 		table.addBeanColumn("Date of Birth", "bdate");

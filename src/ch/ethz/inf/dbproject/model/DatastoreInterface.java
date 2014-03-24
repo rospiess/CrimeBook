@@ -352,10 +352,11 @@ public final class DatastoreInterface {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
-					.executeQuery("Select * from Conviction,personofinterest where type "
+					.executeQuery("Select * from Cases cas, Conviction c,personofinterest where type "
 							+ "like '%"
 							+ category
-							+ "%' and personofinterest.idpersonofinterest = conviction.idpersonofinterest");
+							+ "%' and personofinterest.idpersonofinterest = c.idpersonofinterest"
+							+ " and cas.idcase = c.idcase");
 
 			final List<Conviction> conv = new ArrayList<Conviction>();
 			while (rs.next()) {
@@ -378,11 +379,12 @@ public final class DatastoreInterface {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
-					.executeQuery("Select * from Conviction c,personofinterest p where (beginDate = '"
+					.executeQuery("Select * from Cases cas, Conviction c,personofinterest p where (beginDate = '"
 							+ date
 							+ "' or endDate = '"
 							+ date
-							+ "') and p.idpersonofinterest = c.idpersonofinterest");
+							+ "') and p.idpersonofinterest = c.idpersonofinterest"
+							+ " and cas.idcase = c.idcase");
 
 			final List<Conviction> conv = new ArrayList<Conviction>();
 			while (rs.next()) {

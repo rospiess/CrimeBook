@@ -18,7 +18,7 @@ public class Involved {
 		return idcase;
 	}
 
-	public String getCaseTitle(){
+	public String getCasetitle(){
 		return caze.getTitle();
 	}
 

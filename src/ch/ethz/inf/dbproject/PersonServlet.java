@@ -55,6 +55,7 @@ public final class PersonServlet extends HttpServlet {
 			final List<Comment> comlist = this.dbInterface.getCommentsById(id,"person");
 			final List<Conviction> conlist = this.dbInterface.getConvictionsById(id);
 			final List<Involved> invlist = this.dbInterface.getInvolvedByPersonId(id);
+			//final List<Involved> invlist = this.dbInterface.getInvolvedByPersonId(id);
 			final User loggedUser = UserManagement
 					.getCurrentlyLoggedInUser(session);
 
@@ -71,7 +72,7 @@ public final class PersonServlet extends HttpServlet {
 			// Add columns to the new table
 
 			
-			table.addBeanColumn("Person ID", "idperson");
+			//table.addBeanColumn("Person ID", "idperson");
 			table.addBeanColumn("First Name", "firstname");
 			table.addBeanColumn("Last Name", "lastname");
 			table.addBeanColumn("Date of Birth", "bdate");			
@@ -100,7 +101,7 @@ public final class PersonServlet extends HttpServlet {
 					"casesTable" /* The table html class property */,
 					Conviction.class 	/* The class of the objects (rows) that will be displayed */
 			);
-			contable.addBeanColumn("Case", "caseTitle");
+			contable.addBeanColumn("Case", "casetitle");
 			contable.addBeanColumn("Type", "type");
 			contable.addBeanColumn("Start Date", "date");
 			contable.addBeanColumn("End Date", "enddate");
@@ -117,7 +118,7 @@ public final class PersonServlet extends HttpServlet {
 					"casesTable" /* The table html class property */,
 					Involved.class 	/* The class of the objects (rows) that will be displayed */
 			);
-			invtable.addBeanColumn("Case", "caseTitle");
+			invtable.addBeanColumn("Case", "casetitle");
 			invtable.addBeanColumn("Role", "role");
 			invtable.addLinkColumn("", "View Case", "Case?id=", "idcase");
 
