@@ -53,7 +53,7 @@ public final class PersonServlet extends HttpServlet {
 			final Integer id = Integer.parseInt(idString);
 			final Person aPerson = this.dbInterface.getPersonById(id);
 			final List<Comment> comlist = this.dbInterface.getCommentsById(id,"person");
-			final List<Conviction> conlist = this.dbInterface.getConvictionsById(id);
+			final List<Conviction> conlist = this.dbInterface.getConvictionsById(id,"person");
 			final List<Involved> invlist = this.dbInterface.getInvolvedByPersonId(id);
 			//final List<Involved> invlist = this.dbInterface.getInvolvedByPersonId(id);
 			final User loggedUser = UserManagement
