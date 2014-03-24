@@ -24,11 +24,13 @@
 		<optgroup label="Personal Crimes">
 			<option value = "Assault">Assault</option>
 			<option value = "Murder">Murder</option>
+			<option value = "Kidnapping">Murder</option>
 			<option value = "%">Other personal crimes</option>
 		</optgroup>
 		<optgroup label="Property Crimes">
 			<option value = "Theft">Theft</option>
 			<option value = "Fraud">Fraud</option>
+			<option value = "Burglary">Burglary</option>
 			<option value = "%">Other property crimes</option>
 		</optgroup>
 	</select>
