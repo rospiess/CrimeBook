@@ -72,6 +72,7 @@ td#masterContentPlaceholder {
 	padding: 10px;
 }
 
+/*
 table.casesTable {
 	width: 100%;	
 	border-bottom: 2px solid black;
@@ -89,17 +90,18 @@ table.casesTable th {
 	border-top: 2px solid black;
 	border-bottom: 1px solid black;
 	background: #66CCFF;	
-}
+}*/
 
 table.casesTable {
-	width: 300px;	
+	width: 90%;//300px;	
+	border: 1px solid black;
 	border-bottom: 2px solid black;
-	border-right: 1px solid black;
-	border-top: 1px solid black;
+	border-left: 1px solid black;
 }
 
 table.casesTable td, table.casesTable th {
 	padding: 5px 5px 5px 5px;
+	border-left: 1px solid black;
 	border-right: 1px solid black;
 	border-top: 1px solid black;
 	text-align: center;
@@ -112,6 +114,7 @@ table.casesTable th {
 	background: #66CCFF;
 	text-align: right;	
 }
+/*
 table.personsTable {
 	width: 100%;	
 	border-bottom: 2px solid black;
@@ -130,11 +133,13 @@ table.personsTable th {
 	border-bottom: 1px solid black;
 	background: #66CCFF;	
 }
+*/
 
 table.personsTable {
-	width: 300px;	
+	width: 400px;	
 	border-bottom: 2px solid black;
 	border-right: 1px solid black;
+	border-left: 1px solid black;
 	border-top: 1px solid black;
 }
 
@@ -146,15 +151,18 @@ table.personsTable td, table.casesTable th {
 }
 
 table.personsTable th {
+	padding: 10px 10px 10px 10px;
 	border-top: 1px solid black;
 	border-left: 2px solid black;
 	border-right: 1px solid black;
+	border-bottom: 2px solid black;
 	background: #66CCFF;
 	text-align: right;	
 }
 
 
 //
+/*
 table.convictionTable {
 	width: 100%;	
 	border-bottom: 2px solid black;
@@ -195,3 +203,4 @@ table.convictionTable th {
 	background: #66CCFF;
 	text-align: right;	
 }
+*/

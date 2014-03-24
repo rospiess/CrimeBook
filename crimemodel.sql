@@ -80,7 +80,6 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`Conviction` (
   `idConviction` INT NOT NULL AUTO_INCREMENT,
-  `type` VARCHAR(45) NULL,
   `beginDate` DATE NULL,
   `endDate` DATE NULL,
   `idCase` INT NOT NULL,
@@ -125,6 +124,16 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `CrimeDatabase`.`User`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`User` (
+  `UserName` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(60) NOT NULL,
+  PRIMARY KEY (`UserName`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `CrimeDatabase`.`NoteCase`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`NoteCase` (
@@ -133,9 +142,15 @@ CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`NoteCase` (
   `text` LONGTEXT NULL,
   `UserName` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`Nr`),
+  INDEX `fk_NoteCase_User1_idx` (`UserName` ASC),
   CONSTRAINT `fk_Note_Cases1`
     FOREIGN KEY (`idCase`)
     REFERENCES `CrimeDatabase`.`Cases` (`idCase`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_NoteCase_User1`
+    FOREIGN KEY (`UserName`)
+    REFERENCES `CrimeDatabase`.`User` (`UserName`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -151,21 +166,17 @@ CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`NotePerson` (
   `UserName` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`Nr`),
   INDEX `fk_Note_copy1_PersonOfInterest1_idx` (`idPersonOfInterest` ASC),
+  INDEX `fk_NotePerson_User1_idx` (`UserName` ASC),
   CONSTRAINT `fk_Note_copy1_PersonOfInterest1`
     FOREIGN KEY (`idPersonOfInterest`)
     REFERENCES `CrimeDatabase`.`PersonOfInterest` (`idPersonOfInterest`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_NotePerson_User1`
+    FOREIGN KEY (`UserName`)
+    REFERENCES `CrimeDatabase`.`User` (`UserName`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `CrimeDatabase`.`User`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`User` (
-  `UserName` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(60) NOT NULL,
-  PRIMARY KEY (`UserName`))
 ENGINE = InnoDB;
 
 

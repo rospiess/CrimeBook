@@ -68,20 +68,9 @@ public final class CaseServlet extends HttpServlet {
 			 *******************************************************/
 			final BeanTableHelper<Case> table = new BeanTableHelper<Case>(
 					"case" /* The table html id property */,
-					"casesTable" /* The table html class property */, Case.class /*
-																				 * The
-																				 * class
-																				 * of
-																				 * the
-																				 * objects
-																				 * (
-																				 * rows
-																				 * )
-																				 * that
-																				 * will
-																				 * be
-																				 * displayed
-																				 */
+					"casesTable" /* The table html class property */, 
+					Case.class /*The class of the objects (rows) that will be displayed*/
+
 			);
 
 			//table.addBeanColumn("Case ID", "idcase");
