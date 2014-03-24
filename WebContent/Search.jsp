@@ -24,12 +24,12 @@
 		<optgroup label="Personal Crimes">
 			<option value = "Assault">Assault</option>
 			<option value = "Murder">Murder</option>
-			<option value = "otherPersCrime">Other personal crimes</option>
+			<option value = "%">Other personal crimes</option>
 		</optgroup>
 		<optgroup label="Property Crimes">
 			<option value = "Theft">Theft</option>
 			<option value = "Fraud">Fraud</option>
-			<option value = "otherPropCrime">Other property crimes</option>
+			<option value = "%">Other property crimes</option>
 		</optgroup>
 	</select>
 	<input type="submit" value="Search" title="Search by Type of Conviction" />
