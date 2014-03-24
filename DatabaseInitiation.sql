@@ -29,7 +29,7 @@ Insert into cases(Title,Description,open,date,time,CatName,idAddress) values ('E
 Insert into cases(Title,Description,open,date,time,CatName,idAddress) values ('Mord an der ETH', 'Brutal mit Schreibmaschine erschlagen', true, '2010-10-31', '23:55:00', 'Murder', 1);
 Insert into cases(Title,Description,open,date,time,CatName,idAddress) values ('Schwere Körperverletzung', 'Älterer Mann von Auto mit französischem Kennzeichen angefahren', true, '2010-11-01', '09:32:13', 'Assault', 1);
 Insert into cases(Title,Description,open,date,time,CatName,idAddress) values ('Einbruch ins CAB', 'Entwendet wurden: 9 Flaschen Bier, 2 Tiefkühlpizzas und eine nicht funktionierende Kaffeemaschine', true, '2014-3-20', '00:48:19', 'Burglary', 1);
-Insert into cases(Title,Description,open,date,time,CatName,idAddress) values ('Entführung des ETH Maskottchens', 'Opfer wurde mit Elektroschocker ausser Gefecht gestezt wurde und anschliessend in schwarzen Van verfrachtet', false, '2008-2-29', '21:34:51',  'Kidnapping', 1);
+Insert into cases(Title,Description,open,date,time,CatName,idAddress) values ('Entführung des ETH Maskottchens', 'Opfer wurde mit Elektroschocker ausser Gefecht gestetzt und anschliessend in schwarzen Van verfrachtet', false, '2008-2-29', '21:34:51',  'Kidnapping', 1);
 Insert into cases(Title,Description,open,date,time,CatName,idAddress) values ('Bösartige Turingmaschine', 'Transferierte das Budget des VIS auf ausländisches Konto', false, '2000-1-21', '15:12:34', 'Fraud', 1);
 
 Insert into notecase(idCase,text,username) values ('2', 'Opfer war bekannt dafür, Witze über die Programmiersprache Eiffel zu reissen.','Max Muster');

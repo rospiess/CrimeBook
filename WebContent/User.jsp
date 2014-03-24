@@ -7,7 +7,7 @@
 if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 	// User is logged in. Display the details:
 %>
-	Authentication successfull <hr/> 
+	<h3> Authentication successfull </h3><hr/> 
 Welcome <%= session.getAttribute(UserServlet.SESSION_USER_DETAILS) %> <br> <br> <br> <br> <br> 
 	
 <form action="User" method="get">
@@ -27,9 +27,10 @@ Welcome <%= session.getAttribute(UserServlet.SESSION_USER_DETAILS) %> <br> <br> 
 //TODO: Add possibility to create new case (requires a form) 
 	
 } else {
-	%> <%=session.getAttribute("FailedLogin")
 	%> 
-
+<h3>Login</h3><hr/>
+<%=session.getAttribute("FailedLogin")
+	%> 
 	<form action="User" method="get">
 	<input type="hidden" name="action" value="login" />
 	<table>
@@ -48,7 +49,32 @@ Welcome <%= session.getAttribute(UserServlet.SESSION_USER_DETAILS) %> <br> <br> 
 		</tr>
 	</table>
 	</form>
-
+	<br> <br> <br>
+	<h3>Registration</h3><hr/>
+	<%=session.getAttribute("Registration")
+	%> 
+	<form action="User" method="get">
+	<input type="hidden" name="action" value="register" />
+	<table>
+		<tr>
+			<th align="left">Username</th>
+			<td><input type="text" name="regusername" value="" /></td>
+		</tr>
+		<tr>
+			<th align="left">Password</th>
+			<td><input type="password" name="regpassword" value="" /></td>
+		</tr>
+		<tr>
+			<th>Confirm Password</th>
+			<td><input type="password" name="regpassword2" value="" /></td>
+		</tr>
+		<tr>
+			<th colspan="2">
+				<input type="submit" value="Submit" />
+			</th>
+		</tr>
+	</table>
+	</form>
 <%
 }
 %>

@@ -43,6 +43,7 @@ public final class UserServlet extends HttpServlet {
 				.getCurrentlyLoggedInUser(session);
 
 		session.setAttribute("FailedLogin", "");
+		session.setAttribute("Registration", "");
 
 		if (loggedUser == null) {
 			// Not logged in!
@@ -63,12 +64,8 @@ public final class UserServlet extends HttpServlet {
 			// passwords.
 			// However for this project, security is not a requirement.
 			final String password = request.getParameter("password");
-			if (dbInterface.identify(username,password)) {
+			if (password.equals(dbInterface.getPassword(username))) {
 				User u = new User(1, username, password);
-//				final BeanTableHelper<User> userDetails = new BeanTableHelper<User>(
-//						"userDetails", "casesTable", User.class);
-//				userDetails.addBeanColumn("Username", "username");
-//				userDetails.addObject(u);
 				session.setAttribute("FailedLogin", "");
 				session.setAttribute(SESSION_USER_LOGGED_IN, true);
 				session.setAttribute(SESSION_USER_DETAILS, username);
@@ -83,6 +80,24 @@ public final class UserServlet extends HttpServlet {
 			session.setAttribute(SESSION_USER_LOGGED_IN, false);
 			session.setAttribute(SESSION_USER_DETAILS, null);
 			session.setAttribute(UserManagement.SESSION_USER, null);
+		}
+		else if (action != null && action.trim().equals("register")
+				&& loggedUser == null) {
+			final String username = request.getParameter("regusername");
+			final String password = request.getParameter("regpassword");
+			final String confirmpassword = request.getParameter("regpassword2");
+			if(password.equals(""))
+				session.setAttribute("Registration", "Please enter a password");
+			else if(dbInterface.getNameIsTaken(username))
+				session.setAttribute("Registration", "Username "+username +" already in use");
+			else if(!password.equals(confirmpassword))
+				session.setAttribute("Registration", "Passwords have to agree");			
+			else
+			{
+				dbInterface.insertUser(username, password);
+				session.setAttribute("Registration", "Registration of "+ username +" was successfull");
+			}
+			
 		}
 
 		// Finally, proceed to the User.jsp page which will renden the profile

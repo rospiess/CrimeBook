@@ -140,7 +140,8 @@ public final class CaseServlet extends HttpServlet {
 			convtable.addBeanColumn("Type", "type");
 			convtable.addBeanColumn("Begin Date", "date");
 			convtable.addBeanColumn("End Date", "enddate");
-			convtable.addBeanColumn("Convicted lastname", "lastname");
+			convtable.addBeanColumn("Convicted First Name", "firstname");
+			convtable.addBeanColumn("Convicted Last Name", "lastname");
 			convtable.addLinkColumn("", "View Person", "Person?id=", "idperson");
 
 			convtable.addObjects(convlist);

@@ -508,7 +508,7 @@ public final class DatastoreInterface {
 		}
 	}
 
-	public final boolean identify(String username, String password) {
+	public final String getPassword(String username) {
 		try {
 
 			final Statement stmt = this.sqlConnection.createStatement();
@@ -517,21 +517,48 @@ public final class DatastoreInterface {
 							+ username + "'");
 			final String correctpassword;
 
-			if (!rs.next()) { // user not found
-				rs.close();
-				stmt.close();
-				return false;
-			} else
+			if (!rs.next()) correctpassword = null;
+			else
 				correctpassword = rs.getString("password");
-
 			rs.close();
 			stmt.close();
-			return password.equals(correctpassword);
+			return correctpassword;
 		} catch (final SQLException ex) {
 			ex.printStackTrace();
-			return false;
+			return null;
 		}
 	}
+	
+	public void insertUser(String username, String password) {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			stmt.execute("Insert into user (username, password) values ('"+ username+ "', '" + password + "')");
+			stmt.close();
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+
+		}
+	}
+	
+	public final boolean getNameIsTaken(String username) {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select * from user u where u.username = '"
+							+ username + "'");
+			boolean result = rs.next();
+			stmt.close();
+			rs.close();
+			return result;
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return true;
+
+		}
+	}
+	
 
 	
 }
