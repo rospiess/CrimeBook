@@ -121,16 +121,23 @@ public final class DatastoreInterface {
 
 	}
 
-	public final List<Conviction> getConvictionsById(final int id) {
+	public final List<Conviction> getConvictionsById(final int id, String type) {
 
 		try {
 
 			final Statement stmt = this.sqlConnection.createStatement();
-			final ResultSet rs = stmt
-					.executeQuery("Select * from conviction, personofinterest, cases where conviction.idpersonofinterest = "
+			final ResultSet rs;
+			if(type.equals("case"))
+			rs = stmt
+					.executeQuery("Select * from conviction co, personofinterest p, cases ca where co.idcase = "
 							+ id
-							+ " and personofinterest.idpersonofinterest = "
-							+ id + " and cases.idcase = conviction.idcase");
+							+ " and p.idpersonofinterest = co.idpersonofinterest"
+							+ " and ca.idcase = co.idcase");
+			else
+				rs = stmt
+				.executeQuery("Select * from conviction co, personofinterest p, cases ca where co.idpersonofinterest = "
+						+ id + " and co.idpersonofinterest = p.idpersonofinterest "
+						+ " and co.idcase = ca.idcase");
 			final List<Conviction> clist = new ArrayList<Conviction>();
 			while (rs.next()) {
 				clist.add(new Conviction(rs));
@@ -148,11 +155,11 @@ public final class DatastoreInterface {
 
 	}
 
-	public final List<Involved> getInvolvedByPersonId(final int pid) {
-		// Returns list of involvement of a person by their id.
-		// The Involved class contains information about the case and the
-		// person.
-
+	
+	public final List<Involved> getInvolvedByPersonId(final int pid) {		
+		// Returns list of involvement of a person by their id. 
+		// The Involved class contains information about the case and the person.
+		
 		try {
 
 			final Statement stmt = this.sqlConnection.createStatement();
@@ -161,7 +168,8 @@ public final class DatastoreInterface {
 							+ " where involved.idperson = "
 							+ pid
 							+ " and personofinterest.idpersonofinterest = "
-							+ pid + " and cases.idCase = involved.idcase");
+							+ pid
+							+ " and cases.idCase = involved.idcase");
 			final List<Involved> invlist = new ArrayList<Involved>();
 			while (rs.next()) {
 				invlist.add(new Involved(rs));
@@ -351,11 +359,11 @@ public final class DatastoreInterface {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
-					.executeQuery("Select * from Conviction c,personofinterest p, cases ca where c.type "
+					.executeQuery("Select * from Cases cas, Conviction c,personofinterest where cas.catname "
 							+ "like '%"
 							+ category
-							+ "%' and p.idpersonofinterest = c.idpersonofinterest"
-							+ " and ca.idcase = c.idcase");
+							+ "%' and personofinterest.idpersonofinterest = c.idpersonofinterest"
+							+ " and cas.idcase = c.idcase");
 
 			final List<Conviction> conv = new ArrayList<Conviction>();
 			while (rs.next()) {
@@ -378,12 +386,12 @@ public final class DatastoreInterface {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
-					.executeQuery("Select * from Conviction c,personofinterest p, cases ca where (beginDate = '"
+					.executeQuery("Select * from Cases cas, Conviction c,personofinterest p where (beginDate = '"
 							+ date
 							+ "' or endDate = '"
 							+ date
 							+ "') and p.idpersonofinterest = c.idpersonofinterest"
-							+ " and ca.idcase = c.idcase");
+							+ " and cas.idcase = c.idcase");
 
 			final List<Conviction> conv = new ArrayList<Conviction>();
 			while (rs.next()) {
@@ -473,7 +481,7 @@ public final class DatastoreInterface {
 			return null;
 		}
 	}
-
+	
 	public final List<Person> getWitnessesById(int id) {
 		try {
 
@@ -525,4 +533,5 @@ public final class DatastoreInterface {
 		}
 	}
 
+	
 }

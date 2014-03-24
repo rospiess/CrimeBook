@@ -47,7 +47,7 @@ public final class CasesServlet extends HttpServlet {
 		);
 
 
-		table.addBeanColumn("Case ID", "idcase");
+		//table.addBeanColumn("Case ID", "idcase");
 		table.addBeanColumn("Title", "title");
 		table.addBeanColumn("Case Description", "descr");
 		table.addBeanColumn("Date", "date");

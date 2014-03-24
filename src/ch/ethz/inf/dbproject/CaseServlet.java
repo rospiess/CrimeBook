@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import ch.ethz.inf.dbproject.model.Comment;
+import ch.ethz.inf.dbproject.model.Conviction;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
 import ch.ethz.inf.dbproject.model.Case;
 import ch.ethz.inf.dbproject.model.Person;
@@ -58,6 +59,7 @@ public final class CaseServlet extends HttpServlet {
 					"case");
 			final List<Person> plist = this.dbInterface.getSuspectsById(id);
 			final List<Person> wlist = this.dbInterface.getWitnessesById(id);
+			final List<Conviction> convlist = this.dbInterface.getConvictionsById(id,"case");
 			final User loggedUser = UserManagement
 					.getCurrentlyLoggedInUser(session);
 
@@ -66,23 +68,12 @@ public final class CaseServlet extends HttpServlet {
 			 *******************************************************/
 			final BeanTableHelper<Case> table = new BeanTableHelper<Case>(
 					"case" /* The table html id property */,
-					"casesTable" /* The table html class property */, Case.class /*
-																				 * The
-																				 * class
-																				 * of
-																				 * the
-																				 * objects
-																				 * (
-																				 * rows
-																				 * )
-																				 * that
-																				 * will
-																				 * be
-																				 * displayed
-																				 */
+					"casesTable" /* The table html class property */, 
+					Case.class /*The class of the objects (rows) that will be displayed*/
+
 			);
 
-			table.addBeanColumn("Case ID", "idcase");
+			//table.addBeanColumn("Case ID", "idcase");
 			table.addBeanColumn("Title", "title");
 			table.addBeanColumn("Case Description", "descr");
 			table.addBeanColumn("Date", "date");
@@ -116,7 +107,7 @@ public final class CaseServlet extends HttpServlet {
 			final BeanTableHelper<Person> ptable = new BeanTableHelper<Person>(
 					"person", "casesTable", Person.class);
 
-			ptable.addBeanColumn("Person ID", "idperson");
+			//ptable.addBeanColumn("Person ID", "idperson");
 			ptable.addBeanColumn("First Name", "firstname");
 			ptable.addBeanColumn("Last Name", "lastname");
 			ptable.addBeanColumn("Date of Birth", "bdate");
@@ -129,7 +120,7 @@ public final class CaseServlet extends HttpServlet {
 			final BeanTableHelper<Person> wtable = new BeanTableHelper<Person>(
 					"person", "casesTable", Person.class);
 
-			wtable.addBeanColumn("Person ID", "idperson");
+			//wtable.addBeanColumn("Person ID", "idperson");
 			wtable.addBeanColumn("First Name", "firstname");
 			wtable.addBeanColumn("Last Name", "lastname");
 			wtable.addBeanColumn("Date of Birth", "bdate");
@@ -139,6 +130,24 @@ public final class CaseServlet extends HttpServlet {
 
 			session.setAttribute("witnessTable", wtable);
 			
+			//
+			
+			
+			final BeanTableHelper<Conviction> convtable = new BeanTableHelper<Conviction>(
+					"conviction", "casesTable", Conviction.class);
+
+//			convtable.addBeanColumn("Conviction ID", "idcon");
+			convtable.addBeanColumn("Type", "type");
+			convtable.addBeanColumn("Begin Date", "date");
+			convtable.addBeanColumn("End Date", "enddate");
+			convtable.addBeanColumn("Convicted lastname", "lastname");
+			convtable.addLinkColumn("", "View Person", "Person?id=", "idperson");
+
+			convtable.addObjects(convlist);
+
+			session.setAttribute("convictionTable", convtable);
+			
+			//
 
 			final String comment = request.getParameter("comment");
 			final String action = request.getParameter("action");

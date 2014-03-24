@@ -38,5 +38,8 @@ if (user != null) {
 <h1>Witnesses</h1>
 <%=session.getAttribute("witnessTable")
 %>
+<h1>Convictions</h1>
+<%=session.getAttribute("convictionTable")
+%>
 
 <%@ include file="Footer.jsp"%>
