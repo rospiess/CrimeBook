@@ -134,14 +134,14 @@ public final class CaseServlet extends HttpServlet {
 			
 			
 			final BeanTableHelper<Conviction> convtable = new BeanTableHelper<Conviction>(
-					"conviction", "convictionTable", Conviction.class);
+					"conviction", "casesTable", Conviction.class);
 
-			convtable.addBeanColumn("Conviction ID", "idcon");
+//			convtable.addBeanColumn("Conviction ID", "idcon");
 			convtable.addBeanColumn("Type", "type");
 			convtable.addBeanColumn("Begin Date", "date");
 			convtable.addBeanColumn("End Date", "enddate");
 			convtable.addBeanColumn("Convicted lastname", "lastname");
-			convtable.addLinkColumn("", "View conviction", "Case?id=", "idcase");
+			convtable.addLinkColumn("", "View Person", "Person?id=", "idperson");
 
 			convtable.addObjects(convlist);
 
