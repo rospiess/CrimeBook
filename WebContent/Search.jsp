@@ -24,7 +24,7 @@
 		<optgroup label="Personal Crimes">
 			<option value = "Assault">Assault</option>
 			<option value = "Murder">Murder</option>
-			<option value = "Kidnapping">Murder</option>
+			<option value = "Kidnapping">Kidnapping</option>
 			<option value = "%">Other personal crimes</option>
 		</optgroup>
 		<optgroup label="Property Crimes">
