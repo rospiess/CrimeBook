@@ -28,9 +28,9 @@ Welcome <%= session.getAttribute(UserServlet.SESSION_USER_DETAILS) %> <br> <br> 
 	
 } else {
 	%> 
-<h3>Login</h3><hr/>
+<h3>Login</h3><hr/><font color="#FF0000">
 <%=session.getAttribute("FailedLogin")
-	%> 
+	%> </font>
 	<form action="User" method="get">
 	<input type="hidden" name="action" value="login" />
 	<table>
@@ -50,9 +50,9 @@ Welcome <%= session.getAttribute(UserServlet.SESSION_USER_DETAILS) %> <br> <br> 
 	</table>
 	</form>
 	<br> <br> <br>
-	<h3>Registration</h3><hr/>
+	<h3>Registration</h3><hr/><font color="#FF0000">
 	<%=session.getAttribute("Registration")
-	%> 
+	%> </font>
 	<form action="User" method="get">
 	<input type="hidden" name="action" value="register" />
 	<table>

@@ -1,7 +1,7 @@
 package ch.ethz.inf.dbproject.model;
 
 import java.sql.Connection;
-import java.util.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -187,6 +187,21 @@ public final class DatastoreInterface {
 
 	}
 
+	
+	public final void setCaseOpen(int id, boolean open) {
+
+		try {
+			PreparedStatement s = sqlConnection.prepareStatement("Update Cases set open = ? where idcase = " + id);
+			s.setString(1,open ? "1": "0");
+			s.execute();
+			s.close();
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+		}
+
+	}
+	
 	public final List<Case> getAllCases() {
 
 		try {

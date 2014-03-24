@@ -47,12 +47,11 @@ public final class CaseServlet extends HttpServlet {
 
 		String idString = request.getParameter("id");
 		if (idString == null) {
-			idString = (String) session.getAttribute("Last Case");
+			idString = ""+(((Case)session.getAttribute("CurrentCase")).getIdcase());
 		}
 
 		try {
 
-			session.setAttribute("Last Case", idString);
 			final Integer id = Integer.parseInt(idString);
 			final Case aCase = this.dbInterface.getCaseById(id);
 			final List<Comment> clist = this.dbInterface.getCommentsById(id,
@@ -62,6 +61,7 @@ public final class CaseServlet extends HttpServlet {
 			final List<Conviction> convlist = this.dbInterface.getConvictionsById(id,"case");
 			final User loggedUser = UserManagement
 					.getCurrentlyLoggedInUser(session);
+			session.setAttribute("CurrentCase", aCase);
 
 			/*******************************************************
 			 * Construct a table to present all properties of a case
@@ -156,6 +156,11 @@ public final class CaseServlet extends HttpServlet {
 					&& comment != null && !comment.isEmpty())
 				this.dbInterface.insertComment(id, comment,
 						loggedUser.getUsername(), "case");
+			if  (action != null && action.trim().equals("close"))
+					this.dbInterface.setCaseOpen(id,false);
+			if  (action != null && action.trim().equals("open"))
+					this.dbInterface.setCaseOpen(id,true);
+					
 
 		} catch (final Exception ex) {
 			ex.printStackTrace();

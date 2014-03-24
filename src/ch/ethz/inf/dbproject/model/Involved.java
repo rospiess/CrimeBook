@@ -2,7 +2,6 @@ package ch.ethz.inf.dbproject.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 
 /**
  * Object that represents a conviction.

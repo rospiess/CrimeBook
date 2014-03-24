@@ -1,19 +1,44 @@
 <%@page import="ch.ethz.inf.dbproject.model.User"%>
+<%@page import="ch.ethz.inf.dbproject.model.Case"%>
 <%@page import="ch.ethz.inf.dbproject.util.UserManagement"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="Header.jsp" %>
-<% final User user = (User) session.getAttribute(UserManagement.SESSION_USER); %>
+<% final User user = (User) session.getAttribute(UserManagement.SESSION_USER);
+final Case caze = (Case) session.getAttribute("CurrentCase"); %>
 
 <h1>Case Details</h1>
 
 <%=session.getAttribute("caseTable")%>
 
-<%
-	//TODO close or reopen the case
-%>
 
+<%if(user != null){
+	if(caze.getOpen()){
+%><form action="Case" method="get">
+	<input type="hidden" name="action" value="close" />
+	<table>
+		<tr>
+			<th colspan="2">
+				<input type="submit" value="Close Case" />
+			</th>
+		</tr>
+	</table>
+	</form>
+<%} else { %>
+<form action="Case" method="get">
+	<input type="hidden" name="action" value="open" />
+	<table>
+		<tr>
+			<th colspan="2">
+				<input type="submit" value="Reopen Case" />
+			</th>
+		</tr>
+	</table>
+	</form>
 
-<%
+<%}} %>
+<br>
+
+<% 
 if (user != null) {
 	// User is logged in. He can add a comment
 %> <br>
@@ -31,8 +56,13 @@ if (user != null) {
 %>
 <h1>Comments</h1>
 <%=session.getAttribute("commentTable")
+
 %>
+<%if(caze.getOpen()){ %>
 <h1>Suspects</h1>
+<%} else { %>
+<h1>Perpetrators</h1>
+<%} %>
 <%=session.getAttribute("suspectTable")
 %>
 <h1>Witnesses</h1>

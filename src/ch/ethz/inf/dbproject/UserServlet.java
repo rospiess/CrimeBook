@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
 import ch.ethz.inf.dbproject.model.User;
 import ch.ethz.inf.dbproject.util.UserManagement;
-import ch.ethz.inf.dbproject.util.html.BeanTableHelper;
 
 @WebServlet(description = "Page that displays the user login / logout options.", urlPatterns = { "/User" })
 public final class UserServlet extends HttpServlet {
@@ -53,10 +52,8 @@ public final class UserServlet extends HttpServlet {
 			session.setAttribute(SESSION_USER_LOGGED_IN, true);
 		}
 
-		// TODO display registration
-
 		final String action = request.getParameter("action");
-		if (action != null && action.trim().equals("login")
+		if (action != null && action.trim().equals("login")//Login
 				&& loggedUser == null) {
 
 			final String username = request.getParameter("username");
@@ -75,27 +72,29 @@ public final class UserServlet extends HttpServlet {
 				session.setAttribute("FailedLogin", "Invalid Username or Password");
 
 		}
-		else if  (action != null && action.trim().equals("logout")
+		else if  (action != null && action.trim().equals("logout")//Logout
 				&& loggedUser != null) {
 			session.setAttribute(SESSION_USER_LOGGED_IN, false);
 			session.setAttribute(SESSION_USER_DETAILS, null);
 			session.setAttribute(UserManagement.SESSION_USER, null);
 		}
-		else if (action != null && action.trim().equals("register")
+		else if (action != null && action.trim().equals("register")//Registration
 				&& loggedUser == null) {
 			final String username = request.getParameter("regusername");
 			final String password = request.getParameter("regpassword");
 			final String confirmpassword = request.getParameter("regpassword2");
-			if(password.equals(""))
+			if(username.equals(""))
+				session.setAttribute("Registration", "Please enter a username");
+			else if(password.equals(""))
 				session.setAttribute("Registration", "Please enter a password");
 			else if(dbInterface.getNameIsTaken(username))
-				session.setAttribute("Registration", "Username "+username +" already in use");
+				session.setAttribute("Registration", "Username \""+username +"\" already in use");
 			else if(!password.equals(confirmpassword))
 				session.setAttribute("Registration", "Passwords have to agree");			
 			else
 			{
 				dbInterface.insertUser(username, password);
-				session.setAttribute("Registration", "Registration of "+ username +" was successfull");
+				session.setAttribute("Registration", "Registration of \""+ username +"\" was successfull");
 			}
 			
 		}
