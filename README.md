@@ -5,7 +5,7 @@ Database Project 2014
 
 
 DONE
-===========
+-----------
 (needing code review)
 
 - Case detail view: Show all associated convictions with links to their detailed view.
@@ -15,8 +15,10 @@ DONE
 - Close/reopen case
 - Register new users.
 
+
+
 To-Do List
-===========
+-----------
 
 
 - Add distinction between association to a case and conviction, manage transition opened/closed case and case reopening.
@@ -30,7 +32,7 @@ When logged in:
 
 
 (Design-)Questions:
-===========
+-----------
 
 - What happens to a conviction when the associated case is reopened?
     -> delete convictions?
@@ -38,7 +40,7 @@ When logged in:
 
 
 Ideas and Nice-to-have:
-===========
+-----------
 
 - Bounty
 
