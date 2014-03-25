@@ -72,134 +72,44 @@ td#masterContentPlaceholder {
 	padding: 10px;
 }
 
-/*
-table.casesTable {
-	width: 100%;	
-	border-bottom: 2px solid black;
-	border-right: 2px solid black;
-	border-left: 1px solid black;
-}
 
-table.casesTable td, table.casesTable th {
-	border-left: 1px solid black;
-	border-top: 1px solid black;
-	text-align: center;
+table.casesTable {
+	width: 90%;
+	border-style: solid;
+	border-color: black;
+	border-width: 1px 1px 1px 1px;
 }
 
 table.casesTable th {
-	border-top: 2px solid black;
-	border-bottom: 1px solid black;
-	background: #66CCFF;	
-}*/
-
-table.casesTable {
-	width: 90%;//300px;	
-	border: 1px solid black;
-	border-bottom: 2px solid black;
-	border-left: 1px solid black;
-}
-
-table.casesTable td, table.casesTable th {
-	padding: 5px 5px 5px 5px;
-	border-left: 1px solid black;
-	border-right: 1px solid black;
-	border-top: 1px solid black;
-	text-align: center;
-}
-
-table.casesTable th {
-	border-top: 1px solid black;
-	border-left: 2px solid black;
-	border-right: 1px solid black;
 	background: #66CCFF;
 	text-align: right;	
 }
-/*
-table.personsTable {
-	width: 100%;	
-	border-bottom: 2px solid black;
-	border-right: 2px solid black;
-	border-left: 1px solid black;
-}
 
-table.personsTable td, table.personsTable th {
-	border-left: 1px solid black;
-	border-top: 1px solid black;
+table.casesTable td, table.casesTable th {
+	padding: 5px 5px 5px 5px;
+	border-style: solid;
+	border-color: black;
+	border-width: 1px 1px 1px 1px;
 	text-align: center;
 }
-
-table.personsTable th {
-	border-top: 2px solid black;
-	border-bottom: 1px solid black;
-	background: #66CCFF;	
-}
-*/
 
 table.personsTable {
 	width: 400px;	
-	border-bottom: 2px solid black;
-	border-right: 1px solid black;
-	border-left: 1px solid black;
-	border-top: 1px solid black;
-}
-
-table.personsTable td, table.casesTable th {
-	padding: 5px 5px 5px 5px;
-	border-right: 1px solid black;
-	border-top: 1px solid black;
-	text-align: center;
+	border-style: solid;
+	border-color: black;
+	border-width: 1px 1px 1px 1px;
 }
 
 table.personsTable th {
 	padding: 10px 10px 10px 10px;
-	border-top: 1px solid black;
-	border-left: 2px solid black;
-	border-right: 1px solid black;
-	border-bottom: 2px solid black;
 	background: #66CCFF;
 	text-align: right;	
 }
 
-
-/*
-table.convictionTable {
-	width: 100%;	
-	border-bottom: 2px solid black;
-	border-right: 2px solid black;
-	border-left: 1px solid black;
-}
-
-table.convictionTable td, table.convictionTable th {
-	border-left: 1px solid black;
-	border-top: 1px solid black;
-	text-align: center;
-}
-
-table.convictionTable th {
-	border-top: 2px solid black;
-	border-bottom: 1px solid black;
-	background: #66CCFF;	
-}
-
-table.convictionTable {
-	width: 300px;	
-	border-bottom: 2px solid black;
-	border-right: 1px solid black;
-	border-top: 1px solid black;
-}
-
-table.convictionTable td, table.convictionTable th {
+table.personsTable td, table.personsTable th {
 	padding: 5px 5px 5px 5px;
-	border-right: 1px solid black;
-	border-top: 1px solid black;
+	border-style: solid;
+	border-color: black;
+	border-width: 1px 1px 1px 1px;
 	text-align: center;
 }
-
-table.convictionTable th {
-	border-top: 1px solid black;
-	border-left: 2px solid black;
-	border-right: 1px solid black;
-	background: #66CCFF;
-	text-align: right;	
-}
-*/
