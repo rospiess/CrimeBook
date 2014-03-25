@@ -87,6 +87,7 @@ public final class CaseServlet extends HttpServlet {
 
 			session.setAttribute("caseTable", table);
 
+			//Comment Table
 			final BeanTableHelper<Comment> ctable = new BeanTableHelper<Comment>(
 					"comment" /* The table html id property */,
 					"casesTable" /* The table html class property */,
@@ -104,8 +105,10 @@ public final class CaseServlet extends HttpServlet {
 
 			session.setAttribute("commentTable", ctable);
 
+			
+			//Suspect / Perpetrator table
 			final BeanTableHelper<Person> ptable = new BeanTableHelper<Person>(
-					"person", "casesTable", Person.class);
+					"person", "personsTable", Person.class);
 
 			//ptable.addBeanColumn("Person ID", "idperson");
 			ptable.addBeanColumn("First Name", "firstname");
@@ -117,8 +120,10 @@ public final class CaseServlet extends HttpServlet {
 
 			session.setAttribute("suspectTable", ptable);
 			
+			
+			//Witness table
 			final BeanTableHelper<Person> wtable = new BeanTableHelper<Person>(
-					"person", "casesTable", Person.class);
+					"person", "personsTable", Person.class);
 
 			//wtable.addBeanColumn("Person ID", "idperson");
 			wtable.addBeanColumn("First Name", "firstname");
@@ -133,6 +138,7 @@ public final class CaseServlet extends HttpServlet {
 			//
 			
 			
+			//Conviction table
 			final BeanTableHelper<Conviction> convtable = new BeanTableHelper<Conviction>(
 					"conviction", "casesTable", Conviction.class);
 

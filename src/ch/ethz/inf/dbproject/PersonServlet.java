@@ -65,7 +65,7 @@ public final class PersonServlet extends HttpServlet {
 			 *******************************************************/
 			final BeanTableHelper<Person> table = new BeanTableHelper<Person>(
 					"person" 		/* The table html id property */,
-					"casesTable" /* The table html class property */,
+					"personsTable" /* The table html class property */,
 					Person.class 	/* The class of the objects (rows) that will be displayed */
 			);
 
@@ -96,6 +96,7 @@ public final class PersonServlet extends HttpServlet {
 
 			session.setAttribute("commentTable", ctable);
 			
+			//Conviction table
 			final BeanTableHelper<Conviction> contable = new BeanTableHelper<Conviction>(
 					"conviction" 		/* The table html id property */,
 					"casesTable" /* The table html class property */,
@@ -115,7 +116,7 @@ public final class PersonServlet extends HttpServlet {
 			//Create Involved Table
 			final BeanTableHelper<Involved> invtable = new BeanTableHelper<Involved>(
 					"involved" 		/* The table html id property */,
-					"casesTable" /* The table html class property */,
+					"personsTable" /* The table html class property */,
 					Involved.class 	/* The class of the objects (rows) that will be displayed */
 			);
 			invtable.addBeanColumn("Case", "casetitle");
