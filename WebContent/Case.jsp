@@ -18,7 +18,7 @@ final Case caze = (Case) session.getAttribute("CurrentCase"); %>
 	<table>
 		<tr>
 			<th colspan="2">
-				<input type="submit" value="Close Case" />
+				<input onclick="document.location.reload(true)" type="submit" value="Close Case" />
 			</th>
 		</tr>
 	</table>
@@ -29,7 +29,7 @@ final Case caze = (Case) session.getAttribute("CurrentCase"); %>
 	<table>
 		<tr>
 			<th colspan="2">
-				<input type="submit" value="Reopen Case" />
+				<input onclick="document.location.reload(true)" type="submit" value="Reopen Case" />
 			</th>
 		</tr>
 	</table>
@@ -49,7 +49,7 @@ if (user != null) {
 		<br />
 		<textarea rows="4" cols="50" name="comment"></textarea>
 		<br />
-		<input type="submit" value="Submit" />
+		<input onclick="document.location.reload(true)" type="submit" value="Submit" />
 	</form>
 <%
 }

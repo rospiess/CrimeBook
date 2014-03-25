@@ -161,6 +161,7 @@ public final class CaseServlet extends HttpServlet {
 			if  (action != null && action.trim().equals("open"))
 					this.dbInterface.setCaseOpen(id,true);
 					
+					
 
 		} catch (final Exception ex) {
 			ex.printStackTrace();
