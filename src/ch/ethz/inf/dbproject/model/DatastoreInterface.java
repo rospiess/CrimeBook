@@ -1,10 +1,12 @@
 package ch.ethz.inf.dbproject.model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,17 +129,18 @@ public final class DatastoreInterface {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs;
-			if(type.equals("case"))
-			rs = stmt
-					.executeQuery("Select * from conviction co, personofinterest p, cases ca where co.idcase = "
-							+ id
-							+ " and p.idpersonofinterest = co.idpersonofinterest"
-							+ " and ca.idcase = co.idcase");
+			if (type.equals("case"))
+				rs = stmt
+						.executeQuery("Select * from conviction co, personofinterest p, cases ca where co.idcase = "
+								+ id
+								+ " and p.idpersonofinterest = co.idpersonofinterest"
+								+ " and ca.idcase = co.idcase");
 			else
 				rs = stmt
-				.executeQuery("Select * from conviction co, personofinterest p, cases ca where co.idpersonofinterest = "
-						+ id + " and co.idpersonofinterest = p.idpersonofinterest "
-						+ " and co.idcase = ca.idcase");
+						.executeQuery("Select * from conviction co, personofinterest p, cases ca where co.idpersonofinterest = "
+								+ id
+								+ " and co.idpersonofinterest = p.idpersonofinterest "
+								+ " and co.idcase = ca.idcase");
 			final List<Conviction> clist = new ArrayList<Conviction>();
 			while (rs.next()) {
 				clist.add(new Conviction(rs));
@@ -155,11 +158,11 @@ public final class DatastoreInterface {
 
 	}
 
-	
-	public final List<Involved> getInvolvedByPersonId(final int pid) {		
-		// Returns list of involvement of a person by their id. 
-		// The Involved class contains information about the case and the person.
-		
+	public final List<Involved> getInvolvedByPersonId(final int pid) {
+		// Returns list of involvement of a person by their id.
+		// The Involved class contains information about the case and the
+		// person.
+
 		try {
 
 			final Statement stmt = this.sqlConnection.createStatement();
@@ -168,8 +171,7 @@ public final class DatastoreInterface {
 							+ " where involved.idperson = "
 							+ pid
 							+ " and personofinterest.idpersonofinterest = "
-							+ pid
-							+ " and cases.idCase = involved.idcase");
+							+ pid + " and cases.idCase = involved.idcase");
 			final List<Involved> invlist = new ArrayList<Involved>();
 			while (rs.next()) {
 				invlist.add(new Involved(rs));
@@ -187,12 +189,13 @@ public final class DatastoreInterface {
 
 	}
 
-	
 	public final void setCaseOpen(int id, boolean open) {
 
 		try {
-			PreparedStatement s = sqlConnection.prepareStatement("Update Cases set open = ? where idcase = " + id);
-			s.setString(1,open ? "1": "0");
+			PreparedStatement s = sqlConnection
+					.prepareStatement("Update Cases set open = ? where idcase = "
+							+ id);
+			s.setString(1, open ? "1" : "0");
 			s.execute();
 			s.close();
 
@@ -201,7 +204,39 @@ public final class DatastoreInterface {
 		}
 
 	}
-	
+
+	public final void openNewCase(String title, String descr, String date,
+			String time, Address address, String catname) {
+
+		try {
+			PreparedStatement s = sqlConnection
+					.prepareStatement("Insert into Address(country,city,street, zipcode,streetno)"+
+			" values ( ?, ?, ?, ?, ?)",PreparedStatement.RETURN_GENERATED_KEYS);
+			s.setString(1, address.getCountry());
+			s.setString(2, address.getCity());
+			s.setString(3, address.getStreet());
+			s.setInt(4, address.getZipCode());
+			s.setInt(5, address.getStreetNo());
+			s.execute();
+			ResultSet rs = s.getGeneratedKeys();
+			rs.next();
+			s = sqlConnection
+					.prepareStatement("Insert into Cases(title,description,open,date,time,idAddress,catname) values (?, ?, 1, ?, ?, ?, ?)");
+			s.setString(1, title);
+			s.setString(2, descr);
+			s.setString(3, date);
+			s.setString(4, time);
+			s.setInt(5, rs.getInt(1));
+			s.setString(6, catname);
+			s.execute();
+			s.close();
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+		}
+
+	}
+
 	public final List<Case> getAllCases() {
 
 		try {
@@ -496,7 +531,7 @@ public final class DatastoreInterface {
 			return null;
 		}
 	}
-	
+
 	public final List<Person> getWitnessesById(int id) {
 		try {
 
@@ -532,7 +567,8 @@ public final class DatastoreInterface {
 							+ username + "'");
 			final String correctpassword;
 
-			if (!rs.next()) correctpassword = null;
+			if (!rs.next())
+				correctpassword = null;
 			else
 				correctpassword = rs.getString("password");
 			rs.close();
@@ -543,19 +579,20 @@ public final class DatastoreInterface {
 			return null;
 		}
 	}
-	
+
 	public void insertUser(String username, String password) {
 		try {
 
 			final Statement stmt = this.sqlConnection.createStatement();
-			stmt.execute("Insert into user (username, password) values ('"+ username+ "', '" + password + "')");
+			stmt.execute("Insert into user (username, password) values ('"
+					+ username + "', '" + password + "')");
 			stmt.close();
 		} catch (final SQLException ex) {
 			ex.printStackTrace();
 
 		}
 	}
-	
+
 	public final boolean getNameIsTaken(String username) {
 		try {
 
@@ -573,7 +610,5 @@ public final class DatastoreInterface {
 
 		}
 	}
-	
 
-	
 }

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import ch.ethz.inf.dbproject.model.Address;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
 import ch.ethz.inf.dbproject.model.User;
 import ch.ethz.inf.dbproject.util.UserManagement;
@@ -43,6 +44,7 @@ public final class UserServlet extends HttpServlet {
 
 		session.setAttribute("FailedLogin", "");
 		session.setAttribute("Registration", "");
+		session.setAttribute("Opening", false);
 
 		if (loggedUser == null) {
 			// Not logged in!
@@ -97,6 +99,25 @@ public final class UserServlet extends HttpServlet {
 				session.setAttribute("Registration", "Registration of \""+ username +"\" was successfull");
 			}
 			
+		}
+		else if (action != null && action.trim().equals("open"))
+				session.setAttribute("Opening", true);
+		else if (action != null && action.trim().equals("submitopen"))
+		{
+			session.setAttribute("Opening", false);
+			final String title = request.getParameter("title");
+			final String descr = request.getParameter("description");
+			final String date = request.getParameter("date");
+			final String time = request.getParameter("time");
+			final String catname = request.getParameter("category");
+			final String street = request.getParameter("street");
+			final String city = request.getParameter("city");
+			final String country = request.getParameter("country");
+			final int streetno = Integer.parseInt(request.getParameter("streetno"));
+			final int zipcode = Integer.parseInt(request.getParameter("zipcode"));
+			final Address address = new Address(country, city, street, zipcode, streetno);
+						
+			this.dbInterface.openNewCase(title, descr, date, time, address, catname);
 		}
 
 		// Finally, proceed to the User.jsp page which will renden the profile
