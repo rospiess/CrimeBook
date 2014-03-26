@@ -100,6 +100,7 @@ public final class CaseServlet extends HttpServlet {
 			ctable.addBeanColumn("Note ID", "idnote");
 			ctable.addBeanColumn("Text", "comment");
 			ctable.addBeanColumn("Submitted by", "username");
+			ctable.addLinkColumn("delete", "DELETE", "Case?action=deleteNote&delete=", "idnote");
 
 			ctable.addObjects(clist);
 
@@ -154,10 +155,15 @@ public final class CaseServlet extends HttpServlet {
 
 			session.setAttribute("convictionTable", convtable);
 			
-			//
 
 			final String comment = request.getParameter("comment");
 			final String action = request.getParameter("action");
+			
+			if (request.getParameter("delete") != null){
+				final int Nr = Integer.parseInt(request.getParameter("delete"));
+				if  (action != null && action.trim().equals("deleteNote"))
+					this.dbInterface.deleteNote(Nr);
+			}
 			if (action != null && action.equals("add_comment")
 					&& comment != null && !comment.isEmpty())
 				this.dbInterface.insertComment(id, comment,
@@ -165,9 +171,7 @@ public final class CaseServlet extends HttpServlet {
 			if  (action != null && action.trim().equals("close"))
 					this.dbInterface.setCaseOpen(id,false);
 			if  (action != null && action.trim().equals("open"))
-					this.dbInterface.setCaseOpen(id,true);
-					
-					
+					this.dbInterface.setCaseOpen(id,true);			
 
 		} catch (final Exception ex) {
 			ex.printStackTrace();
@@ -299,6 +303,7 @@ public final class CaseServlet extends HttpServlet {
 
 			final String comment = request.getParameter("comment");
 			final String action = request.getParameter("action");
+			
 			if (action != null && action.equals("add_comment")
 					&& comment != null && !comment.isEmpty())
 				this.dbInterface.insertComment(id, comment,
@@ -307,7 +312,6 @@ public final class CaseServlet extends HttpServlet {
 					this.dbInterface.setCaseOpen(id,false);
 			if  (action != null && action.trim().equals("open"))
 					this.dbInterface.setCaseOpen(id,true);
-					
 					
 
 		} catch (final Exception ex) {

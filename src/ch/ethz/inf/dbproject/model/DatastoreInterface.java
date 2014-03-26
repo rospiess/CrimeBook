@@ -204,6 +204,21 @@ public final class DatastoreInterface {
 		}
 
 	}
+	
+	public final void deleteNote(int Nr) {
+		// Deletes a caseNote with a certain Nr as key
+		try {
+			PreparedStatement s = sqlConnection
+					.prepareStatement("delete from notecase where Nr = ?");
+			s.setString(1, ""+Nr+"");
+			s.execute();
+			s.close();
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+		}
+
+	}
 
 	public final void openNewCase(String title, String descr, String date,
 			String time, Address address, String catname) {
