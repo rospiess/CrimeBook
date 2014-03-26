@@ -61,7 +61,7 @@ public final class Case {
 	}
 
 	/**
-	 * HINT: In eclipse, use Alt + Shirt + S menu and choose:
+	 * HINT: In eclipse, use Alt + Shift + S menu and choose:
 	 * "Generate Getters and Setters to auto-magically generate
 	 * the getters. 
 	 */	

@@ -13,7 +13,7 @@ final Case caze = (Case) session.getAttribute("CurrentCase"); %>
 
 <%if(user != null){
 	if(caze.getOpen()){
-%><form action="Case" method="get">
+%><form action="Case" method="post">
 	<input type="hidden" name="action" value="close" />
 	<table>
 		<tr>
@@ -24,7 +24,7 @@ final Case caze = (Case) session.getAttribute("CurrentCase"); %>
 	</table>
 	</form>
 <%} else { %>
-<form action="Case" method="get">
+<form action="Case" method="post">
 	<input type="hidden" name="action" value="open" />
 	<table>
 		<tr>
@@ -42,7 +42,7 @@ final Case caze = (Case) session.getAttribute("CurrentCase"); %>
 if (user != null) {
 	// User is logged in. He can add a comment
 %> <br>
-	<form action="Case" method="get">
+	<form action="Case" method="post">
 		<input type="hidden" name="action" value="add_comment" />
 		<input type="hidden" name="user_id" value="<%= user.getUserid() %>" />
 		Add Comment
