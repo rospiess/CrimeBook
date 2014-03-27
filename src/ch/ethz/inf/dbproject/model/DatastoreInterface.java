@@ -205,12 +205,13 @@ public final class DatastoreInterface {
 
 	}
 	
-	public final void deleteNote(int Nr) {
+	public final void deleteNote(int Nr, String uname) {
 		// Deletes a caseNote with a certain Nr as key
 		try {
 			PreparedStatement s = sqlConnection
-					.prepareStatement("delete from notecase where Nr = ?");
+					.prepareStatement("delete from notecase where Nr = ? and username = ?");
 			s.setString(1, ""+Nr+"");
+			s.setString(2, uname);
 			s.execute();
 			s.close();
 
