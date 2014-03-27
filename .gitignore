@@ -17,6 +17,9 @@
 !*.mwb
 !*.sql
 
+# Web ressources
+!*.png
+
 !.txt
 !.gitignore
 build/classes/.gitignore

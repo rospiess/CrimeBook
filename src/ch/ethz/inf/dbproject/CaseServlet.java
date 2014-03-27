@@ -100,10 +100,8 @@ public final class CaseServlet extends HttpServlet {
 			ctable.addBeanColumn("Note ID", "idnote");
 			ctable.addBeanColumn("Text", "comment");
 			ctable.addBeanColumn("Submitted by", "username");
-			if (loggedUser != null){
-				ctable.addLinkColumn("delete", "DELETE", "Case?action=deleteNote&uname="+loggedUser.getUsername()+"&delete=", "idnote");
-			}
-			
+			ctable.addLinkColumn("delete", "<img src='./s_cancel.png'></img>", "Case?action=deleteNote&uname="+loggedUser.getUsername()+"&delete=", "idnote");
+
 			ctable.addObjects(clist);
 
 			session.setAttribute("commentTable", ctable);
