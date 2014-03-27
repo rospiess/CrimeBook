@@ -100,7 +100,7 @@ public final class CaseServlet extends HttpServlet {
 			ctable.addBeanColumn("Note ID", "idnote");
 			ctable.addBeanColumn("Text", "comment");
 			ctable.addBeanColumn("Submitted by", "username");
-			ctable.addLinkColumn("delete", "DELETE", "Case?action=deleteNote&delete=", "idnote");
+			ctable.addLinkColumn("delete", "DELETE", "Case?action=deleteNote&uname="+loggedUser.getUsername()+"&delete=", "idnote");
 
 			ctable.addObjects(clist);
 
@@ -159,9 +159,10 @@ public final class CaseServlet extends HttpServlet {
 			final String comment = request.getParameter("comment");
 			final String action = request.getParameter("action");
 			final String Nr = request.getParameter("delete");
+			final String uname = request.getParameter("uname");
 			
-			if  (Nr != null && action != null && action.trim().equals("deleteNote"))
-				this.dbInterface.deleteNote(Integer.parseInt(Nr));
+			if  (Nr != null && uname != null && action != null && action.trim().equals("deleteNote"))
+				this.dbInterface.deleteNote(Integer.parseInt(Nr), uname);
 			if (action != null && action.equals("add_comment")
 					&& comment != null && !comment.isEmpty())
 				this.dbInterface.insertComment(id, comment,
