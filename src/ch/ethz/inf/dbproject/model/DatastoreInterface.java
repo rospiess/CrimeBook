@@ -20,9 +20,22 @@ import ch.ethz.inf.dbproject.database.MySQLConnection;
 public final class DatastoreInterface {
 
 	private Connection sqlConnection;
+	
+	// PreparedStatements declaration
+	PreparedStatement createConviction;
 
 	public DatastoreInterface() {
 		this.sqlConnection = MySQLConnection.getInstance().getConnection();
+		
+		try {
+			// Create prepared Statements
+			
+			createConviction = sqlConnection.prepareStatement("insert into conviction(idcase, idpersonofinterest, beginDate, endDate) " 
+					+ " values(?,?,?,?)");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	public final Case getCaseById(final int id) {
@@ -197,6 +210,38 @@ public final class DatastoreInterface {
 							+ id);
 			s.setString(1, open ? "1" : "0");
 			s.execute();
+			
+			if (open){
+				// delete convictions associated with this case
+				s = sqlConnection.prepareStatement("delete from conviction where "
+						+ " conviction.idcase = " + id);
+				s.execute();
+			}
+			else{
+				// Create convictions based on suspects
+				
+				// Get suspects with query
+				final Statement stmt = this.sqlConnection.createStatement();
+				final ResultSet rs = stmt
+						.executeQuery("Select idpersonofinterest from personofinterest p, involved i "
+								+ "where i.role = 'Suspect' and i.idCase = "
+								+ id
+								+ " and i.idperson = p.idpersonofinterest");
+
+				while (rs.next()) {
+					// Create conviction with the suspects in the resultset
+					createConviction.setInt(1, id);
+					createConviction.setInt(2, rs.getInt("idpersonofinterest"));
+					createConviction.setDate(3, Date.valueOf("2000-01-01"));
+					createConviction.setDate(4, Date.valueOf("2000-01-01"));
+					
+					createConviction.execute();
+				}
+
+				rs.close();
+
+			}
+			
 			s.close();
 
 		} catch (final SQLException ex) {
