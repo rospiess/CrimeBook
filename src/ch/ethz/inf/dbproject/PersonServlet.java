@@ -55,7 +55,6 @@ public final class PersonServlet extends HttpServlet {
 			final List<Comment> comlist = this.dbInterface.getCommentsById(id,"person");
 			final List<Conviction> conlist = this.dbInterface.getConvictionsById(id,"person");
 			final List<Involved> invlist = this.dbInterface.getInvolvedByPersonId(id);
-			//final List<Involved> invlist = this.dbInterface.getInvolvedByPersonId(id);
 			final User loggedUser = UserManagement
 					.getCurrentlyLoggedInUser(session);
 
@@ -91,8 +90,10 @@ public final class PersonServlet extends HttpServlet {
 			ctable.addBeanColumn("Note ID", "idnote");
 			ctable.addBeanColumn("Text", "comment");
 			ctable.addBeanColumn("Submitted by", "username");
-			ctable.addLinkColumn("delete", "<img src='./s_cancel.png'></img>", "Person?action=deleteNote&uname="+loggedUser.getUsername()+"&delete=", "idnote");
-			
+			if (loggedUser != null){
+				ctable.addLinkColumn("delete", "<img src='./s_cancel.png'></img>", "Person?action=deleteNote&uname="+loggedUser.getUsername()+"&delete=", "idnote");
+			}
+				
 			ctable.addObjects(comlist);		
 
 			session.setAttribute("commentTable", ctable);
@@ -130,15 +131,17 @@ public final class PersonServlet extends HttpServlet {
 			
 			
 			
-			final String comment = request.getParameter("comment");
 			final String action = request.getParameter("action");
 			final String Nr = request.getParameter("delete");
 			final String uname = request.getParameter("uname");
 			
-			if  (Nr != null && uname != null && action != null && action.trim().equals("deleteNote"))
-				this.dbInterface.deleteNote(Integer.parseInt(Nr), uname);
-			if(action != null && action.equals("add_comment")&& comment  != null && !comment.isEmpty())
-				this.dbInterface.insertComment(id, comment, loggedUser.getUsername(), "person");
+			if  (Nr != null && uname != null && action != null && action.trim().equals("deleteNote")){
+				this.dbInterface.deleteNote(Integer.parseInt(Nr), uname, "person");
+				// Refresh
+				response.sendRedirect(request.getRequestURL().toString());
+				return;
+			}
+
 			
 		} catch (final Exception ex) {
 			ex.printStackTrace();
@@ -147,4 +150,39 @@ public final class PersonServlet extends HttpServlet {
 
 		this.getServletContext().getRequestDispatcher("/Person.jsp").forward(request, response);
 	}
+	
+	protected final void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
+
+		final HttpSession session = request.getSession(true);
+
+		 String idString = request.getParameter("id");
+		if (idString == null) {
+			idString = (String)session.getAttribute("Last Case");
+			}
+
+		try {
+
+			session.setAttribute("Last Case", idString);
+			final Integer id = Integer.parseInt(idString);
+			final User loggedUser = UserManagement
+					.getCurrentlyLoggedInUser(session);
+
+			
+			
+			final String comment = request.getParameter("comment");
+			final String action = request.getParameter("action");
+
+			if(action != null && action.equals("add_comment")&& comment  != null && !comment.isEmpty()){
+				this.dbInterface.insertComment(id, comment, loggedUser.getUsername(), "person");
+				response.setHeader("Refresh", "0");
+			}
+			
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+			this.getServletContext().getRequestDispatcher("/Persons.jsp").forward(request, response);
+		}
+
+		this.getServletContext().getRequestDispatcher("/Person.jsp").forward(request, response);
+	}
+	
 }

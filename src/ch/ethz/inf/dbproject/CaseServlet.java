@@ -113,7 +113,6 @@ public final class CaseServlet extends HttpServlet {
 			final BeanTableHelper<Person> ptable = new BeanTableHelper<Person>(
 					"person", "personsTable", Person.class);
 
-			//ptable.addBeanColumn("Person ID", "idperson");
 			ptable.addBeanColumn("First Name", "firstname");
 			ptable.addBeanColumn("Last Name", "lastname");
 			ptable.addBeanColumn("Date of Birth", "bdate");
@@ -128,7 +127,6 @@ public final class CaseServlet extends HttpServlet {
 			final BeanTableHelper<Person> wtable = new BeanTableHelper<Person>(
 					"person", "personsTable", Person.class);
 
-			//wtable.addBeanColumn("Person ID", "idperson");
 			wtable.addBeanColumn("First Name", "firstname");
 			wtable.addBeanColumn("Last Name", "lastname");
 			wtable.addBeanColumn("Date of Birth", "bdate");
@@ -145,7 +143,6 @@ public final class CaseServlet extends HttpServlet {
 			final BeanTableHelper<Conviction> convtable = new BeanTableHelper<Conviction>(
 					"conviction", "casesTable", Conviction.class);
 
-//			convtable.addBeanColumn("Conviction ID", "idcon");
 			convtable.addBeanColumn("Type", "type");
 			convtable.addBeanColumn("Begin Date", "date");
 			convtable.addBeanColumn("End Date", "enddate");
@@ -158,21 +155,16 @@ public final class CaseServlet extends HttpServlet {
 			session.setAttribute("convictionTable", convtable);
 			
 
-			final String comment = request.getParameter("comment");
 			final String action = request.getParameter("action");
 			final String Nr = request.getParameter("delete");
 			final String uname = request.getParameter("uname");
 			
-			if  (Nr != null && uname != null && action != null && action.trim().equals("deleteNote"))
-				this.dbInterface.deleteNote(Integer.parseInt(Nr), uname);
-			if (action != null && action.equals("add_comment")
-					&& comment != null && !comment.isEmpty())
-				this.dbInterface.insertComment(id, comment,
-						loggedUser.getUsername(), "case");
-			if  (action != null && action.trim().equals("close"))
-					this.dbInterface.setCaseOpen(id,false);
-			if  (action != null && action.trim().equals("open"))
-					this.dbInterface.setCaseOpen(id,true);			
+			if  (Nr != null && uname != null && action != null && action.trim().equals("deleteNote")){
+				this.dbInterface.deleteNote(Integer.parseInt(Nr), uname, "case");
+				// Refresh to show changes
+				response.sendRedirect(request.getRequestURL().toString());
+				return; //Return is needed to prevent the forwarding
+			}	
 
 		} catch (final Exception ex) {
 			ex.printStackTrace();
@@ -200,17 +192,12 @@ public final class CaseServlet extends HttpServlet {
 
 			final Integer id = Integer.parseInt(idString);
 			final Case aCase = this.dbInterface.getCaseById(id);
-			final List<Comment> clist = this.dbInterface.getCommentsById(id,
-					"case");
-			final List<Person> plist = this.dbInterface.getSuspectsById(id);
-			final List<Person> wlist = this.dbInterface.getWitnessesById(id);
-			final List<Conviction> convlist = this.dbInterface.getConvictionsById(id,"case");
 			final User loggedUser = UserManagement
 					.getCurrentlyLoggedInUser(session);
 			session.setAttribute("CurrentCase", aCase);
 
 
-
+			
 			final String comment = request.getParameter("comment");
 			final String action = request.getParameter("action");
 			

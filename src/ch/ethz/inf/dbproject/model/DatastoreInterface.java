@@ -250,15 +250,27 @@ public final class DatastoreInterface {
 
 	}
 	
-	public final void deleteNote(int Nr, String uname) {
+	public final void deleteNote(int Nr, String uname, final String type) {
 		// Deletes a caseNote with a certain Nr as key
+		// Type distinguishes between casenote and personnote
 		try {
-			PreparedStatement s = sqlConnection
-					.prepareStatement("delete from notecase where Nr = ? and username = ?");
-			s.setString(1, ""+Nr+"");
-			s.setString(2, uname);
-			s.execute();
-			s.close();
+			if (type == "case"){
+				PreparedStatement s = sqlConnection
+						.prepareStatement("delete from notecase where Nr = ? and username = ?");
+				s.setString(1, ""+Nr+"");
+				s.setString(2, uname);
+				s.execute();
+				s.close();
+			}
+			else
+			{
+				PreparedStatement s = sqlConnection
+						.prepareStatement("delete from noteperson where Nr = ? and username = ?");
+				s.setString(1, ""+Nr+"");
+				s.setString(2, uname);
+				s.execute();
+				s.close();
+			}
 
 		} catch (final SQLException ex) {
 			ex.printStackTrace();
