@@ -7,9 +7,59 @@
 if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 	// User is logged in. Display the details:
 %>
+<%if((Boolean)session.getAttribute("ChangingPassword")){ %><font color="#FF0000">
+<%=session.getAttribute("FailedChanging")
+	%></font>
+<form action="User" method="post">
+	<input type="hidden" name="action" value="submitchange" />
+	<table>
+		<tr>
+			<th align="left">Old Password</th>
+			<td><input type="password" name="old" value="" /></td>
+		</tr>
+		<tr>
+			<th align="left">New Password</th>
+			<td><input type="password" name="new" value="" /></td>
+		</tr>
+		<tr>
+			<th align="left">Confirm New Password</th>
+			<td><input type="password" name="confirmnew" value="" /></td>
+		</tr>
+		<tr>
+			<th colspan="2">
+				<input  type="submit" value="Change Password" />
+			</th>
+		</tr>
+	</table>
+	</form>
 
-<%if((Boolean)session.getAttribute("Opening")){ %>
-<form action="User" method="get">
+<%} else if((Boolean)session.getAttribute("AddingPerson")){ %>
+
+<form action="User" method="post">
+	<input type="hidden" name="action" value="submitadd" />
+	<table>
+		<tr>
+			<th align="left">First Name</th>
+			<td><input type="text" name="firstname" value="" /></td>
+		</tr>
+		<tr>
+			<th align="left">Last Name</th>
+			<td><input type="text" name="lastname" value="" /></td>
+		</tr>
+		<tr>
+			<th align="left">Date of Birth (yyyy-mm-dd)</th>
+			<td><input type="date" name="date" value="" /></td>
+		</tr>
+		<tr>
+			<th colspan="2">
+				<input  type="submit" value="Submit Data" />
+			</th>
+		</tr>
+	</table>
+	</form>
+
+<%} else if((Boolean)session.getAttribute("OpeningCase")){ %>
+<form action="User" method="post">
 	<input type="hidden" name="action" value="submitopen" />
 	<table>
 		<tr>
@@ -61,6 +111,7 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 	</select></td>
 	</tr>
 		<tr>
+		
 			<th colspan="2">
 				<input  type="submit" value="Submit Data" />
 			</th>
@@ -68,29 +119,39 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 	</table>
 	</form>
 	<%}else{ %> 
-	<h3> Authentication successfull </h3><hr/> 
-Welcome <%= session.getAttribute(UserServlet.SESSION_USER_DETAILS) %> <br> <br> <br> <br> <br> 
-<form action="User" method="get">
-	<input type="hidden" name="action" value="open" />
-	<table>
+	<h3> <%= session.getAttribute("LatestAction") %> </h3><hr/>  What would you like to do?<br> <br> 
+<table>
 		<tr>
 			<th colspan="2">
-				<input  type="submit" value="Open new Case" />
+				<form action="User" method="get">
+				<input type="hidden" name="action" value="open" />
+					<input  type="submit" value="Open new Case" />
+				</form>
+			</th>
+
+			<th colspan="2">
+				<form action="User" method="get">
+				<input type="hidden" name="action" value="add" />
+					<input type="submit" value="Add new Person" />
+				</form>
+			</th>
+			
+			<th colspan="2">
+				<form action="User" method="get">
+				<input type="hidden" name="action" value="change" />
+					<input type="submit" value="Change Password" />
+				</form>
+			</th>
+			
+			<th colspan="2">
+				<form action="User" method="get">
+				<input type="hidden" name="action" value="logout" />
+					<input type="submit" value="Logout" />
+				</form>
 			</th>
 		</tr>
 	</table>
-	</form>
-	
-<form action="User" method="get">
-	<input type="hidden" name="action" value="logout" />
-	<table>
-		<tr>
-			<th colspan="2">
-				<input type="submit" value="Logout" />
-			</th>
-		</tr>
-	</table>
-	</form>
+
 
 <%}
 //TODO: Display cases opened by the user
@@ -122,7 +183,7 @@ Welcome <%= session.getAttribute(UserServlet.SESSION_USER_DETAILS) %> <br> <br> 
 	</form>
 	<br> <br> <br>
 	<h3>Registration</h3><hr/><font color="#FF0000">
-	<%=session.getAttribute("Registration")
+	<%=session.getAttribute("RegistrationStatus")
 	%> </font>
 	<form action="User" method="get">
 	<input type="hidden" name="action" value="register" />

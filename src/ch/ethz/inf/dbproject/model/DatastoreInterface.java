@@ -250,6 +250,37 @@ public final class DatastoreInterface {
 
 	}
 	
+	public void deleteInvolved(int idcase, int idperson, String type) {
+		// Deletes an involvement of case + person
+		// Type distinguishes between suspect and witness
+		try {
+			if (type == "suspect"){
+				PreparedStatement s = sqlConnection
+						.prepareStatement("delete from involved where idCase = ?"
+								+ " and idperson = ? "
+								+ " and role = 'Suspect'");
+				s.setInt(1, idcase);
+				s.setInt(2, idperson);
+				s.execute();
+				s.close();
+			}
+			else
+			{
+				PreparedStatement s = sqlConnection
+						.prepareStatement("delete from involved where idCase = ?"
+								+ " and idperson = ? "
+								+ " and role = 'Witness'");
+				s.setInt(1, idcase);
+				s.setInt(2, idperson);
+				s.execute();
+				s.close();
+			}
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
 	public final void deleteNote(int Nr, String uname, final String type) {
 		// Deletes a caseNote with a certain Nr as key
 		// Type distinguishes between casenote and personnote
@@ -631,6 +662,25 @@ public final class DatastoreInterface {
 		}
 	}
 
+	public final void addNewPerson(String firstname, String lastname, String date) {
+
+		try {
+			PreparedStatement stmt = sqlConnection
+					.prepareStatement("Insert into personofinterest(firstname,lastname,dateofbirth)"+
+			" values ( ?, ?, ?)");
+			stmt.setString(1, firstname);
+			stmt.setString(2, lastname);
+			stmt.setString(3, date);
+			
+			stmt.execute();
+			stmt.close();
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+		}
+
+	}
+	
 	public final String getPassword(String username) {
 		try {
 
@@ -684,35 +734,21 @@ public final class DatastoreInterface {
 		}
 	}
 
-	public void deleteInvolved(int idcase, int idperson, String type) {
-		// Deletes an involvement of case + person
-		// Type distinguishes between suspect and witness
+	
+	public void changePassword(String username, String newpassword) {
 		try {
-			if (type == "suspect"){
-				PreparedStatement s = sqlConnection
-						.prepareStatement("delete from involved where idCase = ?"
-								+ " and idperson = ? "
-								+ " and role = 'Suspect'");
-				s.setInt(1, idcase);
-				s.setInt(2, idperson);
-				s.execute();
-				s.close();
-			}
-			else
-			{
-				PreparedStatement s = sqlConnection
-						.prepareStatement("delete from involved where idCase = ?"
-								+ " and idperson = ? "
-								+ " and role = 'Witness'");
-				s.setInt(1, idcase);
-				s.setInt(2, idperson);
-				s.execute();
-				s.close();
-			}
 
+			final PreparedStatement stmt = sqlConnection
+					.prepareStatement("Update user set password = ? where username = ?");
+			stmt.setString(1, newpassword);
+			stmt.setString(2, username);
+			stmt.execute();
+			stmt.close();
 		} catch (final SQLException ex) {
 			ex.printStackTrace();
+
 		}
 	}
+	
 
 }
