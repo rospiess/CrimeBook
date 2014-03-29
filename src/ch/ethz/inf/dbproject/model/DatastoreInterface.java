@@ -684,4 +684,35 @@ public final class DatastoreInterface {
 		}
 	}
 
+	public void deleteInvolved(int idcase, int idperson, String type) {
+		// Deletes an involvement of case + person
+		// Type distinguishes between suspect and witness
+		try {
+			if (type == "suspect"){
+				PreparedStatement s = sqlConnection
+						.prepareStatement("delete from involved where idCase = ?"
+								+ " and idperson = ? "
+								+ " and role = 'Suspect'");
+				s.setInt(1, idcase);
+				s.setInt(2, idperson);
+				s.execute();
+				s.close();
+			}
+			else
+			{
+				PreparedStatement s = sqlConnection
+						.prepareStatement("delete from involved where idCase = ?"
+								+ " and idperson = ? "
+								+ " and role = 'Witness'");
+				s.setInt(1, idcase);
+				s.setInt(2, idperson);
+				s.execute();
+				s.close();
+			}
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+		}
+	}
+
 }

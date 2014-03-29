@@ -101,7 +101,7 @@ public final class CaseServlet extends HttpServlet {
 			ctable.addBeanColumn("Text", "comment");
 			ctable.addBeanColumn("Submitted by", "username");
 			if (loggedUser != null){
-				ctable.addLinkColumn("delete", "<img src='./s_cancel.png'></img>", "Case?action=deleteNote&uname="+loggedUser.getUsername()+"&delete=", "idnote");
+				ctable.addLinkColumn("Delete", "<img src='./s_cancel.png'></img>", "Case?action=deleteNote&uname="+loggedUser.getUsername()+"&delete=", "idnote");
 			}
 
 			ctable.addObjects(clist);
@@ -117,6 +117,9 @@ public final class CaseServlet extends HttpServlet {
 			ptable.addBeanColumn("Last Name", "lastname");
 			ptable.addBeanColumn("Date of Birth", "bdate");
 			ptable.addLinkColumn("", "View Person", "Person?id=", "idperson");
+			if (aCase.getOpen()){
+				ptable.addLinkColumn("Erase Suspicion","Redeem", "Case?action=deleteSuspect&idperson=", "idperson");
+			}
 
 			ptable.addObjects(plist);
 
@@ -131,6 +134,9 @@ public final class CaseServlet extends HttpServlet {
 			wtable.addBeanColumn("Last Name", "lastname");
 			wtable.addBeanColumn("Date of Birth", "bdate");
 			wtable.addLinkColumn("", "View Person", "Person?id=", "idperson");
+			if (aCase.getOpen()){
+				wtable.addLinkColumn("Unlink from case","Unlink", "Case?action=deleteWitness&idperson=", "idperson");
+			}
 
 			wtable.addObjects(wlist);
 
@@ -158,6 +164,7 @@ public final class CaseServlet extends HttpServlet {
 			final String action = request.getParameter("action");
 			final String Nr = request.getParameter("delete");
 			final String uname = request.getParameter("uname");
+			final String idperson = request.getParameter("idperson");
 			
 			if  (Nr != null && uname != null && action != null && action.trim().equals("deleteNote")){
 				this.dbInterface.deleteNote(Integer.parseInt(Nr), uname, "case");
@@ -165,6 +172,18 @@ public final class CaseServlet extends HttpServlet {
 				response.sendRedirect(request.getRequestURL().toString());
 				return; //Return is needed to prevent the forwarding
 			}	
+			if  (action != null && action.trim().equals("deleteSuspect") && idperson != null){
+				this.dbInterface.deleteInvolved(aCase.getIdcase(),Integer.parseInt(idperson), "suspect");
+				// Refresh to show changes
+				response.sendRedirect(request.getRequestURL().toString());
+				return; //Return is needed to prevent the forwarding
+			}
+			if  (action != null && action.trim().equals("deleteWitness") && idperson != null){
+				this.dbInterface.deleteInvolved(aCase.getIdcase(),Integer.parseInt(idperson), "witness");
+				// Refresh to show changes
+				response.sendRedirect(request.getRequestURL().toString());
+				return; //Return is needed to prevent the forwarding
+			}
 
 		} catch (final Exception ex) {
 			ex.printStackTrace();
