@@ -117,7 +117,7 @@ public final class CaseServlet extends HttpServlet {
 			ptable.addBeanColumn("Last Name", "lastname");
 			ptable.addBeanColumn("Date of Birth", "bdate");
 			ptable.addLinkColumn("", "View Person", "Person?id=", "idperson");
-			if (aCase.getOpen()){
+			if (aCase.getOpen() && loggedUser != null){
 				ptable.addLinkColumn("Erase Suspicion","Redeem", "Case?action=deleteSuspect&idperson=", "idperson");
 			}
 
@@ -134,7 +134,7 @@ public final class CaseServlet extends HttpServlet {
 			wtable.addBeanColumn("Last Name", "lastname");
 			wtable.addBeanColumn("Date of Birth", "bdate");
 			wtable.addLinkColumn("", "View Person", "Person?id=", "idperson");
-			if (aCase.getOpen()){
+			if (aCase.getOpen() && loggedUser != null){
 				wtable.addLinkColumn("Unlink from case","Unlink", "Case?action=deleteWitness&idperson=", "idperson");
 			}
 
