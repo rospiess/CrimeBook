@@ -39,12 +39,13 @@ Insert into conviction(beginDate,endDate,idCase,idPersonOfInterest) values ('200
 Insert into conviction(beginDate,endDate,idCase,idPersonOfInterest) values ('2008-7-5','2013-4-28',5,4);
 Insert into conviction(beginDate,endDate,idCase,idPersonOfInterest) values ('2006-9-3','2012-3-22',1,1);
 
-
+Insert into involved(idPerson,idCase,role) values (3,1,'Suspect');
+Insert into involved(idPerson,idCase,role) values (5,6,'Suspect');
+Insert into involved(idPerson,idCase,role) values (4,5,'Suspect');
+Insert into involved(idPerson,idCase,role) values (1,1,'Suspect');
 
 Insert into involved(idPerson,idCase,role) values (2,1,'Witness');
 Insert into involved(idPerson,idCase,role) values (1,2,'Suspect');
 Insert into involved(idPerson,idCase,role) values (3,2,'Suspect');
-Insert into involved(idPerson,idCase,role) values (4,5,'Suspect');
-Insert into involved(idPerson,idCase,role) values (5,6,'Suspect');
 Insert into involved(idPerson,idCase,role) values (1,4,'Suspect');
 Insert into involved(idPerson,idCase,role) values (3,4,'Witness');

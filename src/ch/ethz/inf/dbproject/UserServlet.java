@@ -67,7 +67,7 @@ public final class UserServlet extends HttpServlet {
 					session.setAttribute(SESSION_USER_LOGGED_IN, true);
 					session.setAttribute(SESSION_USER_DETAILS, username);
 					session.setAttribute(UserManagement.SESSION_USER, u);
-					session.setAttribute("LatestAction", "Authentication successfull");
+					session.setAttribute("LatestAction", "Authentication successful");
 				} else
 					// wrong password
 					session.setAttribute("FailedLogin",
@@ -95,7 +95,7 @@ public final class UserServlet extends HttpServlet {
 			else {
 				dbInterface.insertUser(username, password);
 				session.setAttribute("RegistrationStatus", "Registration of \""
-					+ username + "\" was successfull");
+					+ username + "\" was successful");
 				}
 			}
 		} else {

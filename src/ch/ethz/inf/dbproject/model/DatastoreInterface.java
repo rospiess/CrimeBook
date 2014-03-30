@@ -120,14 +120,16 @@ public final class DatastoreInterface {
 		try {
 
 			final Statement stmt = this.sqlConnection.createStatement();
-
+			
+			String comment_text = text.replace("'","\\'");
+			
 			if (type.equals("case"))
 				stmt.execute("Insert into notecase(idCase, text, username) values ('"
-						+ id + "', '" + text + "', '" + username + "')");
+						+ id + "', '" + comment_text + "', '" + username + "')");
 
 			else
 				stmt.execute("Insert into noteperson(idpersonofinterest, text, username) values ('"
-						+ id + "', '" + text + "', '" + username + "')");
+						+ id + "', '" + comment_text + "', '" + username + "')");
 			stmt.close();
 
 		} catch (final SQLException ex) {
