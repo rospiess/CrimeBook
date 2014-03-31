@@ -62,6 +62,9 @@ public final class CaseServlet extends HttpServlet {
 			final User loggedUser = UserManagement
 					.getCurrentlyLoggedInUser(session);
 			session.setAttribute("CurrentCase", aCase);
+			session.setAttribute("CurrentCon",null);
+			
+			session.setAttribute("ConvDate",false);
 
 			/*******************************************************
 			 * Construct a table to present all properties of a case
@@ -155,6 +158,9 @@ public final class CaseServlet extends HttpServlet {
 			convtable.addBeanColumn("Convicted First Name", "firstname");
 			convtable.addBeanColumn("Convicted Last Name", "lastname");
 			convtable.addLinkColumn("", "View Person", "Person?id=", "idperson");
+			if (loggedUser != null){
+				convtable.addLinkColumn("", "Edit dates", "Case?action=convDate&idcon=", "idcon");
+			}
 
 			convtable.addObjects(convlist);
 
@@ -165,6 +171,7 @@ public final class CaseServlet extends HttpServlet {
 			final String Nr = request.getParameter("delete");
 			final String uname = request.getParameter("uname");
 			final String idperson = request.getParameter("idperson");
+			final String idcon = request.getParameter("idcon");
 			
 			if  (Nr != null && uname != null && action != null && action.trim().equals("deleteNote")){
 				this.dbInterface.deleteNote(Integer.parseInt(Nr), uname, "case");
@@ -183,6 +190,11 @@ public final class CaseServlet extends HttpServlet {
 				// Refresh to show changes
 				response.sendRedirect(request.getRequestURL().toString());
 				return; //Return is needed to prevent the forwarding
+			}
+			if (action != null && action.trim().equals("convDate") && idcon != null){
+				session.setAttribute("ConvDate",true);
+				Conviction aCon = dbInterface.getConvictionsById(Integer.parseInt(idcon), "conviction").get(0);
+				session.setAttribute("CurrentCon", aCon);
 			}
 
 		} catch (final Exception ex) {
@@ -229,12 +241,23 @@ public final class CaseServlet extends HttpServlet {
 			}
 			
 			if  (action != null && action.trim().equals("close")){
-					this.dbInterface.setCaseOpen(id,false);
-					response.setHeader("Refresh",  "0");
+				this.dbInterface.setCaseOpen(id,false);
+				response.setHeader("Refresh",  "0");
 			}
 			if  (action != null && action.trim().equals("open")){
-					this.dbInterface.setCaseOpen(id,true);
-					response.setHeader("Refresh",  "0");
+				this.dbInterface.setCaseOpen(id,true);
+				response.setHeader("Refresh",  "0");
+			}
+			if (action != null && action.trim().equals("submitdates")){
+				session.setAttribute("ConvDate", false);
+				final String begindate = request.getParameter("begindate");
+				final String enddate = request.getParameter("enddate");
+				
+				
+				dbInterface.updateConvictionDates(((Conviction)session.getAttribute("CurrentCon")).getIdcon(),
+						begindate,
+						enddate);
+				response.setHeader("Refresh",  "0");
 			}
 			
 

@@ -142,7 +142,8 @@ public final class DatastoreInterface {
 	}
 
 	public final List<Conviction> getConvictionsById(final int id, String type) {
-
+		// Get Conviction by ID
+		// type determines whether the ID belongs to the case, the person or the conviction itself
 		try {
 
 			final Statement stmt = this.sqlConnection.createStatement();
@@ -153,12 +154,19 @@ public final class DatastoreInterface {
 								+ id
 								+ " and p.idpersonofinterest = co.idpersonofinterest"
 								+ " and ca.idcase = co.idcase");
-			else
+			else if (type.equals("person")){
 				rs = stmt
 						.executeQuery("Select * from conviction co, personofinterest p, cases ca where co.idpersonofinterest = "
 								+ id
 								+ " and co.idpersonofinterest = p.idpersonofinterest "
 								+ " and co.idcase = ca.idcase");
+			}
+			else{
+				rs = stmt.executeQuery("Select * from conviction co, cases ca, personofinterest p where "
+						+ " co.idconviction = " + id
+						+ " and co.idpersonofinterest = p.idpersonofinterest "
+						+ " and co.idcase = ca.idcase");
+			}
 			final List<Conviction> clist = new ArrayList<Conviction>();
 			while (rs.next()) {
 				clist.add(new Conviction(rs));
@@ -174,6 +182,21 @@ public final class DatastoreInterface {
 			return null;
 		}
 
+	}
+	
+	public final void updateConvictionDates(int idcon, String begindate, String enddate){
+		try{
+			final PreparedStatement stmt = sqlConnection.prepareStatement("UPDATE conviction" +
+					" SET begindate = ?, enddate = ? " +
+					" WHERE idconviction = "+idcon);
+			stmt.setString(1, begindate);
+			stmt.setString(2, enddate);
+			stmt.execute();
+			stmt.close();
+		} catch (final SQLException ex){
+			ex.printStackTrace();
+			return;
+		}
 	}
 
 	public final List<Involved> getInvolvedByPersonId(final int pid) {
