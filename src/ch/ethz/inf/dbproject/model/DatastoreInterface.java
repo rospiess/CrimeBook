@@ -118,18 +118,21 @@ public final class DatastoreInterface {
 			final String username, String type) {
 
 		try {
-
-			final Statement stmt = this.sqlConnection.createStatement();
 			
-			String comment_text = text.replace("'","\\'");
-			
-			if (type.equals("case"))
-				stmt.execute("Insert into notecase(idCase, text, username) values ('"
-						+ id + "', '" + comment_text + "', '" + username + "')");
+			String query = "Insert into $tableName (idCase, text, username) values ('"+ id + "', ?, ?)";
 
-			else
-				stmt.execute("Insert into noteperson(idpersonofinterest, text, username) values ('"
-						+ id + "', '" + comment_text + "', '" + username + "')");
+			if (type.equals("case")){
+				query = query.replace("$tableName", "notecase");
+			}
+
+			else{
+				query = query.replace("$tableName","noteperson");
+			}
+			
+			final PreparedStatement stmt = sqlConnection.prepareStatement(query);
+			stmt.setString(1, text);
+			stmt.setString(2, username);
+			stmt.execute();
 			stmt.close();
 
 		} catch (final SQLException ex) {
