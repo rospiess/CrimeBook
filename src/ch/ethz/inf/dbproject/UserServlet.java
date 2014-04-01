@@ -178,23 +178,41 @@ public final class UserServlet extends HttpServlet {
 		{
 			session.setAttribute("OpeningCase", false);
 			final String title = request.getParameter("title");
-			final String descr = request.getParameter("description");
-			final String date = request.getParameter("date");
-			final String time = request.getParameter("time");
-			final String catname = request.getParameter("category");
-			final String street = request.getParameter("street");
-			final String city = request.getParameter("city");
-			final String country = request.getParameter("country");
-			final int streetno = Integer.parseInt(request
-					.getParameter("streetno"));
-			final int zipcode = Integer.parseInt(request
-					.getParameter("zipcode"));
-			final Address address = new Address(country, city, street, zipcode,
-					streetno);
-			
-			this.dbInterface.openNewCase(title, descr, date, time, address,
-					catname);
-			session.setAttribute("LatestAction", "Opened new Case successfully");
+			if (title != ""){
+				final String descr = request.getParameter("description");
+				final String date = request.getParameter("date");
+				final String time = request.getParameter("time");
+				final String catname = request.getParameter("category");
+				final String street = request.getParameter("street");
+				final String city = request.getParameter("city");
+				final String country = request.getParameter("country");
+				
+				final int streetno;
+				String t_stno = request.getParameter("streetno");
+				if (t_stno != null && t_stno != "")
+					streetno = Integer.parseInt(t_stno);
+				else
+					streetno = -1; // Unknown
+					
+				final int zipcode;
+				String t_zip = request.getParameter("zipcode");
+				if (t_zip != null && t_zip != "")
+					zipcode = Integer.parseInt(t_zip);
+				else
+					zipcode = -1; // Unknown
+				
+				final Address address = new Address(country, city, street, zipcode,
+						streetno);
+				
+				this.dbInterface.openNewCase(title, descr, date, time, address,
+						catname);
+				session.setAttribute("LatestAction", "Opened new Case successfully");
+			}
+			else
+			{
+				//TODO add meaningful way to handle empty title (The only thing which must be set)
+				session.setAttribute("LatestAction", "Title cannot be empty");
+			}
 		}
 		// Finally, proceed to the User.jsp page which will renden the profile
 				this.getServletContext().getRequestDispatcher("/User.jsp")

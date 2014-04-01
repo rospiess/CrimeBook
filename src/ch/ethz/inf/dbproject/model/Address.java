@@ -55,4 +55,18 @@ public final class Address {
 	public int getZipCode() {
 		return zipCode;
 	}
+	
+	public String getStreetNoString() {
+		if (streetNo == -1)
+			return "???";
+		else
+			return Integer.toString(streetNo);
+	}
+
+	public String getZipCodeString() {
+		if (zipCode == -1)
+			return "???";
+		else
+			return Integer.toString(zipCode);
+	}
 }

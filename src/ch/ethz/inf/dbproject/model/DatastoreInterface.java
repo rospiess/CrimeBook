@@ -505,16 +505,6 @@ public final class DatastoreInterface {
 						.executeQuery("Select * from Cases c, Category , Address a where "
 								+ " c.idAddress = a.idAddress and c.catname"
 								+ " = category.catname and  supercat = 'property crime'");
-			else if (category.equals("otherper"))
-				rs = stmt
-						.executeQuery("Select * from Cases c, Address a, category ca where "
-								+ "c.idAddress = a.idAddress and ca.supercat = 'personal crime' "
-								+ "and c.catname <> 'Assault' and c.catname <> 'Murder' and c.catname = ca.catname");
-			else if (category.equals("otherpro"))
-				rs = stmt
-						.executeQuery("Select * from Cases c, Address a, category ca where "
-								+ "c.idAddress = a.idAddress and ca.supercat = 'property crime' "
-								+ "and c.catname <> 'Theft' and c.catname <> 'Fraud' and c.catname = ca.catname");
 			else
 				rs = stmt
 						.executeQuery("Select * from Cases c, Address a where "

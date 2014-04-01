@@ -8,7 +8,7 @@ import java.sql.Time;
 public final class Case {
 	
 	/**
-	 * TODO The properties of the case should be added here
+	 * The properties of the case are added here
 	 */
 	private final int idcase;
 	private final String title;
@@ -88,8 +88,8 @@ public final class Case {
 
 	public String getLoc() {
 		return loc.getStreet() +
-				" " + loc.getStreetNo()+
-				", " +	loc.getZipCode() + " " + loc.getCity()+ ", " + loc.getCountry();
+				" " + loc.getStreetNoString()+
+				", " +	loc.getZipCodeString() + " " + loc.getCity()+ ", " + loc.getCountry();
 	}
 
 	public String getCat() {
