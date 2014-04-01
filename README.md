@@ -24,7 +24,6 @@ To-Do List
 -----------
 
 
-- Add distinction between association to a case and conviction (Person detail view)
 - Manage NULL values in case and person creation.
 
 When logged in:
@@ -40,8 +39,6 @@ When logged in:
 - What happens to a conviction when the associated case is reopened?
     -> delete convictions
 
-- Set datatype of streetno and zipcode in Address to String, so that we can display "unknown" or "???". 
-The alternative would be to write some complicated unknown handling code at multiple places ;)
 
 - When closing a case, should we prompt the user to set date for each conviction right then, or set default values and let him edit them later?
 
@@ -52,4 +49,10 @@ Ideas and Nice-to-have:
 -----------
 
 - Bounty
-
+- Victims
+- Statistics
+  - # cases per category
+  - # cases per year
+  - average age
+  - user activity (# comments etc.)
+  - Most convictions / suspect- / witnessroles
