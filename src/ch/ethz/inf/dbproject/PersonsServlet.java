@@ -48,7 +48,7 @@ public final class PersonsServlet extends HttpServlet {
 		//table.addBeanColumn("Person ID", "idperson");
 		table.addBeanColumn("First Name", "firstname");
 		table.addBeanColumn("Last Name", "lastname");
-		table.addBeanColumn("Date of Birth", "bdate");
+		table.addBeanColumn("Date of Birth", "bdateString");
 		table.addLinkColumn(""	/* The header. We will leave it empty */,
 				"View Person" 	/* What should be displayed in every row */,
 				"Person?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 

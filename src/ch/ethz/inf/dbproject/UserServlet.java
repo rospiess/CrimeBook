@@ -165,12 +165,31 @@ public final class UserServlet extends HttpServlet {
 		else if (action != null && action.trim().equals("submitadd"))// Add new Person
 		{
 			session.setAttribute("AddingPerson", false);
-			final String firstname = request.getParameter("firstname");
-			final String lastname = request.getParameter("lastname");
-			final String date = request.getParameter("date");
+			
+			String errorlog = "";
+			String firstname = request.getParameter("firstname");
+			String lastname = request.getParameter("lastname");
+			String date = request.getParameter("date");
+			
+			if (firstname.isEmpty()){
+				firstname = "X"; // Unknown value -> MR. X
+				errorlog = errorlog.concat(", empty firstname set to X");
+			}
+			if (lastname.isEmpty()){
+				lastname = "Y"; //Akte xy ungelöst
+				errorlog = errorlog.concat(", empty lastname set to Y");
+			}
+			
+			try{
+				java.sql.Date.valueOf(date);
+			}catch(IllegalArgumentException e){
+				date = "0001-01-01"; // default = unknown value
+				errorlog = errorlog.concat(", invalid date");
+			}
+			
 			
 			this.dbInterface.addNewPerson(firstname, lastname, date);
-			session.setAttribute("LatestAction", "Added new Person successfully");
+			session.setAttribute("LatestAction", "Added new Person successfully"+errorlog);
 		}
 
 		
