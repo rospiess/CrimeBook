@@ -127,6 +127,7 @@ public final class DatastoreInterface {
 
 			else{
 				query = query.replace("$tableName","noteperson");
+				query = query.replace("idCase", "idPersonofinterest");
 			}
 			
 			final PreparedStatement stmt = sqlConnection.prepareStatement(query);

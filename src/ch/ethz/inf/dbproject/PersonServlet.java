@@ -153,6 +153,10 @@ public final class PersonServlet extends HttpServlet {
 	
 	protected final void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 
+		request.setCharacterEncoding("UTF-8"); // needed in order to allow for most of special printable UTF-8 char like Umlaut in casenote and personnote
+		response.setContentType("text/plain; charset=utf-8"); // And just in case we do it as well for the response
+		response.setCharacterEncoding("UTF-8");
+		
 		final HttpSession session = request.getSession(true);
 
 		 String idString = request.getParameter("id");
