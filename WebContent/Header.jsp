@@ -50,10 +50,12 @@ if (u != null) {
 					<div class="menuDiv2"><a href="Cases?category=personal">Personal Crimes</a></div>
 					<div class="menuDiv3"><a href="Cases?category=assault">Assault</a></div>
 					<div class="menuDiv3"><a href="Cases?category=murder">Murder</a></div>
+					<div class="menuDiv3"><a href="Cases?category=kidnapping">Kidnapping</a></div>
 					<div class="menuDiv3"><a href="Cases?category=otherper">Other</a></div>
 					<div class="menuDiv2"><a href="Cases?category=property">Property Crimes</a></div>
 					<div class="menuDiv3"><a href="Cases?category=theft">Theft</a></div>
 					<div class="menuDiv3"><a href="Cases?category=fraud">Fraud</a></div>
+					<div class="menuDiv3"><a href="Cases?category=burglary">Burglary</a></div>
 					<div class="menuDiv3"><a href="Cases?category=otherpro">Other</a></div>
 					<div class="menuDiv1"><a href="PersonsOfInterest">Persons of Interest</a></div>
 					<div class="menuDiv1"><a href="Search">Search</a></div>

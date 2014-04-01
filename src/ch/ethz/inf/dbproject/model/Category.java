@@ -15,6 +15,10 @@ public final class Category {
 	}
 
 	public final String getName() {
+		if (name.equals("OtherPers"))
+			return "Other Personal Crime";
+		else if (name.equals("OtherProp"))
+			return "Other Property Crime";
 		return name;
 	}
 	

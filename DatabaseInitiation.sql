@@ -7,10 +7,12 @@ Insert into category(CatName) values ('Personal Crime');
 Insert into category(CatName, SuperCat) values ('Assault', 'Personal Crime');
 Insert into category(CatName, SuperCat) values ('Murder', 'Personal Crime');
 Insert into category(CatName, SuperCat) values ('Kidnapping', 'Personal Crime');
+Insert into category(CatName, SuperCat) values ('OtherPers','Personal Crime');
 Insert into category(CatName) values ('Property Crime');
 Insert into category(CatName, SuperCat) values ('Theft', 'Property Crime');
 Insert into category(CatName, SuperCat) values ('Fraud', 'Property Crime');
 Insert into category(CatName, SuperCat) values ('Burglary', 'Property Crime');
+Insert into category(CatName, SuperCat) values ('OtherProp', 'Property Crime');
 
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Andre', 'Rubbia', '1950-12-31');
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Jörg', 'Gutknecht', '1921-4-13');
