@@ -35,4 +35,11 @@ if (user != null) {
 <h1>Involved in following cases</h1>
 <%=session.getAttribute("involvedTable")
 %>
+
+<%if (user != null){
+%>
+	<h1>Link to a case</h1>
+	<%=session.getAttribute("caseSelect") %>
+<%} %>
+
 <%@ include file="Footer.jsp"%>

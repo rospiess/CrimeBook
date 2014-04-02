@@ -76,7 +76,6 @@ public final class CaseServlet extends HttpServlet {
 
 			);
 
-			//table.addBeanColumn("Case ID", "idcase");
 			table.addBeanColumn("Title", "title");
 			table.addBeanColumn("Case Description", "descr");
 			table.addBeanColumn("Date", "dateString");

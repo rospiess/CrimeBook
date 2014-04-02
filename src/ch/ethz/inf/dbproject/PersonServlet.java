@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import ch.ethz.inf.dbproject.model.Case;
 import ch.ethz.inf.dbproject.model.Conviction;
 import ch.ethz.inf.dbproject.model.Comment;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
@@ -18,6 +19,7 @@ import ch.ethz.inf.dbproject.model.Person;
 import ch.ethz.inf.dbproject.model.User;
 import ch.ethz.inf.dbproject.util.UserManagement;
 import ch.ethz.inf.dbproject.util.html.BeanTableHelper;
+import ch.ethz.inf.dbproject.util.html.SelectHelper;
 
 /**
  * Servlet implementation class of Case Details Page
@@ -128,6 +130,19 @@ public final class PersonServlet extends HttpServlet {
 			invtable.addObjects(invlist);	
 
 			session.setAttribute("involvedTable", invtable);
+			
+			// Add selection to add person to a case
+			final SelectHelper<Case> caseselect = new SelectHelper<Case>(
+					"selectedCase",
+					"Available Cases",
+					"title",
+					"idcase",
+					Case.class
+					);
+			caseselect.addObjects(this.dbInterface.getOpenCases());
+			
+			session.setAttribute("caseSelect",caseselect);
+			
 			
 			
 			
