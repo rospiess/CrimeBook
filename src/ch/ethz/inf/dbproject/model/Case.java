@@ -81,9 +81,23 @@ public final class Case {
 	public Date getDate() {
 		return date;
 	}
+	
+	public String getDateString(){
+		if (date != null)
+			return date.toString();
+		else
+			return "???";
+	}
 
 	public Time getTime() {
 		return time;
+	}
+	
+	public String getTimeString(){
+		if (time != null)
+			return time.toString();
+		else
+			return "???";
 	}
 
 	public String getLoc() {

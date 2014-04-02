@@ -198,34 +198,60 @@ public final class UserServlet extends HttpServlet {
 			session.setAttribute("OpeningCase", false);
 			final String title = request.getParameter("title");
 			if (title != ""){
+				
+				String errorlog = ""; // Error messages for the user
+				
 				final String descr = request.getParameter("description");
-				final String date = request.getParameter("date");
-				final String time = request.getParameter("time");
+				
 				final String catname = request.getParameter("category");
 				final String street = request.getParameter("street");
 				final String city = request.getParameter("city");
 				final String country = request.getParameter("country");
 				
+				// Handle invalid inputs or null values
+				
+				String date = request.getParameter("date");
+				try{
+					java.sql.Date.valueOf(date);
+				}catch(IllegalArgumentException e){
+					date = null; // default = unknown value
+					errorlog = errorlog.concat(", date unkown");
+				}
+				
+				
+				String time = request.getParameter("time");
+				try{
+					java.sql.Time.valueOf(time);
+				}catch(IllegalArgumentException e){
+					time = null;
+					errorlog = errorlog.concat(", time unkown");
+				}
+				
 				final int streetno;
 				String t_stno = request.getParameter("streetno");
 				if (t_stno != null && t_stno != "")
 					streetno = Integer.parseInt(t_stno);
-				else
+				else{
 					streetno = -1; // Unknown
+					errorlog = errorlog.concat(", street no unkown");
+				}
 					
+				
 				final int zipcode;
 				String t_zip = request.getParameter("zipcode");
 				if (t_zip != null && t_zip != "")
 					zipcode = Integer.parseInt(t_zip);
-				else
+				else{
 					zipcode = -1; // Unknown
+					errorlog = errorlog.concat(", zip code unkown");
+				}
 				
 				final Address address = new Address(country, city, street, zipcode,
 						streetno);
 				
 				this.dbInterface.openNewCase(title, descr, date, time, address,
 						catname);
-				session.setAttribute("LatestAction", "Opened new Case successfully");
+				session.setAttribute("LatestAction", "Opened new Case successfully"+errorlog);
 			}
 			else
 			{
