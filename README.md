@@ -50,7 +50,7 @@ Ideas and Nice-to-have:
 
 - Bounty
 - Victims
-- Statistics
+- Statistics (SQL queries are done, will push the commit as soon as the frontend follows)
   - # cases per category
   - # cases per year
   - average age
