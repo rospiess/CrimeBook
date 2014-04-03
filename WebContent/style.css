@@ -45,7 +45,7 @@ div.menuDiv3 {
 	padding-left: 40px;
 }
 
-div.menuDiv3.personal, div.menuDiv3.property {
+div.personal.subcategories , div.property.subcategories {
 	display: none;
 }
 
