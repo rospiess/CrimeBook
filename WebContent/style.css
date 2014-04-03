@@ -42,7 +42,11 @@ div.menuDiv2 {
 }
 
 div.menuDiv3 {
-	padding-left: 35px;
+	padding-left: 40px;
+}
+
+div.menuDiv3.personal, div.menuDiv3.property {
+	display: none;
 }
 
 div.menuDiv1, div.menuDiv2, div.menuDiv3 {
