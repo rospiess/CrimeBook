@@ -8,26 +8,50 @@
 <%@ include file="Header.jsp" %>
 
 <% 
-final List<Pair<String,Integer>> pairs = (List<Pair<String,Integer>>) session.getAttribute("myStats");
+final List<Pair<String,Integer>> pairCrimesCat = (List<Pair<String,Integer>>) session.getAttribute("crimeCatStats");
 String categories = "['";
 String values = "[";
-for (int i = 0; i < pairs.size(); i++){
-	categories = categories + pairs.get(i).getL() + "'" + ", '";
-	values = values + pairs.get(i).getR() + ", ";
+for (int i = 0; i < pairCrimesCat.size(); i++){
+	categories = categories + pairCrimesCat.get(i).getL() + "'" + ", '";
+	values = values + pairCrimesCat.get(i).getR() + ", ";
 }
 categories = categories.substring(0, categories.length()-3) + "]";
 values = values.substring(0, values.length()-2) + "]";
 
+final List<Pair<String,Integer>> pairsPOIInv = (List<Pair<String,Integer>>) session.getAttribute("poiInvStats");
+String firstname = "['";
+String involvements = "[";
+for (int i = 0; i < pairsPOIInv.size(); i++){
+	firstname = firstname + pairsPOIInv.get(i).getL() + "'" + ", '";
+	involvements = involvements + pairsPOIInv.get(i).getR() + ", ";
+}
+firstname = firstname.substring(0, firstname.length()-3) + "]";
+involvements = involvements.substring(0, involvements.length()-2) + "]";
+
 
 %>
+<div style="width:30%; border: thin solid; float: left;">
+	<h3 style="width: 50%; margin: 0 auto; white-space:nowrap;"> <span>Percentage of crimes by category</span> </h3>
+	<svg width="100%" height="300px" id="crimeCatChart" xmlns="http://www.w3.org/2000/svg" viewbox="-100 -100 400 400">
+	  <style type="text/css">
+	    path:hover {
+	      opacity: 0.8;
+	    }
+	  </style>
+	</svg>
+</div>
 
-<svg width="50%" height="50%" id="piechartid" xmlns="http://www.w3.org/2000/svg" viewbox="-50 -50 400 400">
-  <style type="text/css">
-    path:hover {
-      opacity: 0.8;
-    }
-  </style>
-</svg>
+<div style="width:30%; border: thin solid; float: left; margin-left: 10px;">
+	<h3 style="width: 50%; margin: 0 auto; white-space:nowrap;"> <span>Percentage of involvements by POI</span> </h3>
+	<svg width="100%" height="300px" id="poiInvChart" xmlns="http://www.w3.org/2000/svg" viewbox="-100 -100 400 400">
+	  <style type="text/css">
+	    path:hover {
+	      opacity: 0.8;
+	    }
+	  </style>
+	</svg>
+</div>
+
 <script>
 
 function toPercent(values){
@@ -52,11 +76,12 @@ function makeSVG(tag, attrs) {
     return el;
 }
 
-function drawArcs(svg_layout, pieData){
+var categories = toStringArr(<%=categories%>);
+var firstname = toStringArr(<%=firstname%>);
+
+function drawArcs(svg_layout, pieData, legendData, type){
     var total = pieData.reduce(function (accu, that) { return that + accu; }, 0);
     var sectorAngleArr = pieData.map(function (v) { return 360 * v / total; });
-    
-    var categories = toStringArr(<%=categories%>);
 
     var startAngle = 0;
     var endAngle = 0;
@@ -75,21 +100,24 @@ function drawArcs(svg_layout, pieData){
         
         var legend= document.createElementNS('http://www.w3.org/2000/svg', 'text');
 		legend.setAttribute('fill', 'black');
-		legend.innerHTML = categories[i];
-		legend.setAttribute('y',parseInt(Math.round(radius + radius*1.35*Math.sin(Math.PI*endAngle/180))));
-		legend.setAttribute('x',parseInt(Math.round(radius + radius*1.35*Math.cos(Math.PI*endAngle/180))));
+		legend.innerHTML = legendData[i];
 		svg_layout.appendChild(legend);
+		var tlength = legend.getComputedTextLength();
+		legend.setAttribute('y',parseInt(Math.round(radius + radius*1.5*Math.sin(Math.PI*(startAngle+sectorAngleArr[i]/2)/180))));
+		legend.setAttribute('x',parseInt(Math.round(radius - tlength/2 + radius*1.5*Math.cos(Math.PI*(startAngle+sectorAngleArr[i]/2)/180))));
 
         var d = "M"+radius+","+radius+"  L" + x1 + "," + y1 + "  A"+radius+","+radius+" 0 " + ((endAngle-startAngle > 180) ? 1 : 0) + ",1 " + x2 + "," + y2 + " z";
         var c = 360;
 		var colors = ["rgb(111,173,12)", "rgb(128,183,40)", "rgb(145,194,69)", "rgb(179,213,126)", "rgb(196,223,156)", "rgb(216,238,186)"]
-        var arc = makeSVG("path", {d: d, fill: colors[i%colors.length]});
+        var arc = makeSVG("path", {d: d, fill: colors[i%colors.length], id: i});
         svg_layout.appendChild(arc);
-        arc.onclick = clickHandler; // Optional onclick handler
+        if (type == "crimeCatChart") arc.onclick = function(){alert(Math.round(pieData[this.id]*100)/100 + " % of the crimes commited are listed under the category " + legendData[this.id] + ".");}; // Optional onclick handler
+        if (type == "poiInvChart") arc.onclick = function(){alert("Person of interest \""+ legendData[this.id] + "\" accounts for " + Math.round(pieData[this.id]*100)/100 + " % of the involvements in cases." );};
     }
 }
 
-drawArcs(document.getElementById("piechartid"), toPercent(<%=values%>)); // here is the pie chart data
+drawArcs(document.getElementById("crimeCatChart"), toPercent(<%=values%>), categories, "crimeCatChart"); // here is the pie chart data
+drawArcs(document.getElementById("poiInvChart"), toPercent(<%=involvements%>), firstname, "poiInvChart");
 </script>
 
 <%
