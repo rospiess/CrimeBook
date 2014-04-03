@@ -779,7 +779,7 @@ public final class DatastoreInterface {
 
 			final List<Pair<String,Integer>> stats = new ArrayList<Pair<String,Integer>>();
 			while (rs.next()) {
-				Pair<String,Integer> a_cat_val = new Pair(rs.getString("CatName"), rs.getInt("amount"));
+				Pair<String,Integer> a_cat_val = new Pair<String, Integer>(rs.getString("CatName"), rs.getInt("amount"));
 				stats.add(a_cat_val);
 			}
 
