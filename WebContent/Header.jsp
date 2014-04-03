@@ -52,7 +52,7 @@ if (u != null) {
 					<div class="personal subcategories">
 					<div class="menuDiv3 personal"><a href="Cases?category=assault">Assault</a></div>
 					<div class="menuDiv3 personal"><a href="Cases?category=murder">Murder</a></div>
-					<div class="menuDiv3"><a href="Cases?category=kidnapping">Kidnapping</a></div>
+					<div class="menuDiv3 personal"><a href="Cases?category=kidnapping">Kidnapping</a></div>
 					<div class="menuDiv3 personal"><a href="Cases?category=otherper">Other</a></div>
 					</div>
 					</div>
@@ -61,7 +61,7 @@ if (u != null) {
 					<div id="subcategory2">
 					<div class="menuDiv3 property"><a href="Cases?category=theft">Theft</a></div>
 					<div class="menuDiv3 property"><a href="Cases?category=fraud">Fraud</a></div>
-					<div class="menuDiv3"><a href="Cases?category=burglary">Burglary</a></div>
+					<div class="menuDiv3 property"><a href="Cases?category=burglary">Burglary</a></div>
 					<div class="menuDiv3 property"><a href="Cases?category=otherpro">Other</a></div>
 					</div>
 					</div>
