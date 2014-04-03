@@ -19,7 +19,12 @@ if (user != null) {
 		<input type="hidden" name="user_id" value="<%= user.getUserid() %>" />
 		Add Comment
 		<br />
-		<textarea rows="4" cols="50" name="comment"></textarea>
+		<% String defaultComment = "Enter your annotations to the case here ..."; // delete the default text on clicking into the textarea, and only the default text. Restore default text when left empty.%>
+			<textarea rows="4" cols="50" name="comment" 
+			onclick="txta=document.getElementsByTagName('textarea')[0]; if(txta.value=='<%=defaultComment%>'){txta.value='';}" 
+			onblur="txta=document.getElementsByTagName('textarea')[0]; if(txta.value==''){txta.value='<%=defaultComment%>';}">
+			<%=defaultComment%>
+			</textarea>
 		<br />
 		<input type="submit" value="Submit" />
 	</form>
