@@ -75,7 +75,8 @@ else
 			<input type="hidden" name="user_id" value="<%= user.getUserid() %>" />
 			Add Comment
 			<br />
-			<textarea rows="4" cols="50" name="comment"></textarea>
+			<% String defaultComment = "Enter your annotations to the case here ..."; %>
+			<textarea rows="4" cols="50" name="comment" onclick="txta=document.getElementsByTagName('textarea')[0]; if(txta.value=='<%=defaultComment%>'){txta.value='';}" onblur="txta=document.getElementsByTagName('textarea')[0]; if(txta.value==''){txta.value='<%=defaultComment%>';}"><%=defaultComment%></textarea>
 			<br />
 			<input onclick="document.location.reload(true)" type="submit" value="Submit" />
 		</form>
