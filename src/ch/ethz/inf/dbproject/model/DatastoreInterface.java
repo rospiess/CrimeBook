@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -771,6 +770,32 @@ public final class DatastoreInterface {
 	
 	
 	public final List<Pair<String,Integer>> getStatCategories() {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("SELECT Title, CatName, COUNT(*) as amount FROM cases GROUP BY CatName");
+
+			final List<Pair<String,Integer>> stats = new ArrayList<Pair<String,Integer>>();
+			while (rs.next()) {
+				Pair<String,Integer> a_cat_val = new Pair<String, Integer>(rs.getString("CatName"), rs.getInt("amount"));
+				stats.add(a_cat_val);
+			}
+
+			rs.close();
+			stmt.close();
+
+			return stats;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+
+	}
+	
+	//not working correctly, is just copy pasted 
+	public final List<Pair<String,Integer>> getStatPersons() {
 		try {
 
 			final Statement stmt = this.sqlConnection.createStatement();

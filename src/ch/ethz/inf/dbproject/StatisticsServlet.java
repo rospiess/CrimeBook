@@ -10,11 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import ch.ethz.inf.dbproject.model.Conviction;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
 import ch.ethz.inf.dbproject.model.Pair;
-import ch.ethz.inf.dbproject.model.Person;
-import ch.ethz.inf.dbproject.util.html.BeanTableHelper;
 
 /**
  * Servlet implementation class Statistics
@@ -39,7 +36,10 @@ public final class StatisticsServlet extends HttpServlet {
     	final HttpSession session = request.getSession(true);
     	
     	List<Pair<String,Integer>> crimeNbrCat = dbInterface.getStatCategories();
-    	session.setAttribute("myStats", crimeNbrCat);
+    	session.setAttribute("crimeCatStats", crimeNbrCat);
+//    	TODO: implement a getStatPerson function in DatastoreInterface
+    	List<Pair<String,Integer>> crimeNbrPer = dbInterface.getStatPersons();//not correct right now
+    	session.setAttribute("poiInvStats", crimeNbrPer);
     	this.getServletContext().getRequestDispatcher("/Statistics.jsp").forward(request, response);	        
 	}
 }
