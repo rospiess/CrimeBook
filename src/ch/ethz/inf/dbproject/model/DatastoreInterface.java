@@ -829,17 +829,16 @@ public final class DatastoreInterface {
 
 	}
 	
-	//not working correctly, is just copy pasted 
-	public final List<Pair<String,Integer>> getStatPersons() {
+	public final List<Pair<String,Integer>> getStatInvolvements() {
 		try {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
-					.executeQuery("SELECT Title, CatName, COUNT(*) as amount FROM cases GROUP BY CatName");
+					.executeQuery("select FirstName, count(*) as amount from PersonOfInterest as POI, involved as inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest;");
 
 			final List<Pair<String,Integer>> stats = new ArrayList<Pair<String,Integer>>();
 			while (rs.next()) {
-				Pair<String,Integer> a_cat_val = new Pair<String, Integer>(rs.getString("CatName"), rs.getInt("amount"));
+				Pair<String,Integer> a_cat_val = new Pair<String, Integer>(rs.getString("FirstName"), rs.getInt("amount"));
 				stats.add(a_cat_val);
 			}
 
@@ -852,7 +851,6 @@ public final class DatastoreInterface {
 			ex.printStackTrace();
 			return null;
 		}
-
 	}
 	
 
