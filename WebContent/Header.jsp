@@ -47,7 +47,7 @@ if (u != null) {
 					<div class="menuDiv2"><a href="Cases?filter=recent">Recent</a></div>
 					<div class="menuDiv2"><a href="Cases?filter=oldest">Oldest Unsolved</a></div>
 					<div class="menuDiv1">Categories</div>
-					<div onmouseover="document.getElementsByClassName('personal subcategories')[0].style.display = 'block';" onmouseout="document.getElementsByClassName('personal subcategories')[0].style.display = 'none';">
+					<div onmouseover="document.getElementsByClassName('personal subcategories')[0].style.display = 'block'; document.getElementsByClassName('property subcategories')[0].style.display = 'none';">
 					<div class="menuDiv2 personal"><a href="Cases?category=personal">Personal Crimes</a></div>
 					<div class="personal subcategories">
 					<div class="menuDiv3 personal"><a href="Cases?category=assault">Assault</a></div>
@@ -56,9 +56,9 @@ if (u != null) {
 					<div class="menuDiv3 personal"><a href="Cases?category=otherper">Other</a></div>
 					</div>
 					</div>
-					<div onmouseover="document.getElementById('subcategory2').style.display = 'block';"  onmouseout="document.getElementById('subcategory2').style.display = 'none';">
+					<div onmouseover="document.getElementsByClassName('property subcategories')[0].style.display = 'block'; document.getElementsByClassName('personal subcategories')[0].style.display = 'none';">
 					<div class="menuDiv2 property"><a href="Cases?category=property">Property Crimes</a></div>
-					<div id="subcategory2">
+					<div class="property subcategories">
 					<div class="menuDiv3 property"><a href="Cases?category=theft">Theft</a></div>
 					<div class="menuDiv3 property"><a href="Cases?category=fraud">Fraud</a></div>
 					<div class="menuDiv3 property"><a href="Cases?category=burglary">Burglary</a></div>
