@@ -172,12 +172,12 @@ public final class UserServlet extends HttpServlet {
 			String date = request.getParameter("date");
 			
 			if (firstname.isEmpty()){
-				firstname = "X"; // Unknown value -> MR. X
-				errorlog = errorlog.concat(", empty firstname set to X");
+				firstname = "???"; // Unknown value
+				errorlog = errorlog.concat(", empty firstname");
 			}
 			if (lastname.isEmpty()){
-				lastname = "Y"; //Akte xy ungelöst
-				errorlog = errorlog.concat(", empty lastname set to Y");
+				lastname = "???";
+				errorlog = errorlog.concat(", empty lastname");
 			}
 			
 			try{

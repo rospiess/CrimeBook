@@ -15,15 +15,15 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 	<table>
 		<tr>
 			<th align="left">Old Password</th>
-			<td><input type="password" name="old" value="" /></td>
+			<td><input type="password" name="old" maxlength="60" value="" /></td>
 		</tr>
 		<tr>
 			<th align="left">New Password</th>
-			<td><input type="password" name="new" value="" /></td>
+			<td><input type="password" name="new" maxlength="60" value="" /></td>
 		</tr>
 		<tr>
 			<th align="left">Confirm New Password</th>
-			<td><input type="password" name="confirmnew" value="" /></td>
+			<td><input type="password" name="confirmnew" maxlength="60" value="" /></td>
 		</tr>
 		<tr>
 			<th colspan="2">
@@ -40,11 +40,11 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 	<table>
 		<tr>
 			<th align="left">First Name</th>
-			<td><input type="text" name="firstname" value="" /></td>
+			<td><input type="text" name="firstname" maxlength="45" value="" /></td>
 		</tr>
 		<tr>
 			<th align="left">Last Name</th>
-			<td><input type="text" name="lastname" value="" /></td>
+			<td><input type="text" name="lastname" maxlength="45" value="" /></td>
 		</tr>
 		<tr>
 			<th align="left">Date of Birth (yyyy-mm-dd)</th>
@@ -64,11 +64,11 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 	<table>
 		<tr>
 			<th align="left">Case Title</th>
-			<td><input type="text" name="title" value="" /></td>
+			<td><input type="text" name="title" maxlength="45" value="" /></td>
 		</tr>
 		<tr>
 			<th align="left">Description</th>
-			<td><input type="text" name="description" value="" /></td>
+			<td><input type="text" name="description" maxlength="160" value="" /></td>
 		</tr>
 		<tr>
 			<th align="left">Date (yyyy-mm-dd)</th>
@@ -80,17 +80,17 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 		</tr>
 		<tr>
 			<th align="left">Street</th>
-			<td><input type="text" name="street" value="" /></td>
+			<td><input type="text" name="street" maxlength="45" value="" /></td>
 			<th align="left">StreetNo</th>
-			<td><input type="text" name="streetno" value="" /></td>		
+			<td><input type="text" name="streetno" maxlength="9" value="" /></td>		
 		</tr>
 		<tr>
 			<th align="left">ZipCode</th>
-			<td><input type="text" name="zipcode" value="" /></td>	
+			<td><input type="text" name="zipcode" maxlength="9" value="" /></td>	
 			<th align="left">City</th>
-			<td><input type="text" name="city" value="" /></td>	
+			<td><input type="text" name="city" maxlength="45" value="" /></td>	
 			<th align="left">Country</th>
-			<td><input type="text" name="country" value="" /></td>	
+			<td><input type="text" name="country" maxlength="45" value="" /></td>	
 		</tr>
 		<tr>
 		<th align="left">Category</th>
@@ -168,11 +168,11 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 	<table>
 		<tr>
 			<th>Username</th>
-			<td><input type="text" name="username" value="" /></td>
+			<td><input type="text" name="username" maxlength="45" value="" /></td>
 		</tr>
 		<tr>
 			<th>Password</th>
-			<td><input type="password" name="password" value="" /></td>
+			<td><input type="password" name="password" maxlength="60" value="" /></td>
 		</tr>
 		<tr>
 			<th colspan="2">
@@ -190,15 +190,15 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 	<table>
 		<tr>
 			<th align="left">Username</th>
-			<td><input type="text" name="regusername" value="" /></td>
+			<td><input type="text" name="regusername" maxlength="45" value="" /></td>
 		</tr>
 		<tr>
 			<th align="left">Password</th>
-			<td><input type="password" name="regpassword" value="" /></td>
+			<td><input type="password" name="regpassword" maxlength="60" value="" /></td>
 		</tr>
 		<tr>
 			<th>Confirm Password</th>
-			<td><input type="password" name="regpassword2" value="" /></td>
+			<td><input type="password" name="regpassword2" maxlength="60" value="" /></td>
 		</tr>
 		<tr>
 			<th colspan="2">

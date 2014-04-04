@@ -61,6 +61,9 @@ public final class PersonServlet extends HttpServlet {
 					.getCurrentlyLoggedInUser(session);
 
 			
+			session.setAttribute("editingPerson",false);
+			session.setAttribute("currentPerson",aPerson);
+			
 			/*******************************************************
 			 * Construct a table to present all properties of a case
 			 *******************************************************/
@@ -81,7 +84,7 @@ public final class PersonServlet extends HttpServlet {
 			table.addObject(aPerson);
 			table.setVertical(true);			
 
-			session.setAttribute("caseTable", table);	
+			session.setAttribute("personTable", table);	
 			
 			final BeanTableHelper<Comment> ctable = new BeanTableHelper<Comment>(
 					"comment" 		/* The table html id property */,
@@ -156,7 +159,12 @@ public final class PersonServlet extends HttpServlet {
 				response.sendRedirect(request.getRequestURL().toString());
 				return;
 			}
-
+			if (action != null && action.trim().equals("editDetails")){
+				session.setAttribute("editingPerson",true);
+			}
+			if (action != null && action.trim().equals("cancelEditing")){
+				session.setAttribute("editingPerson",false);
+			}
 			
 		} catch (final Exception ex) {
 			ex.printStackTrace();
@@ -217,6 +225,36 @@ public final class PersonServlet extends HttpServlet {
 					response.setHeader("Refresh", "0");
 				}
 				//TODO print some error message "already connected to case"
+			}
+			
+			else if (action != null && action.trim().equals("submitEdit"))
+			{
+				// Edited Person
+				session.setAttribute("editingPerson", false);
+				
+				
+				String firstname = request.getParameter("firstname");
+				String lastname = request.getParameter("lastname");
+				String date = request.getParameter("birthdate");
+				
+				if (firstname.isEmpty()){
+					firstname = "???"; // Unknown value
+					
+				}
+				if (lastname.isEmpty()){
+					lastname = "???"; 
+					
+				}
+				
+				try{
+					java.sql.Date.valueOf(date);
+				}catch(IllegalArgumentException e){
+					date = "0001-01-01"; // default = unknown value
+					
+				}
+				
+				this.dbInterface.updatePerson(id,firstname, lastname, date);
+				response.setHeader("Refresh", "0");
 			}
 			
 		} catch (final Exception ex) {

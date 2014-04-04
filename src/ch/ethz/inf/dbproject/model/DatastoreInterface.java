@@ -715,6 +715,25 @@ public final class DatastoreInterface {
 
 	}
 	
+	public final void updatePerson(int idperson, String firstname, String lastname, String date) {
+
+		try {
+			PreparedStatement stmt = sqlConnection
+					.prepareStatement("UPDATE personofinterest SET firstname = ?, lastname = ?, dateofbirth = ?" +
+							" WHERE idpersonofinterest ="+idperson);
+			stmt.setString(1, firstname);
+			stmt.setString(2, lastname);
+			stmt.setString(3, date);
+			
+			stmt.execute();
+			stmt.close();
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+		}
+
+	}
+	
 	public final String getPassword(String username) {
 		try {
 
