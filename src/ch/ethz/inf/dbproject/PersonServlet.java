@@ -190,10 +190,33 @@ public final class PersonServlet extends HttpServlet {
 			
 			final String comment = request.getParameter("comment");
 			final String action = request.getParameter("action");
+			
+			
 
 			if(action != null && action.equals("add_comment")&& comment  != null && !comment.isEmpty()){
 				this.dbInterface.insertComment(id, comment, loggedUser.getUsername(), "person");
 				response.setHeader("Refresh", "0");
+			}
+			
+			String selCase = request.getParameter("selectedCase");
+			String role = request.getParameter("role");
+			if(action != null && action.equals("link_case") && selCase != null && role != null){
+				int selidcase = Integer.parseInt(selCase);
+				
+				//Check for duplicate
+				boolean not_duplicate = true;
+				List<Involved> inv = dbInterface.getInvolvedByPersonId(id);
+				for(Involved i:inv){
+					if (i.getIdcase() == selidcase){
+						not_duplicate = false;
+						break;
+					}
+				}
+				if (not_duplicate){
+					dbInterface.addInvolvement(selidcase, id, role);
+					response.setHeader("Refresh", "0");
+				}
+				//TODO print some error message "already connected to case"
 			}
 			
 		} catch (final Exception ex) {

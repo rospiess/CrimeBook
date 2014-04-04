@@ -399,7 +399,8 @@ public final class DatastoreInterface {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
-					.executeQuery("Select * from Cases c, Address a where c.idAddress = a.idAddress and open = 1");
+					.executeQuery("Select * from Cases c, Address a where c.idAddress = a.idAddress and open = 1" +
+							" order by title asc");
 
 			final List<Case> cases = new ArrayList<Case>();
 			while (rs.next()) {
@@ -679,6 +680,21 @@ public final class DatastoreInterface {
 			return null;
 		}
 	}
+	
+	
+	public final void addInvolvement(int idcase, int idperson, String role){
+		try{
+			final PreparedStatement stmt = sqlConnection.prepareStatement("Insert into involved (idCase, idPerson, role) values (" 
+					+ idcase + "," 
+					+ idperson + ", ?)");
+			stmt.setString(1, role);
+			stmt.execute();
+			stmt.close();
+		}catch(final SQLException ex){
+			ex.printStackTrace();
+		}
+	}
+	
 
 	public final void addNewPerson(String firstname, String lastname, String date) {
 

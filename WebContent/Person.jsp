@@ -19,12 +19,10 @@ if (user != null) {
 		<input type="hidden" name="user_id" value="<%= user.getUserid() %>" />
 		Add Comment
 		<br />
-		<% String defaultComment = "Enter your annotations to the case here ..."; // delete the default text on clicking into the textarea, and only the default text. Restore default text when left empty.%>
+		<% String defaultComment = "Enter your comment to this person here ..."; // delete the default text on clicking into the textarea, and only the default text. Restore default text when left empty.%>
 			<textarea rows="4" cols="50" name="comment" 
 			onclick="txta=document.getElementsByTagName('textarea')[0]; if(txta.value=='<%=defaultComment%>'){txta.value='';}" 
-			onblur="txta=document.getElementsByTagName('textarea')[0]; if(txta.value==''){txta.value='<%=defaultComment%>';}">
-			<%=defaultComment%>
-			</textarea>
+			onblur="txta=document.getElementsByTagName('textarea')[0]; if(txta.value==''){txta.value='<%=defaultComment%>';}"><%=defaultComment%></textarea>
 		<br />
 		<input type="submit" value="Submit" />
 	</form>
@@ -44,7 +42,21 @@ if (user != null) {
 <%if (user != null){
 %>
 	<h1>Link to a case</h1>
-	<%=session.getAttribute("caseSelect") %>
+	
+		<form action="Person" method = "post">
+		Link to <%=session.getAttribute("caseSelect") %> as a 
+		<select name="role">
+		<optgroup label="Role">
+			<option value = "Suspect">Suspect</option>
+			<option value = "Witness">Witness</option>
+		</optgroup>
+	</select>
+	
+	
+		<input type="hidden" name="action" value="link_case"/>
+		<input type="submit" value = "OK"/>
+	</form>
+	
 <%} %>
 
 <%@ include file="Footer.jsp"%>
