@@ -9,7 +9,85 @@ final Case caze = (Case) session.getAttribute("CurrentCase");
 final Conviction con = (Conviction) session.getAttribute("CurrentCon");
 %>
 
-<%if((Boolean)session.getAttribute("ConvDate")){ %>
+<%if ((Boolean)session.getAttribute("EditingCase")){ %>
+	<h1>Edit Case Detail</h1>
+
+		<form action="Case" method="post">
+			<table cellpadding = "0" cellspacing = "0" class = "casesTable">
+				<tbody>
+					<tr>
+						<th>Title</th>
+						<td><input type="text" name="title" maxlength="45" value="<%=caze.getTitle() %>" /></td>
+					</tr>
+					<tr>
+						<th>Description</th>
+						<td><textarea name="descr" cols="40" rows = "4" maxlength="160"/><%=caze.getDescr() %></textarea></td>
+					</tr>
+					<tr>
+						<th>Date (yyyy-mm-dd)</th>
+						<td><input type="date" name="date" value="<%=caze.getDateString() %>" /></td>
+					</tr>
+					<tr>
+						<th>Time (hh:mm:ss)</th>
+						<td><input type="time" name="time" value="<%=caze.getTimeString() %>"/></td>
+					</tr>
+					<tr>
+						<th>Street</th>
+						<td><input type="text" name="street" maxlength="45" value="<%=caze.getAddress().getStreet() %>"/> </td>
+					</tr>
+					<tr>
+						<th>Street Number</th>
+						<td><input type="text" name="streetno" maxlength="9" value="<%=caze.getAddress().getStreetNoString() %>"/> </td>
+					</tr>
+					<tr>
+						<th>Zip Code</th>
+						<td><input type="text" name="zipcode" maxlength="9" value="<%=caze.getAddress().getZipCodeString() %>"/> </td>
+					</tr>
+					<tr>
+						<th>City</th>
+						<td><input type="text" name="city" maxlength="45" value="<%=caze.getAddress().getCity() %>"/> </td>
+					</tr>
+					<tr>
+						<th>Country</th>
+						<td><input type="text" name="country" maxlength="45" value="<%=caze.getAddress().getCountry() %>"/> </td>
+					</tr>
+					<tr>
+						<th align="left">Category</th>
+						<td><input type="hidden" name="cat" value="category" />
+							<select name="category">
+							<optgroup label="Personal Crimes">
+								<option value = "Assault">Assault</option>
+								<option value = "Murder">Murder</option>
+								<option value = "Kidnapping">Kidnapping</option>
+								<option value = "OtherPers">Other personal crimes</option>
+							</optgroup>
+							<optgroup label="Property Crimes">
+								<option value = "Theft">Theft</option>
+								<option value = "Fraud">Fraud</option>
+								<option value = "Burglary">Burglary</option>
+								<option value = "OtherProp">Other property crimes</option>
+							</optgroup>
+							</select>
+						</td>
+					</tr>
+					
+				</tbody>
+			</table>
+
+
+			<input type="hidden" name="action" value="submitEdit" />
+			<input type="submit" value="Submit" />
+		</form>
+		
+		<br>
+
+		<form action="Case" method="get">
+			<input type="hidden" name="action" value="cancelEdit" />
+			<input type="submit" value="Cancel" />
+		</form>	
+
+	
+<%}else if((Boolean)session.getAttribute("ConvDate")){ %>
 
 	<form action="Case" method="post">
 	<input type="hidden" name="action" value="submitdates" />
@@ -40,17 +118,25 @@ else
 	
 	
 	<%if(user != null){
-		if(caze.getOpen()){
-	%><form action="Case" method="post">
-		<input type="hidden" name="action" value="close" />
-		<table>
-			<tr>
-				<th colspan="2">
-					<input onclick="document.location.reload(true)" type="submit" value="Close Case" />
-				</th>
-			</tr>
-		</table>
-		</form>
+		if(caze.getOpen()){	
+	%>
+	<table>
+		<tr>
+		<th colspan="20">
+			<form action="Case" method="get">
+				<input type="hidden" name="action" value="editDetails" />
+				<input type="submit" value="Edit" />
+			</form>	
+		</th>
+		<th colspan="20">
+			<form action="Case" method="post">
+				<input type="hidden" name="action" value="close" />
+				<input onclick="document.location.reload(true)" type="submit" value="Close Case" />
+			</form>
+		</th>
+		</tr>
+	</table>
+	
 	<%} else { %>
 	<form action="Case" method="post">
 		<input type="hidden" name="action" value="open" />

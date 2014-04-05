@@ -156,7 +156,6 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 <%}
 //TODO: Display cases opened by the user
 
-//TODO: Add possibility to create new case (requires a form) 
 	
 } else {
 	%> 

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import ch.ethz.inf.dbproject.model.Address;
 import ch.ethz.inf.dbproject.model.Comment;
 import ch.ethz.inf.dbproject.model.Conviction;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
@@ -65,6 +66,7 @@ public final class CaseServlet extends HttpServlet {
 			session.setAttribute("CurrentCon",null);
 			
 			session.setAttribute("ConvDate",false);
+			session.setAttribute("EditingCase",false);
 
 			/*******************************************************
 			 * Construct a table to present all properties of a case
@@ -190,6 +192,10 @@ public final class CaseServlet extends HttpServlet {
 				response.sendRedirect(request.getRequestURL().toString());
 				return; //Return is needed to prevent the forwarding
 			}
+			if (action != null && action.trim().equals("editDetails")){
+				session.setAttribute("EditingCase",true);
+				// By the way, the cancel button works by just calling this get method, which sets this attribute back to false
+			}
 			if (action != null && action.trim().equals("convDate") && idcon != null){
 				session.setAttribute("ConvDate",true);
 				Conviction aCon = dbInterface.getConvictionsById(Integer.parseInt(idcon), "conviction").get(0);
@@ -261,6 +267,60 @@ public final class CaseServlet extends HttpServlet {
 						begindate,
 						enddate);
 				response.setHeader("Refresh",  "0");
+			}
+			
+			if (action != null && action.trim().equals("submitEdit")){
+				// Edited case details
+				session.setAttribute("EditingCase", false);
+				
+				String title = request.getParameter("title");
+				if (title != null && title.isEmpty())
+					title = aCase.getTitle(); // Reset to something valid
+				final String descr = request.getParameter("descr");
+				final String catname = request.getParameter("category");
+				final String street = request.getParameter("street");
+				final String city = request.getParameter("city");
+				final String country = request.getParameter("country");
+				
+				// Handle invalid inputs or null values
+				
+				String date = request.getParameter("date");
+				try{
+					java.sql.Date.valueOf(date);
+				}catch(IllegalArgumentException e){
+					date = null; // default = unknown value
+				}
+				
+				
+				String time = request.getParameter("time");
+				try{
+					java.sql.Time.valueOf(time);
+				}catch(IllegalArgumentException e){
+					time = null;
+				}
+				
+				final int streetno;
+				String t_stno = request.getParameter("streetno");
+				if (t_stno != null && t_stno != "")
+					streetno = Integer.parseInt(t_stno);
+				else{
+					streetno = -1; // Unknown
+				}
+					
+				
+				final int zipcode;
+				String t_zip = request.getParameter("zipcode");
+				if (t_zip != null && t_zip != "")
+					zipcode = Integer.parseInt(t_zip);
+				else{
+					zipcode = -1; // Unknown
+				}
+				
+				final Address address = new Address(country, city, street, zipcode,
+						streetno);
+				
+				dbInterface.updateCase(id,title,descr,date,time,address,catname);
+				response.setHeader("Refresh", "0");
 			}
 			
 

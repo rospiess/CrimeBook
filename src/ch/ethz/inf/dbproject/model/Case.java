@@ -105,6 +105,11 @@ public final class Case {
 				" " + loc.getStreetNoString()+
 				", " +	loc.getZipCodeString() + " " + loc.getCity()+ ", " + loc.getCountry();
 	}
+	
+	public Address getAddress(){
+		//Used for Case editing (in Case.jsp)
+		return loc;
+	}
 
 	public String getCat() {
 		return cat.getName();
