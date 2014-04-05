@@ -189,6 +189,25 @@ else
 	%>
 	<%} %>
 
+	<%if (user != null && caze.getOpen()){
+	%>
+		<h1>Add a Suspect / Witness</h1>
+		
+		<form action="Case" method = "post">
+			Add <%=session.getAttribute("personSelect") %> as a 
+			<select name="role">
+			<optgroup label="Role">
+				<option value = "Suspect">Suspect</option>
+				<option value = "Witness">Witness</option>
+			</optgroup>
+			</select>
+		
+		
+			<input type="hidden" name="action" value="link_person"/>
+			<input type="submit" value = "OK"/>
+		</form>
+		
+	<%} %>
 <%} %>
 
 <%@ include file="Footer.jsp"%>

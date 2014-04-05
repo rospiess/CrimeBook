@@ -36,6 +36,7 @@ public class Person {
 	 * the getters. 
 	 */	
 
+
 	public int getIdperson() {
 		return idperson;
 	}
@@ -57,6 +58,11 @@ public class Person {
 			return "???";
 		else
 			return bdate.toString();
+	}
+	
+	public String getFullname()
+	{
+		return getFirstname() + " " + getLastname();
 	}
 
 }

@@ -15,10 +15,12 @@ import ch.ethz.inf.dbproject.model.Comment;
 import ch.ethz.inf.dbproject.model.Conviction;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
 import ch.ethz.inf.dbproject.model.Case;
+import ch.ethz.inf.dbproject.model.Involved;
 import ch.ethz.inf.dbproject.model.Person;
 import ch.ethz.inf.dbproject.model.User;
 import ch.ethz.inf.dbproject.util.UserManagement;
 import ch.ethz.inf.dbproject.util.html.BeanTableHelper;
+import ch.ethz.inf.dbproject.util.html.SelectHelper;
 
 /**
  * Servlet implementation class of Case Details Page
@@ -166,6 +168,18 @@ public final class CaseServlet extends HttpServlet {
 			convtable.addObjects(convlist);
 
 			session.setAttribute("convictionTable", convtable);
+			
+			
+			final SelectHelper<Person> personselect = new SelectHelper<Person>(
+					"selectedPerson",
+					"Available Persons",
+					"fullname",
+					"idperson",
+					Person.class
+					);
+			personselect.addObjects(this.dbInterface.getAllPersons());
+			
+			session.setAttribute("personSelect",personselect);
 			
 
 			final String action = request.getParameter("action");
@@ -321,6 +335,27 @@ public final class CaseServlet extends HttpServlet {
 				
 				dbInterface.updateCase(id,title,descr,date,time,address,catname);
 				response.setHeader("Refresh", "0");
+			}
+			
+			String selPerson = request.getParameter("selectedPerson");
+			String role = request.getParameter("role");
+			if(action != null && action.equals("link_person") && selPerson != null && role != null){
+				int selidperson = Integer.parseInt(selPerson);
+				
+				//Check for duplicate
+				boolean not_duplicate = true;
+				List<Involved> inv = dbInterface.getInvolvedByPersonId(selidperson);
+				for(Involved i:inv){
+					if (i.getIdcase() == id){
+						not_duplicate = false;
+						break;
+					}
+				}
+				if (not_duplicate){
+					dbInterface.addInvolvement(id, selidperson, role);
+					response.setHeader("Refresh", "0");
+				}
+				//TODO print some error message "already connected to case"
 			}
 			
 
