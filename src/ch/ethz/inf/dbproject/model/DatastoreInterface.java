@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import ch.ethz.inf.dbproject.database.MySQLConnection;
@@ -170,15 +171,16 @@ public final class DatastoreInterface {
 						.executeQuery("Select * from conviction co, personofinterest p, cases ca where co.idcase = "
 								+ id
 								+ " and p.idpersonofinterest = co.idpersonofinterest"
-								+ " and ca.idcase = co.idcase");
+								+ " and ca.idcase = co.idcase ORDER BY lastname ASC");
 			else if (type.equals("person")){
 				rs = stmt
 						.executeQuery("Select * from conviction co, personofinterest p, cases ca where co.idpersonofinterest = "
 								+ id
 								+ " and co.idpersonofinterest = p.idpersonofinterest "
-								+ " and co.idcase = ca.idcase");
+								+ " and co.idcase = ca.idcase ORDER BY title ASC");
 			}
 			else{
+				// Search by conviction id
 				rs = stmt.executeQuery("Select * from conviction co, cases ca, personofinterest p where "
 						+ " co.idconviction = " + id
 						+ " and co.idpersonofinterest = p.idpersonofinterest "
@@ -228,7 +230,7 @@ public final class DatastoreInterface {
 							+ " where involved.idperson = "
 							+ pid
 							+ " and personofinterest.idpersonofinterest = "
-							+ pid + " and cases.idCase = involved.idcase");
+							+ pid + " and cases.idCase = involved.idcase ORDER BY title ASC");
 			final List<Involved> invlist = new ArrayList<Involved>();
 			while (rs.next()) {
 				invlist.add(new Involved(rs));
@@ -275,8 +277,8 @@ public final class DatastoreInterface {
 					// Create conviction with the suspects in the resultset
 					ps_createConviction.setInt(1, id);
 					ps_createConviction.setInt(2, rs.getInt("idpersonofinterest"));
-					ps_createConviction.setDate(3, Date.valueOf("2000-01-01"));
-					ps_createConviction.setDate(4, Date.valueOf("2000-01-01"));
+					ps_createConviction.setDate(3, getCurrentDate());
+					ps_createConviction.setDate(4, getCurrentDate());
 					
 					ps_createConviction.execute();
 				}
@@ -291,6 +293,18 @@ public final class DatastoreInterface {
 			ex.printStackTrace();
 		}
 
+	}
+	
+	private final Date getCurrentDate(){
+		try{
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt.executeQuery("SELECT CURDATE()");
+			if(rs.next())
+				return rs.getDate(1);
+		}catch(final SQLException ex){
+			ex.printStackTrace();
+		}
+		return null;
 	}
 	
 	public void deleteInvolved(int idcase, int idperson, String type) {
@@ -414,7 +428,7 @@ public final class DatastoreInterface {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
-					.executeQuery("Select * from Cases c, Address a where c.idAddress = a.idAddress");
+					.executeQuery("Select * from Cases c, Address a where c.idAddress = a.idAddress ORDER BY title ASC");
 
 			final List<Case> cases = new ArrayList<Case>();
 			while (rs.next()) {
@@ -463,7 +477,7 @@ public final class DatastoreInterface {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
-					.executeQuery("Select * from Cases c, Address a where c.idAddress = a.idAddress and open = 0");
+					.executeQuery("Select * from Cases c, Address a where c.idAddress = a.idAddress and open = 0 ORDER BY title ASC");
 
 			final List<Case> cases = new ArrayList<Case>();
 			while (rs.next()) {
@@ -538,17 +552,17 @@ public final class DatastoreInterface {
 				rs = stmt
 						.executeQuery("Select * from Cases c, Category, Address a where "
 								+ "c.idAddress = a.idAddress and c.catname"
-								+ " = category.catname and supercat = 'personal crime'");
+								+ " = category.catname and supercat = 'personal crime' ORDER BY title ASC");
 			else if (category.equals("property"))
 				rs = stmt
 						.executeQuery("Select * from Cases c, Category , Address a where "
 								+ " c.idAddress = a.idAddress and c.catname"
-								+ " = category.catname and  supercat = 'property crime'");
+								+ " = category.catname and  supercat = 'property crime' ORDER BY title ASC");
 			else
 				rs = stmt
 						.executeQuery("Select * from Cases c, Address a where "
 								+ "c.idAddress = a.idAddress and catname = '"
-								+ category + "'");
+								+ category + "' ORDER BY title ASC");
 
 			final List<Case> cases = new ArrayList<Case>();
 			while (rs.next()) {
@@ -575,7 +589,8 @@ public final class DatastoreInterface {
 							+ "like '%"
 							+ category
 							+ "%' and personofinterest.idpersonofinterest = c.idpersonofinterest"
-							+ " and cas.idcase = c.idcase");
+							+ " and cas.idcase = c.idcase" +
+							" ORDER BY LastName ASC");
 
 			final List<Conviction> conv = new ArrayList<Conviction>();
 			while (rs.next()) {
@@ -603,7 +618,8 @@ public final class DatastoreInterface {
 							+ "' or endDate = '"
 							+ date
 							+ "') and p.idpersonofinterest = c.idpersonofinterest"
-							+ " and cas.idcase = c.idcase");
+							+ " and cas.idcase = c.idcase" +
+							" ORDER BY LastName ASC");
 
 			final List<Conviction> conv = new ArrayList<Conviction>();
 			while (rs.next()) {
@@ -627,7 +643,8 @@ public final class DatastoreInterface {
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
 					.executeQuery("Select * from personofinterest where firstname like '%"
-							+ name + "%'" + "or lastname like '%" + name + "%'");
+							+ name + "%'" + "or lastname like '%" + name + "%'" +
+									" ORDER BY LastName ASC");
 
 			final List<Person> persons = new ArrayList<Person>();
 			while (rs.next()) {
@@ -650,7 +667,7 @@ public final class DatastoreInterface {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
-					.executeQuery("Select * from personofinterest");
+					.executeQuery("Select * from personofinterest ORDER BY LastName ASC");
 
 			final List<Person> persons = new ArrayList<Person>();
 			while (rs.next()) {
@@ -676,7 +693,7 @@ public final class DatastoreInterface {
 					.executeQuery("Select idpersonofinterest,firstname,lastname, dateofbirth from personofinterest p, involved i "
 							+ "where i.role = 'Suspect' and i.idCase = '"
 							+ id
-							+ "' and i.idperson = p.idpersonofinterest");
+							+ "' and i.idperson = p.idpersonofinterest ORDER BY lastname ASC");
 
 			final List<Person> persons = new ArrayList<Person>();
 			while (rs.next()) {
@@ -702,7 +719,7 @@ public final class DatastoreInterface {
 					.executeQuery("Select idpersonofinterest,firstname,lastname, dateofbirth from personofinterest p, involved i "
 							+ "where i.role = 'Witness' and i.idCase = '"
 							+ id
-							+ "' and i.idperson = p.idpersonofinterest");
+							+ "' and i.idperson = p.idpersonofinterest ORDER BY lastname ASC");
 
 			final List<Person> persons = new ArrayList<Person>();
 			while (rs.next()) {
