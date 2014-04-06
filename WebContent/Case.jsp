@@ -56,16 +56,16 @@ final Conviction con = (Conviction) session.getAttribute("CurrentCon");
 						<td><input type="hidden" name="cat" value="category" />
 							<select name="category">
 							<optgroup label="Personal Crimes">
-								<option value = "Assault">Assault</option>
-								<option value = "Murder">Murder</option>
-								<option value = "Kidnapping">Kidnapping</option>
-								<option value = "OtherPers">Other personal crimes</option>
+								<option value = "Assault" <%if(caze.getCat().equals("Assault")){ %> selected <%} %>>Assault</option>
+								<option value = "Murder" <%if(caze.getCat().equals("Murder")){ %> selected <%} %> >Murder</option>
+								<option value = "Kidnapping" <%if(caze.getCat().equals("Kidnapping")){ %> selected <%} %>>Kidnapping</option>
+								<option value = "OtherPers" <%if(caze.getCat().equals("OtherPers")){ %> selected <%} %>>Other personal crimes</option>
 							</optgroup>
 							<optgroup label="Property Crimes">
-								<option value = "Theft">Theft</option>
-								<option value = "Fraud">Fraud</option>
-								<option value = "Burglary">Burglary</option>
-								<option value = "OtherProp">Other property crimes</option>
+								<option value = "Theft" <%if(caze.getCat().equals("Theft")){ %> selected <%} %>>Theft</option>
+								<option value = "Fraud" <%if(caze.getCat().equals("Fraud")){ %> selected <%} %>>Fraud</option>
+								<option value = "Burglary" <%if(caze.getCat().equals("Burglary")){ %> selected <%} %>>Burglary</option>
+								<option value = "OtherProp" <%if(caze.getCat().equals("OtherProp")){ %> selected <%} %>>Other property crimes</option>
 							</optgroup>
 							</select>
 						</td>
