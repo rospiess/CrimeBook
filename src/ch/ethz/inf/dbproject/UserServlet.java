@@ -227,20 +227,32 @@ public final class UserServlet extends HttpServlet {
 					errorlog = errorlog.concat(", time unkown");
 				}
 				
-				final int streetno;
+				int streetno;
 				String t_stno = request.getParameter("streetno");
-				if (t_stno != null && t_stno != "")
-					streetno = Integer.parseInt(t_stno);
+				if (t_stno != null && t_stno != ""){
+					try{
+						streetno = Integer.parseInt(t_stno);
+					}catch(NumberFormatException e){
+						streetno = -1; // Unknown
+						errorlog = errorlog.concat(", street No invalid");
+					}
+				}
 				else{
 					streetno = -1; // Unknown
-					errorlog = errorlog.concat(", street no unkown");
+					errorlog = errorlog.concat(", street No unkown");
 				}
 					
 				
-				final int zipcode;
+				int zipcode;
 				String t_zip = request.getParameter("zipcode");
-				if (t_zip != null && t_zip != "")
-					zipcode = Integer.parseInt(t_zip);
+				if (t_zip != null && t_zip != ""){
+					try{
+						zipcode = Integer.parseInt(t_zip);
+					}catch(NumberFormatException e){
+						zipcode = -1; // Unknown
+						errorlog = errorlog.concat(", zip code invalid");
+					}
+				}
 				else{
 					zipcode = -1; // Unknown
 					errorlog = errorlog.concat(", zip code unkown");

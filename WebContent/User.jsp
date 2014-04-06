@@ -12,6 +12,8 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 <font color="#FF0000">
 <%=session.getAttribute("FailedChanging")
 	%></font>
+	
+	<form action="User" method="post">
 	<table>
 		<tr>
 			<th align="left">Old Password</th>
@@ -27,7 +29,7 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 		</tr>
 		<tr>
 			<th colspan="1">			
-				<form action="User" method="post">
+				
 					<input type="hidden" name="action" value="submitchange" />
 					<input  type="submit" value="Change Password" />
 				</form>
@@ -44,6 +46,7 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 
 <%} else if((Boolean)session.getAttribute("AddingPerson")){ %>
 <h3>Add a new Person of Interest</h3><hr/>
+<form action="User" method="post">
 	<table>
 		<tr>
 			<th align="left">First Name</th>
@@ -59,7 +62,7 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 		</tr>
 		<tr>
 			<th colspan="1">			
-				<form action="User" method="post">
+				
 					<input type="hidden" name="action" value="submitadd" />
 					<input  type="submit" value="Submit Data" />
 				</form>
@@ -74,6 +77,7 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 
 <%} else if((Boolean)session.getAttribute("OpeningCase")){ %>
 <h3>Add a new Case</h3><hr/>
+<form action="User" method="post">
 	<table>
 		<tr>
 			<th align="left">Case Title</th>
@@ -126,7 +130,7 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 		<tr>
 		
 			<th colspan="1">			
-				<form action="User" method="post">
+				
 					<input type="hidden" name="action" value="submitopen" />
 					<input  type="submit" value="Submit Data" />				
 				</form>

@@ -14,21 +14,24 @@ DONE
 
 - Close/reopen case with convictions created/deleted.
 
-- Basic case creation
+- Case creation
 - Person of interest creation
 - Register new users.
 
+- Manage NULL values in case and person creation.
 
+- Edit cases and persons.
+- Link person to case.
+
+- Prepare preparedStatements in constructor
 
 To-Do List
 -----------
 
-
-- Manage NULL values in case and person creation.
+- Layout and code polishing
 
 When logged in:
-  - Edit cases and persons.
-  - Link/unlink person from case.
+  - Unlink person from case (in person detail view).
   
 
 

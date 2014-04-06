@@ -21,7 +21,11 @@ public final class DatastoreInterface {
 	private Connection sqlConnection;
 	
 	// PreparedStatements declaration
-	PreparedStatement createConviction;
+	private PreparedStatement ps_createConviction, ps_insertCaseComment, ps_insertPersonComment,
+				ps_updateConvictionDates, ps_setCaseOpen, ps_deleteConvictions, ps_deleteInvolved,
+				ps_deleteCaseNote, ps_deletePersonNote, ps_insertAddress, ps_insertCase, ps_updateAddress, ps_updateCase,
+				ps_addInvolvement, ps_addPerson, ps_updatePerson, ps_changePassword;
+					
 
 	public DatastoreInterface() {
 		this.sqlConnection = MySQLConnection.getInstance().getConnection();
@@ -29,8 +33,24 @@ public final class DatastoreInterface {
 		try {
 			// Create prepared Statements
 			
-			createConviction = sqlConnection.prepareStatement("insert into conviction(idcase, idpersonofinterest, beginDate, endDate) " 
-					+ " values(?,?,?,?)");
+			ps_createConviction = sqlConnection.prepareStatement("insert into conviction(idcase, idpersonofinterest, beginDate, endDate) values(?,?,?,?)");
+			ps_insertCaseComment = sqlConnection.prepareStatement("Insert into notecase (idCase, text, username) values (?, ?, ?)");
+			ps_insertPersonComment = sqlConnection.prepareStatement("Insert into noteperson (idPersonofinterest, text, username) values (?, ?, ?)");
+			ps_updateConvictionDates = sqlConnection.prepareStatement("UPDATE conviction SET begindate = ?, enddate = ?  WHERE idconviction = ?");
+			ps_setCaseOpen = sqlConnection.prepareStatement("Update Cases set open = ? where idcase = ?");
+			ps_deleteConvictions = sqlConnection.prepareStatement("delete from conviction where conviction.idcase = ?");
+			ps_deleteInvolved = sqlConnection.prepareStatement("delete from involved where idCase = ? and idperson = ?  and role = ?");
+			ps_deleteCaseNote = sqlConnection.prepareStatement("delete from notecase where Nr = ? and username = ?");
+			ps_deletePersonNote = sqlConnection.prepareStatement("delete from noteperson where Nr = ? and username = ?");
+			ps_insertAddress = sqlConnection.prepareStatement("Insert into Address(country,city,street, zipcode,streetno) values ( ?, ?, ?, ?, ?)",PreparedStatement.RETURN_GENERATED_KEYS);
+			ps_insertCase = sqlConnection.prepareStatement("Insert into Cases(title,description,open,date,time,idAddress,catname) values (?, ?, 1, ?, ?, ?, ?)");
+			ps_updateAddress = sqlConnection.prepareStatement("UPDATE Address SET country=?,city=?,street=?,zipcode=?,streetno=? WHERE idAddress = ?");
+			ps_updateCase = sqlConnection.prepareStatement("UPDATE Cases SET title=?,description=?,date=?,time=?,catname=? WHERE idcase = ?");
+			ps_addInvolvement = sqlConnection.prepareStatement("Insert into involved (idCase, idPerson, role) values (?,?,?)");
+			ps_addPerson = sqlConnection.prepareStatement("Insert into personofinterest(firstname,lastname,dateofbirth) values ( ?, ?, ?)");
+			ps_updatePerson = sqlConnection.prepareStatement("UPDATE personofinterest SET firstname = ?, lastname = ?, dateofbirth = ? WHERE idpersonofinterest = ?");
+			ps_changePassword = sqlConnection.prepareStatement("Update user set password = ? where username = ?");
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -118,22 +138,19 @@ public final class DatastoreInterface {
 
 		try {
 			
-			String query = "Insert into $tableName (idCase, text, username) values ('"+ id + "', ?, ?)";
-
+			final PreparedStatement stmt;
 			if (type.equals("case")){
-				query = query.replace("$tableName", "notecase");
+				stmt = ps_insertCaseComment;
 			}
 
 			else{
-				query = query.replace("$tableName","noteperson");
-				query = query.replace("idCase", "idPersonofinterest");
+				stmt = ps_insertPersonComment;
 			}
 			
-			final PreparedStatement stmt = sqlConnection.prepareStatement(query);
-			stmt.setString(1, text);
-			stmt.setString(2, username);
+			stmt.setInt(1, id);
+			stmt.setString(2, text);
+			stmt.setString(3, username);
 			stmt.execute();
-			stmt.close();
 
 		} catch (final SQLException ex) {
 			ex.printStackTrace();
@@ -186,13 +203,12 @@ public final class DatastoreInterface {
 	
 	public final void updateConvictionDates(int idcon, String begindate, String enddate){
 		try{
-			final PreparedStatement stmt = sqlConnection.prepareStatement("UPDATE conviction" +
-					" SET begindate = ?, enddate = ? " +
-					" WHERE idconviction = "+idcon);
+			final PreparedStatement stmt = ps_updateConvictionDates;
 			stmt.setString(1, begindate);
 			stmt.setString(2, enddate);
+			stmt.setInt(3,idcon);
 			stmt.execute();
-			stmt.close();
+			
 		} catch (final SQLException ex){
 			ex.printStackTrace();
 			return;
@@ -233,16 +249,15 @@ public final class DatastoreInterface {
 	public final void setCaseOpen(int id, boolean open) {
 
 		try {
-			PreparedStatement s = sqlConnection
-					.prepareStatement("Update Cases set open = ? where idcase = "
-							+ id);
+			PreparedStatement s = ps_setCaseOpen;
 			s.setString(1, open ? "1" : "0");
+			s.setInt(2, id);
 			s.execute();
 			
 			if (open){
 				// delete convictions associated with this case
-				s = sqlConnection.prepareStatement("delete from conviction where "
-						+ " conviction.idcase = " + id);
+				s = ps_deleteConvictions;
+				s.setInt(1, id);
 				s.execute();
 			}
 			else{
@@ -258,19 +273,19 @@ public final class DatastoreInterface {
 
 				while (rs.next()) {
 					// Create conviction with the suspects in the resultset
-					createConviction.setInt(1, id);
-					createConviction.setInt(2, rs.getInt("idpersonofinterest"));
-					createConviction.setDate(3, Date.valueOf("2000-01-01"));
-					createConviction.setDate(4, Date.valueOf("2000-01-01"));
+					ps_createConviction.setInt(1, id);
+					ps_createConviction.setInt(2, rs.getInt("idpersonofinterest"));
+					ps_createConviction.setDate(3, Date.valueOf("2000-01-01"));
+					ps_createConviction.setDate(4, Date.valueOf("2000-01-01"));
 					
-					createConviction.execute();
+					ps_createConviction.execute();
 				}
 
 				rs.close();
 
 			}
 			
-			s.close();
+
 
 		} catch (final SQLException ex) {
 			ex.printStackTrace();
@@ -282,28 +297,18 @@ public final class DatastoreInterface {
 		// Deletes an involvement of case + person
 		// Type distinguishes between suspect and witness
 		try {
+			PreparedStatement s = ps_deleteInvolved;
+			s.setInt(1, idcase);
+			s.setInt(2, idperson);
 			if (type == "suspect"){
-				PreparedStatement s = sqlConnection
-						.prepareStatement("delete from involved where idCase = ?"
-								+ " and idperson = ? "
-								+ " and role = 'Suspect'");
-				s.setInt(1, idcase);
-				s.setInt(2, idperson);
-				s.execute();
-				s.close();
+				s.setString(3, "Suspect");
 			}
 			else
 			{
-				PreparedStatement s = sqlConnection
-						.prepareStatement("delete from involved where idCase = ?"
-								+ " and idperson = ? "
-								+ " and role = 'Witness'");
-				s.setInt(1, idcase);
-				s.setInt(2, idperson);
-				s.execute();
-				s.close();
+				s.setString(3, "Witness");
 			}
-
+			s.execute();
+			
 		} catch (final SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -313,24 +318,18 @@ public final class DatastoreInterface {
 		// Deletes a caseNote with a certain Nr as key
 		// Type distinguishes between casenote and personnote
 		try {
+			PreparedStatement s;
 			if (type == "case"){
-				PreparedStatement s = sqlConnection
-						.prepareStatement("delete from notecase where Nr = ? and username = ?");
-				s.setString(1, ""+Nr+"");
-				s.setString(2, uname);
-				s.execute();
-				s.close();
+				s = ps_deleteCaseNote;
 			}
 			else
 			{
-				PreparedStatement s = sqlConnection
-						.prepareStatement("delete from noteperson where Nr = ? and username = ?");
-				s.setString(1, ""+Nr+"");
-				s.setString(2, uname);
-				s.execute();
-				s.close();
+				s = ps_deletePersonNote;
 			}
-
+			s.setString(1, ""+Nr+"");
+			s.setString(2, uname);
+			s.execute();
+			
 		} catch (final SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -341,9 +340,7 @@ public final class DatastoreInterface {
 			String time, Address address, String catname) {
 
 		try {
-			PreparedStatement s = sqlConnection
-					.prepareStatement("Insert into Address(country,city,street, zipcode,streetno)"+
-			" values ( ?, ?, ?, ?, ?)",PreparedStatement.RETURN_GENERATED_KEYS);
+			PreparedStatement s = ps_insertAddress;
 			s.setString(1, address.getCountry());
 			s.setString(2, address.getCity());
 			s.setString(3, address.getStreet());
@@ -352,8 +349,7 @@ public final class DatastoreInterface {
 			s.execute();
 			ResultSet rs = s.getGeneratedKeys();
 			rs.next();
-			s = sqlConnection
-					.prepareStatement("Insert into Cases(title,description,open,date,time,idAddress,catname) values (?, ?, 1, ?, ?, ?, ?)");
+			s = ps_insertCase;
 			s.setString(1, title);
 			s.setString(2, descr);
 			s.setString(3, date);
@@ -361,7 +357,7 @@ public final class DatastoreInterface {
 			s.setInt(5, rs.getInt(1));
 			s.setString(6, catname);
 			s.execute();
-			s.close();
+
 
 		} catch (final SQLException ex) {
 			ex.printStackTrace();
@@ -373,27 +369,24 @@ public final class DatastoreInterface {
 			String time, Address address, String catname) {
 
 		try {
-			PreparedStatement s = sqlConnection.prepareStatement(
-					"UPDATE Address SET country=?,city=?,street=?,zipcode=?,streetno=? " +
-					"WHERE idAddress = "+getAddressByCase(id));
+			PreparedStatement s = ps_updateAddress;
 			s.setString(1, address.getCountry());
 			s.setString(2, address.getCity());
 			s.setString(3, address.getStreet());
 			s.setInt(4, address.getZipCode());
 			s.setInt(5, address.getStreetNo());
+			s.setInt(6, getAddressByCase(id));
 			s.execute();
 			
-			s = sqlConnection.prepareStatement(
-					"UPDATE Cases SET title=?,description=?,date=?,time=?,catname=? " +
-					"WHERE idcase ="+id);
+			s = ps_updateCase;
 			s.setString(1, title);
 			s.setString(2, descr);
 			s.setString(3, date);
 			s.setString(4, time);
 			s.setString(5, catname);
+			s.setInt(6,id);
 			s.execute();
 			
-			s.close();
 		} catch (final SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -730,12 +723,11 @@ public final class DatastoreInterface {
 	
 	public final void addInvolvement(int idcase, int idperson, String role){
 		try{
-			final PreparedStatement stmt = sqlConnection.prepareStatement("Insert into involved (idCase, idPerson, role) values (" 
-					+ idcase + "," 
-					+ idperson + ", ?)");
-			stmt.setString(1, role);
+			final PreparedStatement stmt = ps_addInvolvement;
+			stmt.setInt(1, idcase);
+			stmt.setInt(2, idperson);
+			stmt.setString(3, role);
 			stmt.execute();
-			stmt.close();
 		}catch(final SQLException ex){
 			ex.printStackTrace();
 		}
@@ -745,15 +737,12 @@ public final class DatastoreInterface {
 	public final void addNewPerson(String firstname, String lastname, String date) {
 
 		try {
-			PreparedStatement stmt = sqlConnection
-					.prepareStatement("Insert into personofinterest(firstname,lastname,dateofbirth)"+
-			" values ( ?, ?, ?)");
+			PreparedStatement stmt = ps_addPerson;
 			stmt.setString(1, firstname);
 			stmt.setString(2, lastname);
 			stmt.setString(3, date);
 			
 			stmt.execute();
-			stmt.close();
 
 		} catch (final SQLException ex) {
 			ex.printStackTrace();
@@ -764,15 +753,13 @@ public final class DatastoreInterface {
 	public final void updatePerson(int idperson, String firstname, String lastname, String date) {
 
 		try {
-			PreparedStatement stmt = sqlConnection
-					.prepareStatement("UPDATE personofinterest SET firstname = ?, lastname = ?, dateofbirth = ?" +
-							" WHERE idpersonofinterest ="+idperson);
+			PreparedStatement stmt = ps_updatePerson;
 			stmt.setString(1, firstname);
 			stmt.setString(2, lastname);
 			stmt.setString(3, date);
+			stmt.setInt(4, idperson);
 			
 			stmt.execute();
-			stmt.close();
 
 		} catch (final SQLException ex) {
 			ex.printStackTrace();
@@ -837,12 +824,10 @@ public final class DatastoreInterface {
 	public void changePassword(String username, String newpassword) {
 		try {
 
-			final PreparedStatement stmt = sqlConnection
-					.prepareStatement("Update user set password = ? where username = ?");
+			final PreparedStatement stmt = ps_changePassword;
 			stmt.setString(1, newpassword);
 			stmt.setString(2, username);
 			stmt.execute();
-			stmt.close();
 		} catch (final SQLException ex) {
 			ex.printStackTrace();
 
