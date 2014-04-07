@@ -221,6 +221,10 @@ public final class UserServlet extends HttpServlet {
 				
 				String time = request.getParameter("time");
 				try{
+					if (time != null && time.length() == 5){
+						//For browser which only have hh:mm (e.g. Chrome)
+						time = time.concat(":00");
+					}
 					java.sql.Time.valueOf(time);
 				}catch(IllegalArgumentException e){
 					time = null;
