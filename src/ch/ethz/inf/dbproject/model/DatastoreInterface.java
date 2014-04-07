@@ -247,6 +247,19 @@ public final class DatastoreInterface {
 		}
 
 	}
+	
+	public final boolean isInvolvedIn(final int pid, final int cid){
+		try{
+			final Statement stmt = sqlConnection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT count(*)>0 FROM involved WHERE idperson ="+pid+" AND idcase="+cid);
+			if (rs.next())
+				return rs.getBoolean(1);
+			return false;
+		}catch(final SQLException ex){
+			ex.printStackTrace();
+			return true;
+		}
+	}
 
 	public final void setCaseOpen(int id, boolean open) {
 

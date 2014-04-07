@@ -125,7 +125,7 @@ public final class CaseServlet extends HttpServlet {
 			ptable.addBeanColumn("Date of Birth", "bdateString");
 			ptable.addLinkColumn("", "View Person", "Person?id=", "idperson");
 			if (aCase.getOpen() && loggedUser != null){
-				ptable.addLinkColumn("Erase Suspicion","Redeem", "Case?action=deleteSuspect&idperson=", "idperson");
+				ptable.addLinkColumn("Erase Suspicion","Reprieve", "Case?action=deleteSuspect&idperson=", "idperson");
 			}
 
 			ptable.addObjects(plist);
@@ -386,15 +386,8 @@ public final class CaseServlet extends HttpServlet {
 				int selidperson = Integer.parseInt(selPerson);
 				
 				//Check for duplicate
-				boolean not_duplicate = true;
-				List<Involved> inv = dbInterface.getInvolvedByPersonId(selidperson);
-				for(Involved i:inv){
-					if (i.getIdcase() == id){
-						not_duplicate = false;
-						break;
-					}
-				}
-				if (not_duplicate){
+				
+				if (!dbInterface.isInvolvedIn(selidperson, id)){
 					dbInterface.addInvolvement(id, selidperson, role);
 					response.setHeader("Refresh", "0");
 				}

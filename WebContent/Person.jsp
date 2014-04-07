@@ -11,10 +11,10 @@
 <%if((Boolean)session.getAttribute("editingPerson")){ %>
 	<h1>Edit Person Detail</h1>
 	
+	<form action="Person" method="post" style="display:inline">	
 	<table>
 	<tr>
 		<th>
-		<form action="Person" method="post">
 			<table cellpadding = "0" cellspacing = "0" class = "personsTable">
 				<tbody>
 					<tr>
@@ -32,21 +32,19 @@
 		
 		</th>
 	</tr>
-	<tr>
-		<th>
+	</table>
+	
+		<br>
 			<input type="hidden" name="action" value="submitEdit" />
 			<input type="submit" value="Submit" />
 		</form>
 		
-		</th>
-		<th>
-		<form action="Person" method="get">
+		
+
+		<form action="Person" method="get" style="display:inline; margin-left: 3em;">
 			<input type="hidden" name="action" value="cancelEdit" />
 			<input type="submit" value="Cancel" />
 		</form>	
-		</th>
-	</tr>	
-	</table>	
 
 	
 <%}else{ %>

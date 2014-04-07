@@ -12,7 +12,7 @@ final Conviction con = (Conviction) session.getAttribute("CurrentCon");
 <%if ((Boolean)session.getAttribute("EditingCase")){ %>
 	<h1>Edit Case Detail</h1>
 
-		<form action="Case" method="post">
+		<form action="Case" method="post" style="display:inline">
 			<table cellpadding = "0" cellspacing = "0" class = "casesTable">
 				<tbody>
 					<tr>
@@ -74,14 +74,14 @@ final Conviction con = (Conviction) session.getAttribute("CurrentCon");
 				</tbody>
 			</table>
 
+		<br>
 
 			<input type="hidden" name="action" value="submitEdit" />
 			<input type="submit" value="Submit" />
 		</form>
 		
-		<br>
 
-		<form action="Case" method="get">
+		<form action="Case" method="get" style="display:inline; margin-left: 3em;">
 			<input type="hidden" name="action" value="cancelEdit" />
 			<input type="submit" value="Cancel" />
 		</form>	

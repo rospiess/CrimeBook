@@ -212,15 +212,15 @@ public final class PersonServlet extends HttpServlet {
 				int selidcase = Integer.parseInt(selCase);
 				
 				//Check for duplicate
-				boolean not_duplicate = true;
+				/*boolean not_duplicate = true;
 				List<Involved> inv = dbInterface.getInvolvedByPersonId(id);
 				for(Involved i:inv){
 					if (i.getIdcase() == selidcase){
 						not_duplicate = false;
 						break;
 					}
-				}
-				if (not_duplicate){
+				}*/
+				if (!dbInterface.isInvolvedIn(id, selidcase)){
 					dbInterface.addInvolvement(selidcase, id, role);
 					response.setHeader("Refresh", "0");
 				}
