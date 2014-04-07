@@ -96,7 +96,7 @@ public final class PersonServlet extends HttpServlet {
 			ctable.addBeanColumn("Text", "comment");
 			ctable.addBeanColumn("Submitted by", "username");
 			if (loggedUser != null){
-				ctable.addLinkColumn("delete", "<img src='./s_cancel.png'></img>", "Person?action=deleteNote&uname="+loggedUser.getUsername()+"&delete=", "idnote");
+				ctable.addLinkColumn("Delete", "<img src='./s_cancel.png'></img>", "Person?action=deleteNote&uname="+loggedUser.getUsername()+"&delete=", "idnote");
 			}
 				
 			ctable.addObjects(comlist);		

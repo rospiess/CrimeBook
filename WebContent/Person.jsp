@@ -24,7 +24,7 @@
 						<th>Last Name</th>
 						<td><input type="text" name="lastname" maxlength="45" value="<%=person.getLastname() %>" /></td>
 					<tr>
-						<th>Date of Birth (yyyy-mm-dd)</th>
+						<th>Date of Birth</th>
 						<td><input type="date" name="birthdate" value="<%=person.getBdateString() %>" /></td>
 					
 				</tbody>
@@ -55,21 +55,29 @@
 	
 	
 	
+	
+	
 	<%
 	if (user != null) {
-		// User is logged in. He can add a comment
+		// User is logged in. He can edit
 	%>
 		<form action="Person" method="get">
 			<input type="hidden" name="action" value="editDetails" />
 			<input type="submit" value="Edit" />
 		</form>	
-		
-		<br>
+		<%
+	}
+	%>
+<h1>Comments</h1>
+	<%=session.getAttribute("commentTable")
+	%>
+	<%if (user != null) {
+		// User is logged in. He can add a comment
+	%>
 		<form action="Person" method="post">
 			<input type="hidden" name="action" value="add_comment" />
 			<input type="hidden" name="user_id" value="<%= user.getUserid() %>" />
-			Add Comment
-			<br />
+			<h2>Add Comment</h2>
 			<% String defaultComment = "Enter your comment to this person here ..."; // delete the default text on clicking into the textarea, and only the default text. Restore default text when left empty.%>
 				<textarea rows="4" cols="50" name="comment" 
 				onclick="txta=document.getElementsByTagName('textarea')[0]; if(txta.value=='<%=defaultComment%>'){txta.value='';}" 
@@ -80,9 +88,6 @@
 	<%
 	}
 	%>
-	<h1>Comments</h1>
-	<%=session.getAttribute("commentTable")
-	%>
 	<h1>Convictions</h1>
 	<%=session.getAttribute("convictionTable")
 	%>
@@ -92,7 +97,7 @@
 	
 	<%if (user != null){
 	%>
-		<h1>Link to a case</h1>
+		<h2>Link to a case</h2>
 		
 		<form action="Person" method = "post">
 			Link to <%=session.getAttribute("caseSelect") %> as a 

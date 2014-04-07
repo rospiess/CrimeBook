@@ -57,7 +57,7 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 			<td><input type="text" name="lastname" maxlength="45" value="" /></td>
 		</tr>
 		<tr>
-			<th align="left">Date of Birth (yyyy-mm-dd)</th>
+			<th align="left">Date of Birth</th>
 			<td><input type="date" name="date" value="" /></td>
 		</tr>
 		<tr>
@@ -88,11 +88,11 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 			<td><input type="text" name="description" maxlength="160" value="" /></td>
 		</tr>
 		<tr>
-			<th align="left">Date (yyyy-mm-dd)</th>
+			<th align="left">Date</th>
 			<td><input type="date" name="date" value="" /></td>
 		</tr>
 		<tr>
-			<th align="left">Time (hh:mm:ss)</th>
+			<th align="left">Time</th>
 			<td><input type="time" name="time" value="" /></td>
 		</tr>
 		<tr>

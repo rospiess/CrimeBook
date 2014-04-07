@@ -24,11 +24,11 @@ final Conviction con = (Conviction) session.getAttribute("CurrentCon");
 						<td><textarea name="descr" cols="40" rows = "4" maxlength="160"/><%=caze.getDescr() %></textarea></td>
 					</tr>
 					<tr>
-						<th>Date (yyyy-mm-dd)</th>
+						<th>Date</th>
 						<td><input type="date" name="date" value="<%=caze.getDateString() %>" /></td>
 					</tr>
 					<tr>
-						<th>Time (hh:mm:ss)</th>
+						<th>Time</th>
 						<td><input type="time" name="time" value="<%=caze.getTimeString() %>"/></td>
 					</tr>
 					<tr>
@@ -150,17 +150,18 @@ else
 		</form>
 	
 	<%}} %>
-	<br>
+		<h1>Comments</h1>
+	<%=session.getAttribute("commentTable")
 	
+	%>
 	<% 
 	if (user != null) {
 		// User is logged in. He can add a comment
-	%> <br>
+	%>
 		<form action="Case" method="post">
 			<input type="hidden" name="action" value="add_comment" />
 			<input type="hidden" name="user_id" value="<%= user.getUserid() %>" />
-			Add Comment
-			<br />
+			<h2>Add Comment</h2>
 			<% String defaultComment = "Enter your annotations to the case here ..."; %>
 			<textarea rows="4" cols="50" name="comment" onclick="txta=document.getElementsByTagName('textarea')[0]; if(txta.value=='<%=defaultComment%>'){txta.value='';}" onblur="txta=document.getElementsByTagName('textarea')[0]; if(txta.value==''){txta.value='<%=defaultComment%>';}"><%=defaultComment%></textarea>
 			<br />
@@ -169,10 +170,7 @@ else
 	<%
 	}
 	%>
-	<h1>Comments</h1>
-	<%=session.getAttribute("commentTable")
-	
-	%>
+
 	<%if(caze.getOpen()){ %>
 	<h1>Suspects</h1>
 	<%} else { %>
@@ -194,7 +192,7 @@ else
 
 	<%if (user != null && caze.getOpen()){
 	%>
-		<h1>Add a Person to this case</h1>
+		<h2>Add a Person to this case</h2>
 		
 		<form action="Case" method = "post">
 			Add <%=session.getAttribute("personSelect") %> as a 
