@@ -110,9 +110,10 @@ function drawArcs(svg_layout, pieData, legendData, type){
         var c = 360;
 		var colors = ["rgb(111,173,12)", "rgb(128,183,40)", "rgb(145,194,69)", "rgb(179,213,126)", "rgb(196,223,156)", "rgb(216,238,186)"]
         var arc = makeSVG("path", {d: d, fill: colors[i%colors.length], id: i});
+		if (type == "crimeCatChart") arc.setAttribute('title', Math.round(pieData[i]*100)/100 + " % of the crimes commited are listed under the category " + legendData[i] + ".");
+		if (type == "poiInvChart") arc.setAttribute('title', "Person of interest \""+ legendData[i] + "\" accounts for " + Math.round(pieData[i]*100)/100 + " % of the involvements in cases.");
         svg_layout.appendChild(arc);
         if (type == "crimeCatChart") arc.onclick = function(){alert(Math.round(pieData[this.id]*100)/100 + " % of the crimes commited are listed under the category " + legendData[this.id] + ".");}; // Optional onclick handler
-        if (type == "poiInvChart") arc.onclick = function(){alert("Person of interest \""+ legendData[this.id] + "\" accounts for " + Math.round(pieData[this.id]*100)/100 + " % of the involvements in cases." );};
     }
 }
 
@@ -125,7 +126,7 @@ if (true) {
 	//
 	/*
 		# Number of cases per year
-		SELECT Title, YEAR(endDate) AS year, COUNT(*) AS numberOfCrimes FROM cases, conviction WHERE cases.idCase = conviction.idCase GROUP BY YEAR(conviction.endDate) ORDER BY year DESC;
+		SELECT YEAR(endDate) AS year, COUNT(*) AS numberOfCrimes FROM cases, conviction WHERE cases.idCase = conviction.idCase GROUP BY YEAR(conviction.endDate) ORDER BY year DESC;
 		# Number of cases by category
 		SELECT Title, CatName, COUNT(*) FROM cases GROUP BY CatName;
 		# Number of cases per SuperCat
