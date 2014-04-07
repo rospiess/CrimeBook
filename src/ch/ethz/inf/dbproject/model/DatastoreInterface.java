@@ -737,6 +737,32 @@ public final class DatastoreInterface {
 		}
 	}
 	
+	public final List<Person> getVictimsById(int id) {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select idpersonofinterest,firstname,lastname, dateofbirth from personofinterest p, involved i "
+							+ "where i.role = 'Victim' and i.idCase = '"
+							+ id
+							+ "' and i.idperson = p.idpersonofinterest ORDER BY lastname ASC");
+
+			final List<Person> persons = new ArrayList<Person>();
+			while (rs.next()) {
+				persons.add(new Person(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return persons;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+	
 	
 	public final void addInvolvement(int idcase, int idperson, String role){
 		try{

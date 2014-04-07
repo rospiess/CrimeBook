@@ -65,10 +65,9 @@ public final class SearchServlet extends HttpServlet {
 
 				session.setAttribute("results", ptable);
 				final String name = request.getParameter("description");				
-				//ptable.addBeanColumn("Person ID", "idperson");
 				ptable.addBeanColumn("First Name", "firstname");
 				ptable.addBeanColumn("Last Name", "lastname");
-				ptable.addBeanColumn("Date of Birth", "bdate");
+				ptable.addBeanColumn("Date of Birth", "bdateString");
 				ptable.addLinkColumn(""	/* The header. We will leave it empty */,
 						"View Person" 	/* What should be displayed in every row */,
 						"Person?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
@@ -79,11 +78,9 @@ public final class SearchServlet extends HttpServlet {
 
 				session.setAttribute("results", ctable);
 				final String name = request.getParameter("category");
-				//ctable.addBeanColumn("Conviction ID", "idcon");
 				ctable.addBeanColumn("Type", "type");
-				ctable.addBeanColumn("Start Date", "date");
-				ctable.addBeanColumn("End Date", "enddate");
-				//ctable.addBeanColumn("Case ID", "idcase");
+				ctable.addBeanColumn("Start Date", "dateString");
+				ctable.addBeanColumn("End Date", "enddateString");
 				ctable.addBeanColumn("Case Title", "casetitle");
 				ctable.addLinkColumn(""	/* The header. We will leave it empty */,
 						"View Case" 	/* What should be displayed in every row */,
@@ -102,17 +99,14 @@ public final class SearchServlet extends HttpServlet {
 			} else if (filter.equals("date")) {
 
 				session.setAttribute("results", ctable);
-				//ctable.addBeanColumn("Conviction ID", "idcon");
 				ctable.addBeanColumn("Type", "type");
-				ctable.addBeanColumn("Start Date", "date");
-				ctable.addBeanColumn("End Date", "enddate");
-				//ctable.addBeanColumn("Case ID", "idcase");
+				ctable.addBeanColumn("Start Date", "dateString");
+				ctable.addBeanColumn("End Date", "enddateString");
 				ctable.addBeanColumn("Case Title", "casetitle");
 				ctable.addLinkColumn(""	/* The header. We will leave it empty */,
 						"View Case" 	/* What should be displayed in every row */,
 						"Case?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
 						"idcase");
-				//ctable.addBeanColumn("Person ID", "idperson");
 				ctable.addBeanColumn("Convict First Name", "firstname");
 				ctable.addBeanColumn("Convict Last Name", "lastname");
 				ctable.addLinkColumn(""	/* The header. We will leave it empty */,

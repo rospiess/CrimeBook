@@ -22,6 +22,18 @@ public class Conviction {
 	public Date getEnddate() {
 		return enddate;
 	}
+	
+	public String getDateString() {
+		if (date == null)
+			return "???";
+		return date.toString();
+	}
+
+	public String getEnddateString() {
+		if (enddate == null)
+			return "???";
+		return enddate.toString();
+	}
 
 	public String getType() {
 		return caze.getCat();

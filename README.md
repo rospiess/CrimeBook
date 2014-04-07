@@ -47,6 +47,7 @@ When logged in:
 
 - Should unlinking a person from a case also be possible from the persons detail view?
 
+- Should it be possible to add comments when a case is closed?
 
 Ideas and Nice-to-have:
 -----------

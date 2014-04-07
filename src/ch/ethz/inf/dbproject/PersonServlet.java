@@ -111,8 +111,8 @@ public final class PersonServlet extends HttpServlet {
 			);
 			contable.addBeanColumn("Case", "casetitle");
 			contable.addBeanColumn("Type", "type");
-			contable.addBeanColumn("Start Date", "date");
-			contable.addBeanColumn("End Date", "enddate");
+			contable.addBeanColumn("Start Date", "dateString");
+			contable.addBeanColumn("End Date", "enddateString");
 			contable.addLinkColumn("", "View Case", "Case?id=", "idcase");
 			
 			contable.addObjects(conlist);	

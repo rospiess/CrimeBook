@@ -61,6 +61,7 @@ public final class CaseServlet extends HttpServlet {
 					"case");
 			final List<Person> plist = this.dbInterface.getSuspectsById(id);
 			final List<Person> wlist = this.dbInterface.getWitnessesById(id);
+			final List<Person> vlist = this.dbInterface.getVictimsById(id);
 			final List<Conviction> convlist = this.dbInterface.getConvictionsById(id,"case");
 			final User loggedUser = UserManagement
 					.getCurrentlyLoggedInUser(session);
@@ -148,6 +149,25 @@ public final class CaseServlet extends HttpServlet {
 
 			session.setAttribute("witnessTable", wtable);
 			
+			
+
+			//Witness table
+			final BeanTableHelper<Person> vtable = new BeanTableHelper<Person>(
+					"person", "personsTable", Person.class);
+
+			vtable.addBeanColumn("First Name", "firstname");
+			vtable.addBeanColumn("Last Name", "lastname");
+			vtable.addBeanColumn("Date of Birth", "bdateString");
+			vtable.addLinkColumn("", "View Person", "Person?id=", "idperson");
+			if (aCase.getOpen() && loggedUser != null){
+				vtable.addLinkColumn("Unlink from case","Unlink", "Case?action=deleteWitness&idperson=", "idperson");
+			}
+
+			vtable.addObjects(vlist);
+
+			session.setAttribute("victimTable", vtable);
+			
+			
 			//
 			
 			
@@ -156,8 +176,8 @@ public final class CaseServlet extends HttpServlet {
 					"conviction", "casesTable", Conviction.class);
 
 			convtable.addBeanColumn("Type", "type");
-			convtable.addBeanColumn("Begin Date", "date");
-			convtable.addBeanColumn("End Date", "enddate");
+			convtable.addBeanColumn("Begin Date", "dateString");
+			convtable.addBeanColumn("End Date", "enddateString");
 			convtable.addBeanColumn("Convicted First Name", "firstname");
 			convtable.addBeanColumn("Convicted Last Name", "lastname");
 			convtable.addLinkColumn("", "View Person", "Person?id=", "idperson");
@@ -273,9 +293,18 @@ public final class CaseServlet extends HttpServlet {
 			}
 			if (action != null && action.trim().equals("submitdates")){
 				session.setAttribute("ConvDate", false);
-				final String begindate = request.getParameter("begindate");
-				final String enddate = request.getParameter("enddate");
-				
+				String begindate = request.getParameter("begindate");
+				try{
+					java.sql.Date.valueOf(begindate);
+				}catch(IllegalArgumentException e){
+					begindate = null; // default = unknown value
+				}
+				String enddate = request.getParameter("enddate");
+				try{
+					java.sql.Date.valueOf(enddate);
+				}catch(IllegalArgumentException e){
+					enddate = null; // default = unknown value
+				}
 				
 				dbInterface.updateConvictionDates(((Conviction)session.getAttribute("CurrentCon")).getIdcon(),
 						begindate,

@@ -180,6 +180,9 @@ else
 	<%} %>
 	<%=session.getAttribute("suspectTable")
 	%>
+	<h1>Victims</h1>
+	<%=session.getAttribute("victimTable")
+	%>
 	<h1>Witnesses</h1>
 	<%=session.getAttribute("witnessTable")
 	%>
@@ -191,7 +194,7 @@ else
 
 	<%if (user != null && caze.getOpen()){
 	%>
-		<h1>Add a Suspect / Witness</h1>
+		<h1>Add a Person to this case</h1>
 		
 		<form action="Case" method = "post">
 			Add <%=session.getAttribute("personSelect") %> as a 
@@ -199,6 +202,7 @@ else
 			<optgroup label="Role">
 				<option value = "Suspect">Suspect</option>
 				<option value = "Witness">Witness</option>
+				<option value = "Victim">Victim</option>
 			</optgroup>
 			</select>
 		
