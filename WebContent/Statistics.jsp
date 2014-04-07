@@ -52,6 +52,78 @@ involvements = involvements.substring(0, involvements.length()-2) + "]";
 	</svg>
 </div>
 
+
+<div style="width:30%; border: thin solid; float: left; margin-left: 10px;">
+	<h3 style="width: 50%; margin: 0 auto; white-space:nowrap;"> <span>Crimes per year</span> </h3>
+	<svg width="400" height="300" viewBox="50 20 350 350">
+		<desc>BEI Database Event Tracker</desc>
+		<linearGradient id="blueGrad">
+		<stop offset="0" style="stop-color: indigo;"></stop>
+		<stop offset="25%" style="stop-color: blue"></stop> 
+		<stop offset="100%" style="stop-color: white;"></stop>
+		</linearGradient> 
+		<filter id="drop-shadow"> 
+			<feGaussianBlur in="" stdDeviation="5" result="blur"></feGaussianBlur> 
+			<feOffset id="depth" in="blur" dx="4" dy="4" result="offsetBlur"></feOffset> 
+			<feMerge> <feMergeNode in="offsetBlur"></feMergeNode> 
+		<feMergeNode in="SourceGraphic"></feMergeNode> 
+		</feMerge>
+		</filter> 
+		<g transform="scale(0.32)">
+		<g> 
+		<g filter="url(#drop-shadow)">
+		<text x="50" y="35" style="font-size:30; fill : white">
+		Database Event Tracker Graph
+		</text>
+		</g>
+		<!-- Now Draw the main X and Y axis -->
+		<g style="stroke-width:5; stroke:black">
+		<!-- X Axis -->
+				<path d="M 40 1100 L 1040 1100 Z"></path>
+		</g>
+		<!-- Now add some dashes in as a guide -->
+		<g filter="url(#drop-shadow)" style="fill:none; stroke:#B0B0B0; stroke-width:2; stroke-dasharray:2 4;text-anchor:end; font-size:15">
+			<path d="M 42 1000.1085776330076 L 1040 1000.1085776330076 Z"></path>
+		 	<text style="fill:black; stroke:none" x="36" y="1000.1085776330076">276</text>
+			<path d="M 42 900.2171552660152 L 1040 900.2171552660152 Z"></path>
+		 	<text style="fill:black; stroke:none" x="36" y="900.2171552660152">552</text>
+			<path d="M 42 800.3257328990228 L 1040 800.3257328990228 Z"></path>
+		 	<text style="fill:black; stroke:none" x="36" y="800.3257328990228">828</text>
+			<path d="M 42 700.4343105320304 L 1040 700.4343105320304 Z"></path>
+		 	<text style="fill:black; stroke:none" x="36" y="700.4343105320304">1104</text>
+			<path d="M 42 600.542888165038 L 1040 600.542888165038 Z"></path>
+		 	<text style="fill:black; stroke:none" x="36" y="600.542888165038">1380</text>
+			<path d="M 42 500.6514657980456 L 1040 500.6514657980456 Z"></path>
+		 	<text style="fill:black; stroke:none" x="36" y="500.6514657980456">1656</text>
+			<path d="M 42 400.7600434310532 L 1040 400.7600434310532 Z"></path>
+		 	<text style="fill:black; stroke:none" x="36" y="400.7600434310532">1932</text>
+			<path d="M 42 300.8686210640608 L 1040 300.8686210640608 Z"></path>
+		 	<text style="fill:black; stroke:none" x="36" y="300.8686210640608">2208</text>
+			<path d="M 42 200.9771986970684 L 1040 200.9771986970684 Z"></path>
+		 	<text style="fill:black; stroke:none" x="36" y="200.9771986970684">2484</text>
+			<path d="M 42 101.08577633007599 L 1040 101.08577633007599 Z"></path>
+		 	<text style="fill:black; stroke:none" x="36" y="101.08577633007599">2760</text>
+		 	<text style="fill:black; stroke:none; font-size: larger;" x="105" y="80">Event Count</text>
+			<path d="M 42 100.0 L 1040 100.0 Z"></path>
+		</g>
+		<g filter="url(#drop-shadow)">
+		 	<path d="M 1040 1095 L 1040 100 Z"></path>
+		 	<text style="fill:black; stroke:none" x="1030" y="1125">250</text>
+		 	<path d="M 520 1095 L 520 100 Z"></path>
+		 	<text style="fill:black; stroke:none" x="510" y="1125">125</text>
+		 	<path d="M 260 1095 L 260 100 Z"></path>
+		 	<text style="fill:black; stroke:none" x="250" y="1125">62</text>
+		 	<path d="M 780.0 1095 L 780.0 100 Z"></path>
+		 	<text style="fill:black; stroke:none" x="770.0" y="1125">186</text>
+		 	<text style="fill:black; stroke:none; font-size: larger;" x="520" y="1140">Reading Count</text>
+		</g>
+		<polyline filter="url(#drop-shadow)" points=" 44 922.6565327542526, 332 803.6916395222584, 644 449.6199782844734, 760 375.38545059717694, 872 240.4270720231632, 940 173.56496561708286, 1040 150.0," style="stroke:red; stroke-width: 3; fill : none;"></polyline>
+		 	<text style="fill:black; stroke:none" x="1040" y="115.0">2763</text>
+		</g>
+		</g>
+	</svg>
+</div>
+
 <script>
 
 function toPercent(values){
