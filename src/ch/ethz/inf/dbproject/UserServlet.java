@@ -293,7 +293,7 @@ public final class UserServlet extends HttpServlet {
 						streetno);
 				
 				this.dbInterface.openNewCase(title, descr, date, time, address,
-						catname);
+						catname, loggedUser.getUsername());
 				session.setAttribute("LatestAction", "Opened new Case successfully"+errorlog);
 			}
 			else

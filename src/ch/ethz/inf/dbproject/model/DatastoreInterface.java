@@ -44,7 +44,7 @@ public final class DatastoreInterface {
 			ps_deleteCaseNote = sqlConnection.prepareStatement("delete from notecase where Nr = ? and username = ?");
 			ps_deletePersonNote = sqlConnection.prepareStatement("delete from noteperson where Nr = ? and username = ?");
 			ps_insertAddress = sqlConnection.prepareStatement("Insert into Address(country,city,street, zipcode,streetno) values ( ?, ?, ?, ?, ?)",PreparedStatement.RETURN_GENERATED_KEYS);
-			ps_insertCase = sqlConnection.prepareStatement("Insert into Cases(title,description,open,date,time,idAddress,catname) values (?, ?, 1, ?, ?, ?, ?)");
+			ps_insertCase = sqlConnection.prepareStatement("Insert into Cases(title,description,open,date,time,idAddress,catname,username) values (?, ?, 1, ?, ?, ?, ?,?)");
 			ps_updateAddress = sqlConnection.prepareStatement("UPDATE Address SET country=?,city=?,street=?,zipcode=?,streetno=? WHERE idAddress = ?");
 			ps_updateCase = sqlConnection.prepareStatement("UPDATE Cases SET title=?,description=?,date=?,time=?,catname=? WHERE idcase = ?");
 			ps_addInvolvement = sqlConnection.prepareStatement("Insert into involved (idCase, idPerson, role) values (?,?,?)");
@@ -364,7 +364,7 @@ public final class DatastoreInterface {
 	}
 
 	public final void openNewCase(String title, String descr, String date,
-			String time, Address address, String catname) {
+			String time, Address address, String catname, String username) {
 
 		try {
 			PreparedStatement s = ps_insertAddress;
@@ -383,6 +383,7 @@ public final class DatastoreInterface {
 			s.setString(4, time);
 			s.setInt(5, rs.getInt(1));
 			s.setString(6, catname);
+			s.setString(7, username);
 			s.execute();
 
 
