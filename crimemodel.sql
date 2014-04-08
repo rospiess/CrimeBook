@@ -36,6 +36,16 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `CrimeDatabase`.`User`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`User` (
+  `UserName` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(60) NOT NULL,
+  PRIMARY KEY (`UserName`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `CrimeDatabase`.`Cases`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`Cases` (
@@ -47,9 +57,11 @@ CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`Cases` (
   `time` TIME NULL,
   `CatName` VARCHAR(45) NOT NULL,
   `idAddress` INT NULL,
+  `UserName` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idCase`),
   INDEX `fk_Cases_Category1_idx` (`CatName` ASC),
   INDEX `fk_Cases_Address1_idx` (`idAddress` ASC),
+  INDEX `fk_Cases_User1_idx` (`UserName` ASC),
   CONSTRAINT `fk_Cases_Category1`
     FOREIGN KEY (`CatName`)
     REFERENCES `CrimeDatabase`.`Category` (`CatName`)
@@ -58,6 +70,11 @@ CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`Cases` (
   CONSTRAINT `fk_Cases_Address1`
     FOREIGN KEY (`idAddress`)
     REFERENCES `CrimeDatabase`.`Address` (`idAddress`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Cases_User1`
+    FOREIGN KEY (`UserName`)
+    REFERENCES `CrimeDatabase`.`User` (`UserName`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -90,12 +107,12 @@ CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`Conviction` (
   CONSTRAINT `fk_Conviction_Cases1`
     FOREIGN KEY (`idCase`)
     REFERENCES `CrimeDatabase`.`Cases` (`idCase`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Conviction_PersonOfInterest1`
     FOREIGN KEY (`idPersonOfInterest`)
     REFERENCES `CrimeDatabase`.`PersonOfInterest` (`idPersonOfInterest`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -113,23 +130,13 @@ CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`involved` (
   CONSTRAINT `fk_PersonOfInterest_has_Cases_PersonOfInterest`
     FOREIGN KEY (`idPerson`)
     REFERENCES `CrimeDatabase`.`PersonOfInterest` (`idPersonOfInterest`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_PersonOfInterest_has_Cases_Cases1`
     FOREIGN KEY (`idCase`)
     REFERENCES `CrimeDatabase`.`Cases` (`idCase`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `CrimeDatabase`.`User`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`User` (
-  `UserName` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(60) NOT NULL,
-  PRIMARY KEY (`UserName`))
 ENGINE = InnoDB;
 
 
@@ -146,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`NoteCase` (
   CONSTRAINT `fk_Note_Cases1`
     FOREIGN KEY (`idCase`)
     REFERENCES `CrimeDatabase`.`Cases` (`idCase`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_NoteCase_User1`
     FOREIGN KEY (`UserName`)
@@ -170,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `CrimeDatabase`.`NotePerson` (
   CONSTRAINT `fk_Note_copy1_PersonOfInterest1`
     FOREIGN KEY (`idPersonOfInterest`)
     REFERENCES `CrimeDatabase`.`PersonOfInterest` (`idPersonOfInterest`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_NotePerson_User1`
     FOREIGN KEY (`UserName`)
