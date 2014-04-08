@@ -435,6 +435,31 @@ public final class DatastoreInterface {
 		return -1;
 	}
 
+	public final List<Case> getCasesByUser(String username) {
+
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select * from Cases c, Address a where c.idAddress = a.idAddress and c.username = '" + username +"' ORDER BY title ASC");
+
+			final List<Case> cases = new ArrayList<Case>();
+			while (rs.next()) {
+				cases.add(new Case(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return cases;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+
+	}
+	
 	public final List<Case> getAllCases() {
 
 		try {
@@ -556,7 +581,7 @@ public final class DatastoreInterface {
 		}
 	}
 
-	public final List<Case> getProjectsByCategory(String category) {
+	public final List<Case> getCasesByCategory(String category) {
 		try {
 
 			final Statement stmt = this.sqlConnection.createStatement();

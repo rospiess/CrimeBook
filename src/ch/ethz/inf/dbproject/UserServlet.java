@@ -10,9 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import ch.ethz.inf.dbproject.model.Address;
+import ch.ethz.inf.dbproject.model.Case;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
 import ch.ethz.inf.dbproject.model.User;
 import ch.ethz.inf.dbproject.util.UserManagement;
+import ch.ethz.inf.dbproject.util.html.BeanTableHelper;
 
 @WebServlet(description = "Page that displays the user login / logout options.", urlPatterns = { "/User" })
 public final class UserServlet extends HttpServlet {
@@ -63,11 +65,13 @@ public final class UserServlet extends HttpServlet {
 				// However for this project, security is not a requirement.
 				final String password = request.getParameter("password");
 				if (password.equals(dbInterface.getPassword(username))) {
-					User u = new User(1, username, password);
+					User u = new User(1, username);
 					session.setAttribute(SESSION_USER_LOGGED_IN, true);
 					session.setAttribute(SESSION_USER_DETAILS, username);
 					session.setAttribute(UserManagement.SESSION_USER, u);
 					session.setAttribute("LatestAction", "Authentication successful");
+
+					response.sendRedirect(request.getRequestURL().toString());return;
 				} else
 					// wrong password
 					session.setAttribute("FailedLogin",
@@ -102,6 +106,29 @@ public final class UserServlet extends HttpServlet {
 			// Logged in
 			session.setAttribute("LatestAction", "Welcome "+loggedUser.getUsername());
 			session.setAttribute(SESSION_USER_LOGGED_IN, true);
+			
+			final BeanTableHelper<Case> table = new BeanTableHelper<Case>(
+					"cases" 		/* The table html id property */,
+					"casesTable" /* The table html class property */,
+					Case.class 	/* The class of the objects (rows) that will bedisplayed */
+			);
+
+
+			table.addBeanColumn("Title", "title");
+			table.addBeanColumn("Case Description", "descr");
+			table.addBeanColumn("Date", "dateString");
+			table.addBeanColumn("Time", "timeString");
+			table.addBeanColumn("Location", "loc");
+			table.addBeanColumn("Category", "cat");
+			table.addBeanColumn("Open", "open");
+			table.addLinkColumn(""	/* The header. We will leave it empty */,
+					"View Case" 	/* What should be displayed in every row */,
+					"Case?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
+					"idcase" 			/* For every case displayed, the ID will be retrieved and will be attached to the url base above */);
+
+			table.addObjects(dbInterface.getCasesByUser(loggedUser.getUsername()));
+			session.setAttribute("UserCases",table);
+
 
 		
 		 if (action != null && action.trim().equals("logout")// Logout

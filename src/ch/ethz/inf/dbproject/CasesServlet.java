@@ -55,10 +55,6 @@ public final class CasesServlet extends HttpServlet {
 		table.addBeanColumn("Category", "cat");
 		table.addBeanColumn("Open", "open");
 
-		/*
-		 * Column 4: This is a special column. It adds a link to view the
-		 * Project. We need to pass the case identifier to the url.
-		 */
 		table.addLinkColumn(""	/* The header. We will leave it empty */,
 				"View Case" 	/* What should be displayed in every row */,
 				"Case?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
@@ -77,7 +73,7 @@ public final class CasesServlet extends HttpServlet {
 
 		} else if (category != null) {
 
-			table.addObjects(this.dbInterface.getProjectsByCategory(category));
+			table.addObjects(this.dbInterface.getCasesByCategory(category));
 			
 		} else if (filter != null) {
 		

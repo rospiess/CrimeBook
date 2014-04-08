@@ -143,7 +143,7 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 		</tr>
 	</table>
 	<%}else{ %> 
-	<h3> <%= session.getAttribute("LatestAction") %> </h3><hr/>  What would you like to do?<br> <br> 
+	<h2> <%= session.getAttribute("LatestAction") %> </h2><hr/>  What would you like to do?<br> <br> 
 <table>
 		<tr>
 			<th colspan="2">
@@ -175,8 +175,9 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 			</th>
 		</tr>
 	</table>
-
-
+<h2>Your Cases</h2>
+<%=session.getAttribute("UserCases")
+	%>
 <%}
 //TODO: Display cases opened by the user
 

@@ -7,12 +7,10 @@ public final class User {
 
 	private final int userid;
 	private final String username;
-	private final String name;
 	
-	public User(final int userid, final String username, final String name) {
+	public User(final int userid, final String username) {
 		this.userid = userid;
 		this.username = username;
-		this.name = name;
 	}
 
 	public int getUserid() {
@@ -23,7 +21,4 @@ public final class User {
 		return username;
 	}
 
-	public String getName() {
-		return name;
-	}	
 }
