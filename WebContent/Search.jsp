@@ -7,8 +7,19 @@
 
 <form method="get" action="Search">
 <div>
+	<input type="hidden" name="filter" value="title" />
+	Search Case By Title:
+	<input type="text" name="title" />
+	<input type="submit" value="Search" title="Search by Title" />
+</div>
+</form>
+
+<hr/>
+
+<form method="get" action="Search">
+<div>
 	<input type="hidden" name="filter" value="description" />
-	Search By Person Name:
+	Search Person By Name:
 	<input type="text" name="description" />
 	<input type="submit" value="Search" title="Search by Description" />
 </div>
@@ -19,7 +30,7 @@
 <form method="get" action="Search">
 <div>
 	<input type="hidden" name="filter" value="category" />
-	<label>Search By Type of Conviction:</label>
+	<label>Search Conviction By Type:</label>
 	<select name="category">
 		<optgroup label="Personal Crimes">
 			<option value = "Assault">Assault</option>
@@ -43,8 +54,8 @@
 <form method="get" action="Search">
 <div>
 	<input type="hidden" name="filter" value="date" />
-	Search By Date of Conviction (yyyy-mm-dd):
-	<input type="text" name="date" />
+	Search Conviction By Date (yyyy-mm-dd):
+	<input type="date" name="date" />
 	<input type="submit" value="Search" title="Search by Date of Conviction" />
 </div>
 </form>

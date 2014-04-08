@@ -650,6 +650,31 @@ public final class DatastoreInterface {
 		}
 	}
 
+	public final List<Case> searchByTitle(String title) {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("Select * from Cases c, Address a where c.idAddress = a.idAddress and c.title like '%"
+							+ title + "%'" +
+									" ORDER BY Title ASC");
+
+			final List<Case> persons = new ArrayList<Case>();
+			while (rs.next()) {
+				persons.add(new Case(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return persons;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+	
 	public final List<Person> searchByName(String name) {
 		try {
 

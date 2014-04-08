@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import ch.ethz.inf.dbproject.model.Case;
 import ch.ethz.inf.dbproject.model.Conviction;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
 import ch.ethz.inf.dbproject.model.Person;
@@ -47,7 +48,11 @@ public final class SearchServlet extends HttpServlet {
 				Person.class 	/* The class of the objects (rows) that will bedisplayed */
 		);
 
-
+		final BeanTableHelper<Case> table = new BeanTableHelper<Case>(
+				"cases" 		/* The table html id property */,
+				"casesTable" /* The table html class property */,
+				Case.class 	/* The class of the objects (rows) that will bedisplayed */
+		);
 		
 		final BeanTableHelper<Conviction> ctable = new BeanTableHelper<Conviction>(
 				"conviction" 		/* The table html id property */,
@@ -61,6 +66,28 @@ public final class SearchServlet extends HttpServlet {
 
 		if (filter != null) {
 		
+			
+			if(filter.equals("title")) {
+
+				session.setAttribute("results", table);
+				final String title = request.getParameter("title");	
+
+				table.addBeanColumn("Title", "title");
+				table.addBeanColumn("Case Description", "descr");
+				table.addBeanColumn("Date", "dateString");
+				table.addBeanColumn("Time", "timeString");
+				table.addBeanColumn("Location", "loc");
+				table.addBeanColumn("Category", "cat");
+				table.addBeanColumn("Open", "open");
+				table.addLinkColumn(""	/* The header. We will leave it empty */,
+						"View Case" 	/* What should be displayed in every row */,
+						"Case?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
+						"idcase" 			/* For every case displayed, the ID will be retrieved and will be attached to the url base above */);
+
+				table.addObjects(this.dbInterface.searchByTitle(title));
+				
+			}
+			
 			if(filter.equals("description")) {
 
 				session.setAttribute("results", ptable);
