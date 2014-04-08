@@ -72,19 +72,21 @@ final Conviction con = (Conviction) session.getAttribute("CurrentCon");
 					</tr>
 					
 				</tbody>
-			</table>
-
-		<br>
-
+				<tr>
+				
+		</table>
+				<br>
 			<input type="hidden" name="action" value="submitEdit" />
 			<input type="submit" value="Submit" />
 		</form>
+		
 		
 
 		<form action="Case" method="get" style="display:inline; margin-left: 3em;">
 			<input type="hidden" name="action" value="cancelEdit" />
 			<input type="submit" value="Cancel" />
 		</form>	
+
 
 	
 <%}else if((Boolean)session.getAttribute("ConvDate")){ %>
@@ -132,6 +134,12 @@ else
 			<form action="Case" method="post">
 				<input type="hidden" name="action" value="close" />
 				<input onclick="document.location.reload(true)" type="submit" value="Close Case" />
+			</form>
+		</th>
+		<th colspan="20">
+			<form action="Case" method="post">
+				<input type="hidden" name="action" value="delete" />
+				<input type="submit" value="Delete Case" />
 			</form>
 		</th>
 		</tr>

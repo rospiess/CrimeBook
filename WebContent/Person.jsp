@@ -12,11 +12,9 @@
 	<h1>Edit Person Detail</h1>
 	
 	<form action="Person" method="post" style="display:inline">	
-	<table>
-	<tr>
-		<th>
+
 			<table cellpadding = "0" cellspacing = "0" class = "personsTable">
-				<tbody>
+
 					<tr>
 						<th>First Name</th>
 						<td><input type="text" name="firstname" maxlength="45" value="<%=person.getFirstname() %>" /></td>
@@ -26,13 +24,8 @@
 					<tr>
 						<th>Date of Birth</th>
 						<td><input type="date" name="birthdate" value="<%=person.getBdateString() %>" /></td>
-					
-				</tbody>
+
 			</table>
-		
-		</th>
-	</tr>
-	</table>
 	
 		<br>
 			<input type="hidden" name="action" value="submitEdit" />
@@ -45,6 +38,7 @@
 			<input type="hidden" name="action" value="cancelEdit" />
 			<input type="submit" value="Cancel" />
 		</form>	
+		
 
 	
 <%}else{ %>
@@ -61,10 +55,22 @@
 	if (user != null) {
 		// User is logged in. He can edit
 	%>
+		<table>
+		<tr>
+		<th colspan="20">
 		<form action="Person" method="get">
 			<input type="hidden" name="action" value="editDetails" />
 			<input type="submit" value="Edit" />
 		</form>	
+		</th>
+		<th colspan="20">
+			<form action="Person" method="post">
+				<input type="hidden" name="action" value="delete" />
+				<input type="submit" value="Delete Person" />
+			</form>
+					</th>
+		</tr>
+	</table>
 		<%
 	}
 	%>

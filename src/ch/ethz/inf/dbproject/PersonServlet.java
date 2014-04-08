@@ -227,6 +227,11 @@ public final class PersonServlet extends HttpServlet {
 				//TODO print some error message "already connected to case"
 			}
 			
+			else if (action != null && action.trim().equals("delete"))
+			{
+				dbInterface.deletePerson(id);
+				response.sendRedirect(request.getRequestURL().toString() + "s");return;
+			}
 			else if (action != null && action.trim().equals("submitEdit"))
 			{
 				// Edited Person

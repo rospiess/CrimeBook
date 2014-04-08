@@ -25,7 +25,7 @@ public final class DatastoreInterface {
 	private PreparedStatement ps_createConviction, ps_insertCaseComment, ps_insertPersonComment,
 				ps_updateConvictionDates, ps_setCaseOpen, ps_deleteConvictions, ps_deleteInvolved,
 				ps_deleteCaseNote, ps_deletePersonNote, ps_insertAddress, ps_insertCase, ps_updateAddress, ps_updateCase,
-				ps_addInvolvement, ps_addPerson, ps_updatePerson, ps_changePassword;
+				ps_addInvolvement, ps_addPerson, ps_updatePerson, ps_changePassword, ps_deletePersons, ps_deleteCases;
 					
 
 	public DatastoreInterface() {
@@ -43,6 +43,8 @@ public final class DatastoreInterface {
 			ps_deleteInvolved = sqlConnection.prepareStatement("delete from involved where idCase = ? and idperson = ?  and role = ?");
 			ps_deleteCaseNote = sqlConnection.prepareStatement("delete from notecase where Nr = ? and username = ?");
 			ps_deletePersonNote = sqlConnection.prepareStatement("delete from noteperson where Nr = ? and username = ?");
+			ps_deletePersons = sqlConnection.prepareStatement("delete from personofinterest where idpersonofinterest = ?");
+			ps_deleteCases = sqlConnection.prepareStatement("delete from cases where idcase = ?");
 			ps_insertAddress = sqlConnection.prepareStatement("Insert into Address(country,city,street, zipcode,streetno) values ( ?, ?, ?, ?, ?)",PreparedStatement.RETURN_GENERATED_KEYS);
 			ps_insertCase = sqlConnection.prepareStatement("Insert into Cases(title,description,open,date,time,idAddress,catname,username) values (?, ?, 1, ?, ?, ?, ?,?)");
 			ps_updateAddress = sqlConnection.prepareStatement("UPDATE Address SET country=?,city=?,street=?,zipcode=?,streetno=? WHERE idAddress = ?");
@@ -341,6 +343,30 @@ public final class DatastoreInterface {
 		}
 	}
 	
+	public final void deleteCase(int id) {
+		try {
+			PreparedStatement s = ps_deleteCases;
+			s.setInt(1, id);
+			s.execute();
+			
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+		}
+
+	}
+	public final void deletePerson(int id) {
+		try {
+
+			PreparedStatement s = ps_deletePersons;
+			s.setInt(1, id);
+			s.execute();
+			
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+		}
+
+	}
+	
 	public final void deleteNote(int Nr, String uname, final String type) {
 		// Deletes a caseNote with a certain Nr as key
 		// Type distinguishes between casenote and personnote
@@ -353,7 +379,7 @@ public final class DatastoreInterface {
 			{
 				s = ps_deletePersonNote;
 			}
-			s.setString(1, ""+Nr+"");
+			s.setInt(1, Nr);
 			s.setString(2, uname);
 			s.execute();
 			
@@ -990,6 +1016,8 @@ public final class DatastoreInterface {
 			return null;
 		}
 	}
+	
+	
 	
 
 }

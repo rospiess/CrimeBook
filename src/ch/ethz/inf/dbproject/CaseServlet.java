@@ -282,7 +282,12 @@ public final class CaseServlet extends HttpServlet {
 						loggedUser.getUsername(), "case");
 				response.setHeader("Refresh",  "0");
 			}
-			
+			if (action != null && action.trim().equals("delete"))
+			{
+				dbInterface.deleteCase(id);
+				response.sendRedirect(request.getRequestURL().toString() + "s");return;
+
+			}
 			if  (action != null && action.trim().equals("close")){
 				this.dbInterface.setCaseOpen(id,false);
 				response.setHeader("Refresh",  "0");
