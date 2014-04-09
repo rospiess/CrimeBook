@@ -196,7 +196,10 @@ public final class UserServlet extends HttpServlet {
 			String errorlog = "";
 			String firstname = request.getParameter("firstname");
 			String lastname = request.getParameter("lastname");
-			String date = request.getParameter("date");
+			String birthyear = request.getParameter("birthyear");
+			String birthmonth = request.getParameter("birthmonth");
+			String birthday = request.getParameter("birthday");
+			
 			
 			if (firstname.isEmpty()){
 				firstname = "???"; // Unknown value
@@ -207,10 +210,25 @@ public final class UserServlet extends HttpServlet {
 				errorlog = errorlog.concat(", empty lastname");
 			}
 			
+			String date;
+			if (birthyear != null && birthmonth != null && birthday != null){
+				while(birthyear.length()<4){
+					birthyear = "0"+birthyear;
+				}
+				date = birthyear+"-"+birthmonth+"-"+birthday;
+				try{
+					java.sql.Date.valueOf(date);
+				}catch(IllegalArgumentException e){
+					date = null; // default = unknown value
+				}
+			}
+			else
+				date = null;
+			
 			try{
 				java.sql.Date.valueOf(date);
 			}catch(IllegalArgumentException e){
-				date = "0001-01-01"; // default = unknown value
+				date = null; // default = unknown value
 				errorlog = errorlog.concat(", invalid date");
 			}
 			

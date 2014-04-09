@@ -58,7 +58,12 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 		</tr>
 		<tr>
 			<th align="left">Date of Birth</th>
-			<td><input type="date" name="date" value="" /></td>
+			<td> 
+				Year: <input type = "text" name = "birthyear" size = "4" maxlength="4" value =""/> 
+				Month: <input type = "text" name = "birthmonth"  size = "2" maxlength="2" value =""/>
+				Day: <input type = "text" name = "birthday"  size = "2" maxlength="2" value =""/>
+			</td>
+			
 		</tr>
 		<tr>
 			<th colspan="1">			

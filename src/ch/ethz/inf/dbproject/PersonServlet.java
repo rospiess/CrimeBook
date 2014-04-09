@@ -76,7 +76,6 @@ public final class PersonServlet extends HttpServlet {
 			// Add columns to the new table
 
 			
-			//table.addBeanColumn("Person ID", "idperson");
 			table.addBeanColumn("First Name", "firstname");
 			table.addBeanColumn("Last Name", "lastname");
 			table.addBeanColumn("Date of Birth", "bdateString");			
@@ -235,7 +234,10 @@ public final class PersonServlet extends HttpServlet {
 				
 				String firstname = request.getParameter("firstname");
 				String lastname = request.getParameter("lastname");
-				String date = request.getParameter("birthdate");
+				//String date = request.getParameter("birthdate");
+				String birthyear = request.getParameter("birthyear");
+				String birthmonth = request.getParameter("birthmonth");
+				String birthday = request.getParameter("birthday");
 				
 				if (firstname.isEmpty()){
 					firstname = "???"; // Unknown value
@@ -246,12 +248,21 @@ public final class PersonServlet extends HttpServlet {
 					
 				}
 				
-				try{
-					java.sql.Date.valueOf(date);
-				}catch(IllegalArgumentException e){
-					date = "0001-01-01"; // default = unknown value
-					
+				String date;
+				if (birthyear != null && birthmonth != null && birthday != null){
+					while(birthyear.length()<4){
+						birthyear = "0"+birthyear;
+					}
+					date = birthyear+"-"+birthmonth+"-"+birthday;
+					try{
+						java.sql.Date.valueOf(date);
+					}catch(IllegalArgumentException e){
+						date = null; // default = unknown value
+					}
 				}
+				else
+					date = null;
+				
 				
 				this.dbInterface.updatePerson(id,firstname, lastname, date);
 				response.setHeader("Refresh", "0");

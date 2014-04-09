@@ -54,7 +54,7 @@ public class Person {
 	}
 	
 	public String getBdateString() {
-		if (bdate.toString().equals("0001-01-01"))
+		if (bdate == null)
 			return "???";
 		else
 			return bdate.toString();

@@ -1,10 +1,26 @@
 <%@page import="ch.ethz.inf.dbproject.model.User"%>
 <%@page import="ch.ethz.inf.dbproject.model.Person"%>
 <%@page import="ch.ethz.inf.dbproject.util.UserManagement"%>
+<%@page import = "java.util.Calendar"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="Header.jsp" %>
 <% final User user = (User) session.getAttribute(UserManagement.SESSION_USER); %>
-<% final Person person = (Person) session.getAttribute("currentPerson");%>
+<% final Person person = (Person) session.getAttribute("currentPerson");
+Calendar bdate;
+String byear,bmonth,bday;
+if (person.getBdate() != null){
+	bdate = Calendar.getInstance();
+	bdate.setTime(person.getBdate());
+	byear = Integer.toString(bdate.get(Calendar.YEAR));
+	bmonth = Integer.toString(bdate.get(Calendar.MONTH)+1);
+	bday = Integer.toString(bdate.get(Calendar.DAY_OF_MONTH));
+}
+else{
+	byear = "????";
+	bmonth = "??";
+	bday = "??";
+}
+%>
 
 
 
@@ -25,7 +41,12 @@
 						<td><input type="text" name="lastname" maxlength="45" value="<%=person.getLastname() %>" /></td>
 					<tr>
 						<th>Date of Birth</th>
-						<td><input type="date" name="birthdate" value="<%=person.getBdateString() %>" /></td>
+						
+						<td> 
+						Year: <input type = "text" name = "birthyear" size = "4" maxlength="4" value ="<%=byear%>"/> 
+						Month: <input type = "text" name = "birthmonth"  size = "2" maxlength="2" value ="<%=bmonth%>"/>
+						Day: <input type = "text" name = "birthday"  size = "2" maxlength="2" value ="<%=bday%>"/>
+						</td>
 					
 				</tbody>
 			</table>
