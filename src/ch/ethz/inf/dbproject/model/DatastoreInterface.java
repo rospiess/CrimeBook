@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import ch.ethz.inf.dbproject.database.MySQLConnection;
@@ -283,17 +282,40 @@ public final class DatastoreInterface {
 				// Get suspects with query
 				final Statement stmt = this.sqlConnection.createStatement();
 				final ResultSet rs = stmt
-						.executeQuery("Select idpersonofinterest from personofinterest p, involved i "
+						.executeQuery("Select idpersonofinterest, catname from personofinterest p, involved i, cases c "
 								+ "where i.role = 'Suspect' and i.idCase = "
 								+ id
-								+ " and i.idperson = p.idpersonofinterest");
+								+ " and i.idperson = p.idpersonofinterest and c.idCase = " + id);
 
 				while (rs.next()) {
 					// Create conviction with the suspects in the resultset
 					ps_createConviction.setInt(1, id);
 					ps_createConviction.setInt(2, rs.getInt("idpersonofinterest"));
-					ps_createConviction.setDate(3, getCurrentDate());
-					ps_createConviction.setDate(4, getCurrentDate());
+					
+					Date d =getCurrentDate();
+					ps_createConviction.setDate(3, d);
+					
+					Category c = new Category(rs.getString("catname"),null);
+					switch(c.getName()){
+					case "Assault":
+						d.setYear(d.getYear()+5); break;
+					case "Murder":
+						d.setYear(d.getYear()+20); break;
+					case "Kidnapping":
+						d.setYear(d.getYear()+8); break;
+					case "OtherPers":
+						d.setYear(d.getYear()+4); break;
+					case "Theft":
+						d.setYear(d.getYear()+1); break;
+					case "Fraud":
+						d.setYear(d.getYear()+2); break;
+					case "Burglary":
+						d.setYear(d.getYear()+2); break;
+					case "OtherProp":
+						d.setYear(d.getYear()+3); break;
+						}
+					
+					ps_createConviction.setDate(4, d);
 					
 					ps_createConviction.execute();
 				}
