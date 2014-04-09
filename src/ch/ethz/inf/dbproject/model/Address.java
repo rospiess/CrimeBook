@@ -69,4 +69,10 @@ public final class Address {
 		else
 			return Integer.toString(zipCode);
 	}
+	
+	public boolean equals(Address a)
+	{
+		return (a.getCity().equals(city) && a.getCountry().equals(country) && a.getStreet().equals(street)
+				&& a.getStreetNo() == streetNo && a.getZipCode() == zipCode	);
+	}
 }

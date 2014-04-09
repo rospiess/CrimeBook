@@ -262,6 +262,7 @@ public final class DatastoreInterface {
 		}
 	}
 
+	@SuppressWarnings( "deprecation" )
 	public final void setCaseOpen(int id, boolean open) {
 
 		try {
@@ -313,7 +314,9 @@ public final class DatastoreInterface {
 						d.setYear(d.getYear()+2); break;
 					case "OtherProp":
 						d.setYear(d.getYear()+3); break;
-						}
+					default:
+						d.setYear(d.getYear()+1); break;
+					}
 					
 					ps_createConviction.setDate(4, d);
 					
@@ -441,20 +444,65 @@ public final class DatastoreInterface {
 
 	}
 	
-	public final void updateCase(int id, String title, String descr, String date,
-			String time, Address address, String catname) {
+	public final void updateAddress(int id, Address address) {
 
 		try {
+			final Statement stmt = sqlConnection.createStatement();
+			ResultSet rs = stmt.executeQuery("Select * FROM Address a");
+			while(rs.next()){
+			Address a = new Address(rs);
+			if(a.equals(address))
+				{
+				String s ="Update Cases set idAddress = " + rs.getInt("idAddress")
+						+ " where idCase = " + id;
+				stmt.execute(s);				
+				return;
+				}
+			}
+			
+			rs = stmt.executeQuery("Select  idCase, idAddress FROM Cases");
+			int idAddress = getIdAddressByCase(id);
+			while(rs.next()){
+			
+				if(rs.getInt("idAddress") == idAddress && rs.getInt("idCase") != id)
+				{
+					PreparedStatement s = ps_insertAddress;
+					s.setString(1, address.getCountry());
+					s.setString(2, address.getCity());
+					s.setString(3, address.getStreet());
+					s.setInt(4, address.getZipCode());
+					s.setInt(5, address.getStreetNo());
+					s.execute();
+					ResultSet rs2 = s.getGeneratedKeys();
+					rs2.next();
+					stmt.execute("Update Cases set idAddress = " + rs2.getInt(1) + " where idCase = " + id);
+					return;
+				}
+			}
+			
 			PreparedStatement s = ps_updateAddress;
 			s.setString(1, address.getCountry());
 			s.setString(2, address.getCity());
 			s.setString(3, address.getStreet());
 			s.setInt(4, address.getZipCode());
 			s.setInt(5, address.getStreetNo());
-			s.setInt(6, getAddressByCase(id));
+			s.setInt(6, getIdAddressByCase(id));
 			s.execute();
 			
-			s = ps_updateCase;
+			
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+		}
+
+	}
+	
+	public final void updateCase(int id, String title, String descr, String date,
+			String time, Address address, String catname) {
+
+		try {
+			updateAddress(id,address);
+			
+			PreparedStatement s = ps_updateCase;
 			s.setString(1, title);
 			s.setString(2, descr);
 			s.setString(3, date);
@@ -469,11 +517,11 @@ public final class DatastoreInterface {
 
 	}
 	
-	private final int getAddressByCase(int idcase){
+	private final int getIdAddressByCase(int idcase){
 		try{
 			final Statement s = sqlConnection.createStatement();
-			final ResultSet rs = s.executeQuery("Select a.idAddress FROM Cases c, Address a" +
-					" WHERE c.idAddress = a.idAddress AND c.idcase = "+idcase);
+			final ResultSet rs = s.executeQuery("Select idAddress FROM Cases c" +
+					" WHERE c.idcase = "+idcase);
 			if(rs.next()){
 				return rs.getInt("idAddress");
 			}

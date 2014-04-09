@@ -19,6 +19,8 @@ Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Jörg', 
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Bertrand', 'Meyer', '1921-4-14');
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Frank', 'Gürkaynak', '1967-9-2');
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Emo', 'Welzl', '1971-3-25');
+Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Timothy', 'Roscoe', '1961-6-1');
+Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Donald', 'Kossmann', '1963-11-15');
 
 Insert into noteperson(idPersonOfInterest,text,username) values ('1', 'Sehr kräftig gebaut','Max Muster');
 Insert into noteperson(idPersonOfInterest,text,username) values ('1', 'Besitzt eine Vorliebe für Fastfood','Max Muster');
@@ -29,7 +31,7 @@ insert into address(country, zipCode, city, street, streetNo) values ('Switzerla
 
 Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Entwendung einer Schreibmaschine', 'Auf einmal war sie weg...', false, '2010-10-30', '13:45:00',  'Theft', 1,'Test');
 Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Mord an der ETH', 'Brutal mit Schreibmaschine erschlagen', true, '2010-10-31', '23:55:00', 'Murder', 1,'Test');
-Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Schwere Körperverletzung', 'Älterer Mann von Auto mit französischem Kennzeichen angefahren', true, '2010-11-01', '09:32:13', 'Assault', 1,'Test');
+Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Älterer Mann überfahren', 'Ein renommierter Professor wurde von einem Auto mit französischem Kennzeichen angefahren, welches anschliessend Fahrerflucht beging', true, '2010-11-01', '09:32:13', 'Assault', 1,'Test');
 Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Einbruch ins CAB', 'Entwendet wurden: 9 Flaschen Bier, 2 Tiefkühlpizzas und eine nicht funktionierende Kaffeemaschine', true, '2014-3-20', '00:48:19', 'Burglary', 1,'Test');
 Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Entführung des ETH Maskottchens', 'Opfer wurde mit Elektroschocker ausser Gefecht gestetzt und anschliessend in schwarzen Van verfrachtet', false, '2008-2-29', '21:34:51',  'Kidnapping', 1,'Test');
 Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Bösartige Turingmaschine', 'Transferierte das Budget des VIS auf ausländisches Konto', false, '2000-1-21', '15:12:34', 'Fraud', 1,'Test');
@@ -51,3 +53,8 @@ Insert into involved(idPerson,idCase,role) values (1,2,'Suspect');
 Insert into involved(idPerson,idCase,role) values (3,2,'Suspect');
 Insert into involved(idPerson,idCase,role) values (1,4,'Suspect');
 Insert into involved(idPerson,idCase,role) values (3,4,'Witness');
+
+Insert into involved(idPerson,idCase,role) values (2,3,'Victim');
+Insert into involved(idPerson,idCase,role) values (7,5,'Victim');
+Insert into involved(idPerson,idCase,role) values (6,6,'Witness');
+Insert into involved(idPerson,idCase,role) values (6,4,'Victim');
