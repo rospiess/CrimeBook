@@ -844,6 +844,61 @@ public final class DatastoreInterface {
 			return null;
 		}
 	}
+	
+	public final List<Person> getUninvolvedInCase(int idcase) {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("SELECT * from personofinterest p " +
+							"WHERE p.idpersonofinterest NOT IN (SELECT p2.idpersonofinterest " +
+								"FROM personofinterest p2, involved i2 " +
+								"WHERE p2.idpersonofinterest = i2.idperson AND i2.idcase = " + idcase +")"+
+							" ORDER BY p.LastName ASC");
+
+			final List<Person> persons = new ArrayList<Person>();
+			while (rs.next()) {
+				persons.add(new Person(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return persons;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+	
+	public final List<Case> getCasesUninvolvedIn(int pid) {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("SELECT * FROM Cases c, Address a where c.idAddress = a.idAddress and open = 1" +
+							" AND c.idCase NOT IN ( " +
+								" SELECT i2.idCase FROM Involved i2 " +
+								" WHERE i2.idperson = "+pid+")" +
+							" ORDER BY title asc");
+
+			final List<Case> cases = new ArrayList<Case>();
+			while (rs.next()) {
+				cases.add(new Case(rs));
+			}
+
+			rs.close();
+			stmt.close();
+
+			return cases;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+
+	}
 
 	public final List<Person> getSuspectsById(int id) {
 		try {

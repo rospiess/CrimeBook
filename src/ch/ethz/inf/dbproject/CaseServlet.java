@@ -196,7 +196,7 @@ public final class CaseServlet extends HttpServlet {
 					"idperson",
 					Person.class
 					);
-			personselect.addObjects(this.dbInterface.getAllPersons());
+			personselect.addObjects(this.dbInterface.getUninvolvedInCase(aCase.getIdcase()));
 			
 			session.setAttribute("personSelect",personselect);
 			
