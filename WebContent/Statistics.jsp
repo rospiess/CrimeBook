@@ -69,46 +69,70 @@ function createLineChart(years, values){
 
 function makeLineChart(svg_layout, yearData, valuesData, legendData){
 	// blur filter
-	var filter = makeSVGpie("filter", {id: "drop-shadow"});
-	var feGaussianBlur = makeSVGpie("feGaussianBlur", {in: "", stdDeviation: 5, result: "blur"});
+	var filter = makeNodeWithAtt("filter", {id: "drop-shadow"});
+	var feGaussianBlur = makeNodeWithAtt("feGaussianBlur", {in: "", stdDeviation: 5, result: "blur"});
 	filter.appendChild(feGaussianBlur);
-	var feOffset = makeSVGpie("feOffset", {id: "depth", dy: 4, dx: 4, result: "offsetBlur"});
+	var feOffset = makeNodeWithAtt("feOffset", {id: "depth", dy: 4, dx: 4, result: "offsetBlur"});
 	filter.appendChild(feOffset);
 	var feMerge = document.createElementNS('http://www.w3.org/2000/svg', 'feMerge');
-	var feMergeNode = makeSVGpie("feMergeNode", {in: "offsetBlur"});
+	var feMergeNode = makeNodeWithAtt("feMergeNode", {in: "offsetBlur"});
 	feMerge.appendChild(feMergeNode);
-	var feMergeNode2 = makeSVGpie("feMergeNode", {in: "SourceGraphic"});
+	var feMergeNode2 = makeNodeWithAtt("feMergeNode", {in: "SourceGraphic"});
 	feMerge.appendChild(feMergeNode2);
 	filter.appendChild(feMerge);
 	svg_layout.appendChild(filter);
 	
 	// Axis
-	var gxAxis = makeSVGpie("g", {style: "stroke-width:3; stroke:black"});
-	var xAxis = makeSVGpie("path", {d: "M 105 1005 L 1095 1005 Z"});
+	var gxAxis = makeNodeWithAtt("g", {style: "stroke-width:3; stroke:black"});
+	var xAxis = makeNodeWithAtt("path", {d: "M 105 1005 L 1095 1005 Z"});
 	gxAxis.appendChild(xAxis);
 	svg_layout.appendChild(gxAxis);
 	
-	var gHoriz = makeSVGpie("g", {filter: "url(#drop-shadow)", style: "fill:none; stroke:#B0B0B0; stroke-width:2.3; stroke-dasharray:2.3 4.7;"});
+	var gHoriz = makeNodeWithAtt("g", {filter: "url(#drop-shadow)", style: "fill:none; stroke:#B0B0B0; stroke-width:2.3; stroke-dasharray:2.3 4.7;"});
 	for (var i=0; i<5; i++){
-		var horiz = makeSVGpie("path", {d: "M 100 " + (250 + i*150) + " L 1100 " + (250 + i*150) + " Z"});
+		var horiz = makeNodeWithAtt("path", {d: "M 100 " + (250 + i*150) + " L 1100 " + (250 + i*150) + " Z"});
 		gHoriz.appendChild(horiz);
 	}
 	svg_layout.appendChild(gHoriz);
 	
-	var gVert = makeSVGpie("g", {style: "fill:none; stroke:#101010; stroke-width:2;"});
+	var gVert = makeNodeWithAtt("g", {style: "fill:none; stroke:#101010; stroke-width:2;"});
 	for (var i=0; i<5; i++){
-		var vert = makeSVGpie("path", {d: "M " + (100 + i*250) + " 1000 L " + (100 + i*250) + " 980 Z"});
+		var vert = makeNodeWithAtt("path", {d: "M " + (100 + i*250) + " 1000 L " + (100 + i*250) + " 980 Z"});
 		gVert.appendChild(vert);
 	}
 	svg_layout.appendChild(gVert);
 	
 	// Legends
-	var gLegend = makeSVGpie("g", {style: "font-size: 250%;"});
+	var gLegend = makeNodeWithAtt("g", {style: "font-size: 250%;"});
+	
+	var xLabel= makeNodeWithAtt("text", {style: "font-size: 150%;", x: 1180, y: 1000});
+	xLabel.innerHTML = "Year";
+	gLegend.appendChild(xLabel);
+	var yLabel= makeNodeWithAtt("text", {style: "font-size: 150%;", x: 0, y: 110});
+	yLabel.innerHTML = "Crimes";
+	gLegend.appendChild(yLabel);
+	
+	for (var i=0; i<5; i++){
+		var vLabel = makeNodeWithAtt("text", {x: 45, y: 260 + i*150});
+		vLabel.innerHTML = 100 - i * 20;
+		gLegend.appendChild(vLabel);
+	}
+	
+	for (var i=0; i<5; i++){
+		var hLabel = makeNodeWithAtt("text", {x: 80 + i*250, y: 1050});
+		hLabel.innerHTML = 2010 + i;
+		gLegend.appendChild(hLabel);
+	}
+	
+	var lastpoint = 150;
+	var endValue = makeNodeWithAtt("text", {x: 1150, y: lastpoint});
+	endValue.innerHTML = 1100-lastpoint;
+	gLegend.appendChild(endValue);
 	
 	svg_layout.appendChild(gLegend);
 	
 	// Graph
-	var polyline = makeSVGpie("polyline", {filter: "url(#drop-shadow)", points: "100 900, 232 700, 444 800, 560 500, 672 300, 840 250, 1100 200", style: "stroke:red; stroke-width: 3; fill : none;"});
+	var polyline = makeNodeWithAtt("polyline", {filter: "url(#drop-shadow)", points: "100 922, 232 803, 444 449, 560 375, 672 440, 840 323, 1100 250", style: "stroke:red; stroke-width: 3; fill : none;"});
 	svg_layout.appendChild(polyline);
 	
 	return false;
@@ -134,7 +158,7 @@ function clickHandler() {
     alert("You clicked the pie chart.");
 }
 
-function makeSVGpie(tag, attrs) {
+function makeNodeWithAtt(tag, attrs) {
     var el= document.createElementNS('http://www.w3.org/2000/svg', tag);
     for (var k in attrs)
         if (attrs.hasOwnProperty(k)) el.setAttribute(k, attrs[k]);
@@ -174,7 +198,7 @@ function drawArcs(svg_layout, pieData, legendData, type){
         var d = "M"+radius+","+radius+"  L" + x1 + "," + y1 + "  A"+radius+","+radius+" 0 " + ((endAngle-startAngle > 180) ? 1 : 0) + ",1 " + x2 + "," + y2 + " z";
         var c = 360;
 		var colors = ["rgb(111,173,12)", "rgb(128,183,40)", "rgb(145,194,69)", "rgb(179,213,126)", "rgb(196,223,156)", "rgb(216,238,186)"]
-        var arc = makeSVGpie("path", {d: d, fill: colors[i%colors.length], id: i});
+        var arc = makeNodeWithAtt("path", {d: d, fill: colors[i%colors.length], id: i});
 		if (type == "crimeCatChart") arc.setAttribute('title', Math.round(pieData[i]*100)/100 + " % of the crimes commited are listed under the category " + legendData[i] + ".");
 		if (type == "poiInvChart") arc.setAttribute('title', "Person of interest \""+ legendData[i] + "\" accounts for " + Math.round(pieData[i]*100)/100 + " % of the involvements in cases.");
         svg_layout.appendChild(arc);
