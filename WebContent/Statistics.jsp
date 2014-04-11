@@ -30,8 +30,8 @@ involvements = involvements.substring(0, involvements.length()-2) + "]";
 
 
 %>
-<div style="width:30%; border: thin solid; float: left;">
-	<h3 style="width: 50%; margin: 0 auto; white-space:nowrap;"> <span>Percentage of crimes by category</span> </h3>
+<div style="width:30%; border: thin solid; float: left; text-align: center;">
+	<h3 style="margin: 0 auto;">Percentage of crimes by category</h3>
 	<svg width="100%" height="300px" id="crimeCatChart" xmlns="http://www.w3.org/2000/svg" viewbox="-100 -100 400 400">
 	  <style type="text/css">
 	    path:hover {
@@ -41,8 +41,8 @@ involvements = involvements.substring(0, involvements.length()-2) + "]";
 	</svg>
 </div>
 
-<div style="width:30%; border: thin solid; float: left; margin-left: 10px;">
-	<h3 style="width: 50%; margin: 0 auto; white-space:nowrap;"> <span>Percentage of involvements by POI</span> </h3>
+<div style="width:30%; border: thin solid; float: left; margin-left: 10px; text-align: center;">
+	<h3 style="margin: 0 auto;">Percentage of involvements by POI</h3>
 	<svg width="100%" height="300px" id="poiInvChart" xmlns="http://www.w3.org/2000/svg" viewbox="-100 -100 400 400">
 	  <style type="text/css">
 	    path:hover {
@@ -53,78 +53,71 @@ involvements = involvements.substring(0, involvements.length()-2) + "]";
 </div>
 
 
-<div style="width:30%; border: thin solid; float: left; margin-left: 10px;">
-	<h3 style="width: 50%; margin: 0 auto; white-space:nowrap;"> <span>Crimes per year</span> </h3>
-	<svg width="400" height="300" viewBox="50 20 350 350">
-		<desc>BEI Database Event Tracker</desc>
-		<linearGradient id="blueGrad">
-		<stop offset="0" style="stop-color: indigo;"></stop>
-		<stop offset="25%" style="stop-color: blue"></stop> 
-		<stop offset="100%" style="stop-color: white;"></stop>
-		</linearGradient> 
-		<filter id="drop-shadow"> 
-			<feGaussianBlur in="" stdDeviation="5" result="blur"></feGaussianBlur> 
-			<feOffset id="depth" in="blur" dx="4" dy="4" result="offsetBlur"></feOffset> 
-			<feMerge> <feMergeNode in="offsetBlur"></feMergeNode> 
-		<feMergeNode in="SourceGraphic"></feMergeNode> 
-		</feMerge>
-		</filter> 
-		<g transform="scale(0.32)">
-		<g> 
-		<g filter="url(#drop-shadow)">
-		<text x="50" y="35" style="font-size:30; fill : white">
-		Database Event Tracker Graph
-		</text>
-		</g>
-		<!-- Now Draw the main X and Y axis -->
-		<g style="stroke-width:5; stroke:black">
-		<!-- X Axis -->
-				<path d="M 40 1100 L 1040 1100 Z"></path>
-		</g>
-		<!-- Now add some dashes in as a guide -->
-		<g filter="url(#drop-shadow)" style="fill:none; stroke:#B0B0B0; stroke-width:2; stroke-dasharray:2 4;text-anchor:end; font-size:15">
-			<path d="M 42 1000.1085776330076 L 1040 1000.1085776330076 Z"></path>
-		 	<text style="fill:black; stroke:none" x="36" y="1000.1085776330076">276</text>
-			<path d="M 42 900.2171552660152 L 1040 900.2171552660152 Z"></path>
-		 	<text style="fill:black; stroke:none" x="36" y="900.2171552660152">552</text>
-			<path d="M 42 800.3257328990228 L 1040 800.3257328990228 Z"></path>
-		 	<text style="fill:black; stroke:none" x="36" y="800.3257328990228">828</text>
-			<path d="M 42 700.4343105320304 L 1040 700.4343105320304 Z"></path>
-		 	<text style="fill:black; stroke:none" x="36" y="700.4343105320304">1104</text>
-			<path d="M 42 600.542888165038 L 1040 600.542888165038 Z"></path>
-		 	<text style="fill:black; stroke:none" x="36" y="600.542888165038">1380</text>
-			<path d="M 42 500.6514657980456 L 1040 500.6514657980456 Z"></path>
-		 	<text style="fill:black; stroke:none" x="36" y="500.6514657980456">1656</text>
-			<path d="M 42 400.7600434310532 L 1040 400.7600434310532 Z"></path>
-		 	<text style="fill:black; stroke:none" x="36" y="400.7600434310532">1932</text>
-			<path d="M 42 300.8686210640608 L 1040 300.8686210640608 Z"></path>
-		 	<text style="fill:black; stroke:none" x="36" y="300.8686210640608">2208</text>
-			<path d="M 42 200.9771986970684 L 1040 200.9771986970684 Z"></path>
-		 	<text style="fill:black; stroke:none" x="36" y="200.9771986970684">2484</text>
-			<path d="M 42 101.08577633007599 L 1040 101.08577633007599 Z"></path>
-		 	<text style="fill:black; stroke:none" x="36" y="101.08577633007599">2760</text>
-		 	<text style="fill:black; stroke:none; font-size: larger;" x="105" y="80">Event Count</text>
-			<path d="M 42 100.0 L 1040 100.0 Z"></path>
-		</g>
-		<g filter="url(#drop-shadow)">
-		 	<path d="M 1040 1095 L 1040 100 Z"></path>
-		 	<text style="fill:black; stroke:none" x="1030" y="1125">250</text>
-		 	<path d="M 520 1095 L 520 100 Z"></path>
-		 	<text style="fill:black; stroke:none" x="510" y="1125">125</text>
-		 	<path d="M 260 1095 L 260 100 Z"></path>
-		 	<text style="fill:black; stroke:none" x="250" y="1125">62</text>
-		 	<path d="M 780.0 1095 L 780.0 100 Z"></path>
-		 	<text style="fill:black; stroke:none" x="770.0" y="1125">186</text>
-		 	<text style="fill:black; stroke:none; font-size: larger;" x="520" y="1140">Reading Count</text>
-		</g>
-		<polyline filter="url(#drop-shadow)" points=" 44 922.6565327542526, 332 803.6916395222584, 644 449.6199782844734, 760 375.38545059717694, 872 240.4270720231632, 940 173.56496561708286, 1040 150.0," style="stroke:red; stroke-width: 3; fill : none;"></polyline>
-		 	<text style="fill:black; stroke:none" x="1040" y="115.0">2763</text>
-		</g>
-		</g>
+<div style="width:30%; border: thin solid; float: left; margin-left: 10px; text-align: center;">
+	<h3 style="margin: 0 auto;">Crimes per year</h3>
+	<svg width="100%" height="300px" id="crimeAyearChart" viewBox="150 50 1000 1050">
+
 	</svg>
 </div>
 
 <script>
+
+function createLineChart(years, values){
+	makeLineChart(document.getElementById("crimeAyearChart"), years, values);
+	return false;
+}
+
+function makeLineChart(svg_layout, yearData, valuesData, legendData){
+	// blur filter
+	var filter = makeSVGpie("filter", {id: "drop-shadow"});
+	var feGaussianBlur = makeSVGpie("feGaussianBlur", {in: "", stdDeviation: 5, result: "blur"});
+	filter.appendChild(feGaussianBlur);
+	var feOffset = makeSVGpie("feOffset", {id: "depth", dy: 4, dx: 4, result: "offsetBlur"});
+	filter.appendChild(feOffset);
+	var feMerge = document.createElementNS('http://www.w3.org/2000/svg', 'feMerge');
+	var feMergeNode = makeSVGpie("feMergeNode", {in: "offsetBlur"});
+	feMerge.appendChild(feMergeNode);
+	var feMergeNode2 = makeSVGpie("feMergeNode", {in: "SourceGraphic"});
+	feMerge.appendChild(feMergeNode2);
+	filter.appendChild(feMerge);
+	svg_layout.appendChild(filter);
+	
+	// Axis
+	var gxAxis = makeSVGpie("g", {style: "stroke-width:3; stroke:black"});
+	var xAxis = makeSVGpie("path", {d: "M 105 1005 L 1095 1005 Z"});
+	gxAxis.appendChild(xAxis);
+	svg_layout.appendChild(gxAxis);
+	
+	var gHoriz = makeSVGpie("g", {filter: "url(#drop-shadow)", style: "fill:none; stroke:#B0B0B0; stroke-width:2.3; stroke-dasharray:2.3 4.7;"});
+	for (var i=0; i<5; i++){
+		var horiz = makeSVGpie("path", {d: "M 100 " + (250 + i*150) + " L 1100 " + (250 + i*150) + " Z"});
+		gHoriz.appendChild(horiz);
+	}
+	svg_layout.appendChild(gHoriz);
+	
+	var gVert = makeSVGpie("g", {style: "fill:none; stroke:#101010; stroke-width:2;"});
+	for (var i=0; i<5; i++){
+		var vert = makeSVGpie("path", {d: "M " + (100 + i*250) + " 1000 L " + (100 + i*250) + " 980 Z"});
+		gVert.appendChild(vert);
+	}
+	svg_layout.appendChild(gVert);
+	
+	// Legends
+	var gLegend = makeSVGpie("g", {style: "font-size: 250%;"});
+	
+	svg_layout.appendChild(gLegend);
+	
+	// Graph
+	var polyline = makeSVGpie("polyline", {filter: "url(#drop-shadow)", points: "100 900, 232 700, 444 800, 560 500, 672 300, 840 250, 1100 200", style: "stroke:red; stroke-width: 3; fill : none;"});
+	svg_layout.appendChild(polyline);
+	
+	return false;
+}
+
+function getE(integerValue)
+{
+    return (integerValue+"").length-1;
+}
 
 function toPercent(values){
 	var sum = values.reduce(function(a, b) { return a + b; }, 0);
@@ -141,7 +134,7 @@ function clickHandler() {
     alert("You clicked the pie chart.");
 }
 
-function makeSVG(tag, attrs) {
+function makeSVGpie(tag, attrs) {
     var el= document.createElementNS('http://www.w3.org/2000/svg', tag);
     for (var k in attrs)
         if (attrs.hasOwnProperty(k)) el.setAttribute(k, attrs[k]);
@@ -181,7 +174,7 @@ function drawArcs(svg_layout, pieData, legendData, type){
         var d = "M"+radius+","+radius+"  L" + x1 + "," + y1 + "  A"+radius+","+radius+" 0 " + ((endAngle-startAngle > 180) ? 1 : 0) + ",1 " + x2 + "," + y2 + " z";
         var c = 360;
 		var colors = ["rgb(111,173,12)", "rgb(128,183,40)", "rgb(145,194,69)", "rgb(179,213,126)", "rgb(196,223,156)", "rgb(216,238,186)"]
-        var arc = makeSVG("path", {d: d, fill: colors[i%colors.length], id: i});
+        var arc = makeSVGpie("path", {d: d, fill: colors[i%colors.length], id: i});
 		if (type == "crimeCatChart") arc.setAttribute('title', Math.round(pieData[i]*100)/100 + " % of the crimes commited are listed under the category " + legendData[i] + ".");
 		if (type == "poiInvChart") arc.setAttribute('title', "Person of interest \""+ legendData[i] + "\" accounts for " + Math.round(pieData[i]*100)/100 + " % of the involvements in cases.");
         svg_layout.appendChild(arc);
@@ -191,6 +184,7 @@ function drawArcs(svg_layout, pieData, legendData, type){
 
 drawArcs(document.getElementById("crimeCatChart"), toPercent(<%=values%>), categories, "crimeCatChart"); // here is the pie chart data
 drawArcs(document.getElementById("poiInvChart"), toPercent(<%=involvements%>), firstname, "poiInvChart");
+createLineChart();
 </script>
 
 <%
