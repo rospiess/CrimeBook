@@ -15,28 +15,28 @@ Insert into category(CatName, SuperCat) values ('Burglary', 'Property Crime');
 Insert into category(CatName, SuperCat) values ('OtherProp', 'Property Crime');
 
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Andre', 'Rubbia', '1950-12-31');
-Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('JÃ¶rg', 'Gutknecht', '1921-4-13');
+Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Jürg', 'Gutknecht', '1921-4-13');
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Bertrand', 'Meyer', '1921-4-14');
-Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Frank', 'GÃ¼rkaynak', '1967-9-2');
+Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Frank', 'Gürkaynak', '1967-9-2');
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Emo', 'Welzl', '1971-3-25');
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Timothy', 'Roscoe', '1961-6-1');
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Donald', 'Kossmann', '1963-11-15');
 
-Insert into noteperson(idPersonOfInterest,text,username) values ('1', 'Sehr krÃ¤ftig gebaut','Max Muster');
-Insert into noteperson(idPersonOfInterest,text,username) values ('1', 'Besitzt eine Vorliebe fÃ¼r Fastfood','Max Muster');
-Insert into noteperson(idPersonOfInterest,text,username) values ('2', 'HÃ¶chstgefÃ¤hrlich','Max Muster');
+Insert into noteperson(idPersonOfInterest,text,username) values ('1', 'Sehr kräftig gebaut','Max Muster');
+Insert into noteperson(idPersonOfInterest,text,username) values ('1', 'Besitzt eine Vorliebe für Fastfood','Max Muster');
+Insert into noteperson(idPersonOfInterest,text,username) values ('2', 'Hüchstgefährlich','Max Muster');
 Insert into noteperson(idPersonOfInterest,text,username) values ('3', 'Auch bekannt als "Der Witwenmacher"','Max Muster');
 
-insert into address(country, zipCode, city, street, streetNo) values ('Switzerland',8000,'ZÃ¼rich','RÃ¤mistrasse',101);
+insert into address(country, zipCode, city, street, streetNo) values ('Switzerland',8000,'Zürich','Rämistrasse',101);
 
 Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Entwendung einer Schreibmaschine', 'Auf einmal war sie weg...', false, '2010-10-30', '13:45:00',  'Theft', 1,'Test');
 Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Mord an der ETH', 'Brutal mit Schreibmaschine erschlagen', true, '2010-10-31', '23:55:00', 'Murder', 1,'Test');
-Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Ã„lterer Mann Ã¼berfahren', 'Ein renommierter Professor wurde von einem Auto mit franzÃ¶sischem Kennzeichen angefahren, welches anschliessend Fahrerflucht beging', true, '2010-11-01', '09:32:13', 'Assault', 1,'Test');
-Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Einbruch ins CAB', 'Entwendet wurden: 9 Flaschen Bier, 2 TiefkÃ¼hlpizzas und eine nicht funktionierende Kaffeemaschine', true, '2014-3-20', '00:48:19', 'Burglary', 1,'Test');
-Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('EntfÃ¼hrung des ETH Maskottchens', 'Opfer wurde mit Elektroschocker ausser Gefecht gestetzt und anschliessend in schwarzen Van verfrachtet', false, '2008-2-29', '21:34:51',  'Kidnapping', 1,'Test');
-Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('BÃ¶sartige Turingmaschine', 'Transferierte das Budget des VIS auf auslÃ¤ndisches Konto', false, '2000-1-21', '15:12:34', 'Fraud', 1,'Test');
+Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Älterer Mann überfahren', 'Ein renommierter Professor wurde von einem Auto mit franzüsischem Kennzeichen angefahren, welches anschliessend Fahrerflucht beging', true, '2010-11-01', '09:32:13', 'Assault', 1,'Test');
+Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Einbruch ins CAB', 'Entwendet wurden: 9 Flaschen Bier, 2 Tiefkühlpizzas und eine nicht funktionierende Kaffeemaschine', true, '2014-3-20', '00:48:19', 'Burglary', 1,'Test');
+Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Entführung des ETH Maskottchens', 'Opfer wurde mit Elektroschocker ausser Gefecht gestetzt und anschliessend in schwarzen Van verfrachtet', false, '2008-2-29', '21:34:51',  'Kidnapping', 1,'Test');
+Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Büsartige Turingmaschine', 'Transferierte das Budget des VIS auf ausländisches Konto', false, '2000-1-21', '15:12:34', 'Fraud', 1,'Test');
 
-Insert into notecase(idCase,text,username) values ('2', 'Opfer war bekannt dafÃ¼r, Witze Ã¼ber die Programmiersprache Eiffel zu reissen.','Max Muster');
+Insert into notecase(idCase,text,username) values ('2', 'Opfer war bekannt dafür, Witze über die Programmiersprache Eiffel zu reissen.','Max Muster');
 
 Insert into conviction(beginDate,endDate,idCase,idPersonOfInterest) values ('2010-11-2','2010-12-2',1,3);
 Insert into conviction(beginDate,endDate,idCase,idPersonOfInterest) values ('2000-3-5','2000-9-13',6,5);
