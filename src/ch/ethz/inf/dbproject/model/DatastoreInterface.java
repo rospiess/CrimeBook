@@ -33,25 +33,25 @@ public final class DatastoreInterface {
 		try {
 			// Create prepared Statements
 			
-			ps_createConviction = sqlConnection.prepareStatement("insert into conviction(idcase, idpersonofinterest, beginDate, endDate) values(?,?,?,?)");
-			ps_insertCaseComment = sqlConnection.prepareStatement("Insert into notecase (idCase, text, username) values (?, ?, ?)");
-			ps_insertPersonComment = sqlConnection.prepareStatement("Insert into noteperson (idPersonofinterest, text, username) values (?, ?, ?)");
+			ps_createConviction = sqlConnection.prepareStatement("INSERT INTO conviction(idcase, idpersonofinterest, beginDate, endDate) VALUES (?,?,?,?)");
+			ps_insertCaseComment = sqlConnection.prepareStatement("INSERT INTO notecase (idCase, text, username) VALUES (?, ?, ?)");
+			ps_insertPersonComment = sqlConnection.prepareStatement("INSERT INTO noteperson (idPersonofinterest, text, username) VALUES (?, ?, ?)");
 			ps_updateConvictionDates = sqlConnection.prepareStatement("UPDATE conviction SET begindate = ?, enddate = ?  WHERE idconviction = ?");
-			ps_setCaseOpen = sqlConnection.prepareStatement("Update Cases set open = ? where idcase = ?");
-			ps_deleteConvictions = sqlConnection.prepareStatement("delete from conviction where conviction.idcase = ?");
-			ps_deleteInvolved = sqlConnection.prepareStatement("delete from involved where idCase = ? and idperson = ?  and role = ?");
-			ps_deleteCaseNote = sqlConnection.prepareStatement("delete from notecase where Nr = ? and username = ?");
-			ps_deletePersonNote = sqlConnection.prepareStatement("delete from noteperson where Nr = ? and username = ?");
-			ps_deletePersons = sqlConnection.prepareStatement("delete from personofinterest where idpersonofinterest = ?");
-			ps_deleteCases = sqlConnection.prepareStatement("delete from cases where idcase = ?");
-			ps_insertAddress = sqlConnection.prepareStatement("Insert into Address(country,city,street, zipcode,streetno) values ( ?, ?, ?, ?, ?)",PreparedStatement.RETURN_GENERATED_KEYS);
-			ps_insertCase = sqlConnection.prepareStatement("Insert into Cases(title,description,open,date,time,idAddress,catname,username) values (?, ?, 1, ?, ?, ?, ?,?)");
+			ps_setCaseOpen = sqlConnection.prepareStatement("UPDATE Cases SET open = ? WHERE idcase = ?");
+			ps_deleteConvictions = sqlConnection.prepareStatement("DELETE FROM conviction WHERE conviction.idcase = ?");
+			ps_deleteInvolved = sqlConnection.prepareStatement("DELETE FROM involved WHERE idCase = ? AND idperson = ?  AND role = ?");
+			ps_deleteCaseNote = sqlConnection.prepareStatement("DELETE FROM notecase WHERE Nr = ? AND username = ?");
+			ps_deletePersonNote = sqlConnection.prepareStatement("DELETE FROM noteperson WHERE Nr = ? AND username = ?");
+			ps_deletePersons = sqlConnection.prepareStatement("DELETE FROM personofinterest WHERE idpersonofinterest = ?");
+			ps_deleteCases = sqlConnection.prepareStatement("DELETE FROM cases WHERE idcase = ?");
+			ps_insertAddress = sqlConnection.prepareStatement("INSERT INTO Address(country,city,street, zipcode,streetno) VALUES ( ?, ?, ?, ?, ?)",PreparedStatement.RETURN_GENERATED_KEYS);
+			ps_insertCase = sqlConnection.prepareStatement("INSERT INTO Cases(title,description,open,date,time,idAddress,catname,username) VALUES (?, ?, 1, ?, ?, ?, ?,?)");
 			ps_updateAddress = sqlConnection.prepareStatement("UPDATE Address SET country=?,city=?,street=?,zipcode=?,streetno=? WHERE idAddress = ?");
 			ps_updateCase = sqlConnection.prepareStatement("UPDATE Cases SET title=?,description=?,date=?,time=?,catname=? WHERE idcase = ?");
-			ps_addInvolvement = sqlConnection.prepareStatement("Insert into involved (idCase, idPerson, role) values (?,?,?)");
-			ps_addPerson = sqlConnection.prepareStatement("Insert into personofinterest(firstname,lastname,dateofbirth) values ( ?, ?, ?)");
+			ps_addInvolvement = sqlConnection.prepareStatement("INSERT INTO involved (idCase, idPerson, role) VALUES (?,?,?)");
+			ps_addPerson = sqlConnection.prepareStatement("INSERT INTO personofinterest(firstname,lastname,dateofbirth) VALUES ( ?, ?, ?)");
 			ps_updatePerson = sqlConnection.prepareStatement("UPDATE personofinterest SET firstname = ?, lastname = ?, dateofbirth = ? WHERE idpersonofinterest = ?");
-			ps_changePassword = sqlConnection.prepareStatement("Update user set password = ? where username = ?");
+			ps_changePassword = sqlConnection.prepareStatement("UPDATE user SET password = ? WHERE username = ?");
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
