@@ -47,6 +47,9 @@ public final class StatisticsServlet extends HttpServlet {
     	List<Pair<Integer,Integer>> convictionsAyear = dbInterface.getStatConvictionsPerYear();
     	session.setAttribute("convictionsAyear", convictionsAyear);
     	
+    	List<Pair<String,Integer>> crimeNbrSuperCat = dbInterface.getStatSuperCategories();
+    	session.setAttribute("crimeSuperCatStats", crimeNbrSuperCat);
+    	
     	this.getServletContext().getRequestDispatcher("/Statistics.jsp").forward(request, response);	        
 	}
 }
