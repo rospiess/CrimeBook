@@ -1190,5 +1190,30 @@ public final class DatastoreInterface {
 		}
 	}
 	
+	public final List<Pair<String,Integer>> getStatSuperCategories() {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("SELECT category.SuperCat AS SuperCatName, COUNT(*) FROM cases, category WHERE cases.CatName = category.CatName GROUP BY category.SuperCat;");
+
+			final List<Pair<String,Integer>> stats = new ArrayList<Pair<String,Integer>>();
+			while (rs.next()) {
+				Pair<String,Integer> a_SuperCat_val = new Pair<String, Integer>(rs.getString("SuperCatName"), rs.getInt("amount"));
+				stats.add(a_SuperCat_val);
+			}
+
+			rs.close();
+			stmt.close();
+
+			return stats;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+
+	}
+	
 
 }
