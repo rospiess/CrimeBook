@@ -48,6 +48,16 @@ for (int i = 0; i < pairsConvictionsYear.size(); i++){
 yearsConv = yearsConv.substring(0, yearsConv.length()-2) + "]";
 convictions = convictions.substring(0, convictions.length()-2) + "]";
 
+final List<Pair<String,Integer>> pairSuperCrimesCat = (List<Pair<String,Integer>>) session.getAttribute("crimeSuperCatStats");
+String categoriesSuper = "['";
+String valuesSuper = "[";
+for (int i = 0; i < pairSuperCrimesCat.size(); i++){
+	categoriesSuper = categoriesSuper + pairSuperCrimesCat.get(i).getL() + "'" + ", '";
+	valuesSuper = valuesSuper + pairSuperCrimesCat.get(i).getR() + ", ";
+}
+categoriesSuper = categoriesSuper.substring(0, categoriesSuper.length()-3) + "]";
+valuesSuper = valuesSuper.substring(0, valuesSuper.length()-2) + "]";
+
 
 %>
 <div id="overlayCont" style="text-align: center;">
@@ -56,6 +66,7 @@ convictions = convictions.substring(0, convictions.length()-2) + "]";
 	<div id="zoomed" style="position: absolute; left: 20%; width: 75%; height: 75%; float: center; opacity:1; background-color: white; display: none;" onclick="this.parentNode.style.display = 'none'">
 	</div>
 </div>
+
 <div id="crimeCat" style="width:30%; height: 320px; border: thin solid; float: left; text-align: center;"  onclick="zoom('crimeCat');">
 	<h3 style="margin: 0 auto;">Percentage of crimes by category</h3>
 	<svg width="100%" height="300px" id="crimeCatChart" xmlns="http://www.w3.org/2000/svg" viewbox="-100 -100 400 400">
@@ -90,6 +101,17 @@ convictions = convictions.substring(0, convictions.length()-2) + "]";
 	<h3 style="margin: 0 auto;">Convictions per year</h3>
 	<svg width="100%" height="300px" id="convictionAyearChart" viewBox="-40 80 1400 1000">
 
+	</svg>
+</div>
+
+<div id="crimeSuperCat" style="width:30%; height: 320px; border: thin solid; float: left;  margin-top: 10px;  margin-left: 10px;  text-align: center;"  onclick="zoom('crimeCat');">
+	<h3 style="margin: 0 auto;">Personal vs property crimes by percents</h3>
+	<svg width="100%" height="300px" id="crimeSuperCatChart" xmlns="http://www.w3.org/2000/svg" viewbox="-100 -100 400 400">
+	  <style type="text/css">
+	    path:hover {
+	      opacity: 0.8;
+	    }
+	  </style>
 	</svg>
 </div>
 
@@ -272,6 +294,7 @@ function drawArcs(svg_layout, pieData, legendData, type){
 		var tooltip= document.createElementNS('http://www.w3.org/2000/svg', 'title');
 		if (type == "crimeCatChart") tooltip.textContent = Math.round(pieData[i]*100)/100 + " % of the crimes commited are listed under the category " + legendData[i] + ".";
 		if (type == "poiInvChart") tooltip.textContent = "Person of interest \""+ legendData[i] + "\" accounts for " + Math.round(pieData[i]*100)/100 + " % of the involvements in cases.";
+		if (type == "crimeSuperCatChart") tooltip.textContent = Math.round(pieData[i]*100)/100 + " % of the crimes commited are listed under the  super category " + legendData[i] + ".";
 		arc.appendChild(tooltip);
 		svg_layout.appendChild(arc);
         if (type == "crimeCatChart") arc.onclick = function(){alert(Math.round(pieData[this.id]*100)/100 + " % of the crimes commited are listed under the category " + legendData[this.id] + ".");}; // alternative onclick handler as chrome doesn't support tooltip on svg elements
@@ -281,6 +304,7 @@ function drawArcs(svg_layout, pieData, legendData, type){
 
 drawArcs(document.getElementById("crimeCatChart"), toPercent(<%=values%>), categories, "crimeCatChart");
 drawArcs(document.getElementById("poiInvChart"), toPercent(<%=involvements%>), firstname, "poiInvChart");
+drawArcs(document.getElementById("crimeSuperCatChart"), toPercent(<%=valuesSuper%>), <%=categoriesSuper%>, "crimeSuperCatChart");
 createLineChart();
 </script>
 
