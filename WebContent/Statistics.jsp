@@ -86,10 +86,20 @@ convictions = convictions.substring(0, convictions.length()-2) + "]";
 	</svg>
 </div>
 
+<div id="convictionAyear" style="width:30%; height: 320px; border: thin solid; float: left; margin-top: 10px; text-align: center;" onclick="zoom('crimeAyear');">
+	<h3 style="margin: 0 auto;">Convictions per year</h3>
+	<svg width="100%" height="300px" id="convictionAyearChart" viewBox="-40 80 1400 1000">
+
+	</svg>
+</div>
+
 <script>
 
 var crimes = (<%=crimes%>);
 var years = (<%=years%>);
+
+var convictions = (<%=convictions%>);
+var yearsConv = (<%=yearsConv%>);
 
 function zoom(divTozoom){
 	var htmlCode = document.getElementById(divTozoom).innerHTML;
@@ -106,6 +116,7 @@ function zoom(divTozoom){
 
 function createLineChart(){
 	makeLineChart(document.getElementById("crimeAyearChart"), years, crimes, ["Crimes", "Years"]);
+	makeLineChart(document.getElementById("convictionAyearChart"), yearsConv, convictions, ["Convictions", "Years"]);
 	return false;
 }
 
