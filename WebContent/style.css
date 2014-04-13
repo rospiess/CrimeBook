@@ -8,7 +8,7 @@ html, body {
 
 body {
 	margin: 0px;
-	background: red;
+	background: #66CCFF;
 }
 table#masterTable {
 	background: white;
@@ -45,7 +45,11 @@ div.menuDiv3 {
 	padding-left: 40px;
 }
 
-div.personal.subcategories , div.property.subcategories {
+div.personal.subcategories {
+	display: block;
+}
+
+div.property.subcategories {
 	display: none;
 }
 

@@ -41,6 +41,9 @@ public final class StatisticsServlet extends HttpServlet {
     	List<Pair<String,Integer>> poiInvolv = dbInterface.getStatInvolvements();
     	session.setAttribute("poiInvStats", poiInvolv);
     	
+    	List<Pair<Integer,Integer>> crimesAyear = dbInterface.getStatCrimesPerYear();
+    	session.setAttribute("crimesAyear", crimesAyear);
+    	
     	this.getServletContext().getRequestDispatcher("/Statistics.jsp").forward(request, response);	        
 	}
 }

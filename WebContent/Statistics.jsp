@@ -28,9 +28,25 @@ for (int i = 0; i < pairsPOIInv.size(); i++){
 firstname = firstname.substring(0, firstname.length()-3) + "]";
 involvements = involvements.substring(0, involvements.length()-2) + "]";
 
+final List<Pair<Integer,Integer>> pairsCrimesYear = (List<Pair<Integer,Integer>>) session.getAttribute("crimesAyear");
+String years = "[";
+String crimes = "[";
+for (int i = 0; i < pairsCrimesYear.size(); i++){
+	years = years + pairsCrimesYear.get(i).getL() + ", ";
+	crimes = crimes + pairsCrimesYear.get(i).getR() + ", ";
+}
+years = years.substring(0, years.length()-2) + "]";
+crimes = crimes.substring(0, crimes.length()-2) + "]";
+
 
 %>
-<div style="width:30%; border: thin solid; float: left; text-align: center;">
+<div id="overlayCont" style="text-align: center;">
+	<div id="overlay" style="position:absolute; left:220px; top:115px; width: 100%; height: 100%; background-color: black; opacity:0.8; display: none;" onclick="this.parentNode.style.display = 'none'">
+	</div>
+	<div id="zoomed" style="position: absolute; left: 20%; width: 75%; height: 75%; float: center; opacity:1; background-color: white; display: none;" onclick="this.parentNode.style.display = 'none'">
+	</div>
+</div>
+<div id="crimeCat" style="width:30%; height: 320px; border: thin solid; float: left; text-align: center;"  onclick="zoom('crimeCat');">
 	<h3 style="margin: 0 auto;">Percentage of crimes by category</h3>
 	<svg width="100%" height="300px" id="crimeCatChart" xmlns="http://www.w3.org/2000/svg" viewbox="-100 -100 400 400">
 	  <style type="text/css">
@@ -41,7 +57,7 @@ involvements = involvements.substring(0, involvements.length()-2) + "]";
 	</svg>
 </div>
 
-<div style="width:30%; border: thin solid; float: left; margin-left: 10px; text-align: center;">
+<div id="poiInv" style="width:30%; height: 320px; border: thin solid; float: left; margin-left: 10px; text-align: center;"  onclick="zoom('poiInv');">
 	<h3 style="margin: 0 auto;">Percentage of involvements by POI</h3>
 	<svg width="100%" height="300px" id="poiInvChart" xmlns="http://www.w3.org/2000/svg" viewbox="-100 -100 400 400">
 	  <style type="text/css">
@@ -53,21 +69,37 @@ involvements = involvements.substring(0, involvements.length()-2) + "]";
 </div>
 
 
-<div style="width:30%; border: thin solid; float: left; margin-left: 10px; text-align: center;">
+<div id="crimeAyear" style="width:30%; height: 320px; border: thin solid; float: left; margin-left: 10px; text-align: center;" onclick="zoom('crimeAyear');">
 	<h3 style="margin: 0 auto;">Crimes per year</h3>
-	<svg width="100%" height="300px" id="crimeAyearChart" viewBox="150 50 1000 1050">
+	<svg width="100%" height="300px" id="crimeAyearChart" viewBox="-40 80 1400 1000">
 
 	</svg>
 </div>
 
 <script>
 
-function createLineChart(years, values){
-	makeLineChart(document.getElementById("crimeAyearChart"), years, values);
+var crimes = (<%=crimes%>);
+var years = (<%=years%>);
+
+function zoom(divTozoom){
+	var htmlCode = document.getElementById(divTozoom).innerHTML;
+	htmlCode = htmlCode.slice(0);
+	htmlCode = htmlCode.replace("height=\"300px\"", "height=\"90%\"");
+	htmlCode = htmlCode.replace("viewBox=\"-40 80", "viewBox=\"0 50");
+	htmlCode = htmlCode.replace(/id=\".*?\"/g, '');
+	htmlCode = htmlCode.replace("id=\"crimeAyearChart\"", "id=\"crimeAyearChartZoomed\"");
+	document.getElementById('zoomed').innerHTML = htmlCode;
+	document.getElementById('overlayCont').style.display = 'block';
+	document.getElementById('zoomed').style.display = 'block';
+	document.getElementById('overlay').style.display = 'block';
+}
+
+function createLineChart(){
+	makeLineChart(document.getElementById("crimeAyearChart"), years, crimes, ["Crimes", "Years"]);
 	return false;
 }
 
-function makeLineChart(svg_layout, yearData, valuesData, legendData){
+function makeLineChart(svg_layout, xAxisData, valuesData, legendData){
 	// blur filter
 	var filter = makeNodeWithAtt("filter", {id: "drop-shadow"});
 	var feGaussianBlur = makeNodeWithAtt("feGaussianBlur", {in: "", stdDeviation: 5, result: "blur"});
@@ -106,33 +138,47 @@ function makeLineChart(svg_layout, yearData, valuesData, legendData){
 	var gLegend = makeNodeWithAtt("g", {style: "font-size: 250%;"});
 	
 	var xLabel= makeNodeWithAtt("text", {style: "font-size: 150%;", x: 1180, y: 1000});
-	xLabel.innerHTML = "Year";
+	xLabel.textContent = legendData[1];
 	gLegend.appendChild(xLabel);
 	var yLabel= makeNodeWithAtt("text", {style: "font-size: 150%;", x: 0, y: 110});
-	yLabel.innerHTML = "Crimes";
+	yLabel.textContent = legendData[0];
 	gLegend.appendChild(yLabel);
 	
+	
+	var sorted = valuesData.slice(0).sort();
+	var maxV = sorted[sorted.length-1];
+	var maxL;
+	var min = sorted[0];
+	var step = Math.ceil(maxV/5);
 	for (var i=0; i<5; i++){
-		var vLabel = makeNodeWithAtt("text", {x: 45, y: 260 + i*150});
-		vLabel.innerHTML = 100 - i * 20;
+		var vLabel = makeNodeWithAtt("text", {x: 45, y: 860 - i*150});
+		maxL = (i+1)*step;
+		vLabel.textContent = maxL;
 		gLegend.appendChild(vLabel);
 	}
 	
-	for (var i=0; i<5; i++){
+	for (var i=0; i<years.length; i++){
 		var hLabel = makeNodeWithAtt("text", {x: 80 + i*250, y: 1050});
-		hLabel.innerHTML = 2010 + i;
+		hLabel.textContent = years[years.length-1-i];
 		gLegend.appendChild(hLabel);
 	}
 	
-	var lastpoint = 150;
+	// coords
+	var unit = 750/maxL;
+	// legend: value of last point
+	var lastpoint = (1000 - valuesData[valuesData.length-1]*unit);
 	var endValue = makeNodeWithAtt("text", {x: 1150, y: lastpoint});
-	endValue.innerHTML = 1100-lastpoint;
+	endValue.textContent = valuesData[valuesData.length-1];
 	gLegend.appendChild(endValue);
 	
 	svg_layout.appendChild(gLegend);
 	
 	// Graph
-	var polyline = makeNodeWithAtt("polyline", {filter: "url(#drop-shadow)", points: "100 922, 232 803, 444 449, 560 375, 672 440, 840 323, 1100 250", style: "stroke:red; stroke-width: 3; fill : none;"});
+	var coords = "100 ?.?, 350 ?.?, 600 ?.?, 850 ?.?, 1100 ?.?";
+	for (var i=0; i<valuesData.length; i++){
+		coords = coords.replace("?.?",(1000 - valuesData[i]*unit));
+	}
+	var polyline = makeNodeWithAtt("polyline", {filter: "url(#drop-shadow)", points: coords, style: "stroke:red; stroke-width: 3; fill : none;"});
 	svg_layout.appendChild(polyline);
 	
 	return false;
@@ -151,6 +197,7 @@ function toPercent(values){
 }
 
 function toStringArr(categories){
+	//return categories.slice(1,categories.length).split(',');
 	return categories;
 }
 
@@ -165,8 +212,8 @@ function makeNodeWithAtt(tag, attrs) {
     return el;
 }
 
-var categories = toStringArr(<%=categories%>);
-var firstname = toStringArr(<%=firstname%>);
+var categories = (<%=categories%>);
+var firstname = (<%=firstname%>);
 
 function drawArcs(svg_layout, pieData, legendData, type){
     var total = pieData.reduce(function (accu, that) { return that + accu; }, 0);
@@ -189,7 +236,7 @@ function drawArcs(svg_layout, pieData, legendData, type){
         
         var legend= document.createElementNS('http://www.w3.org/2000/svg', 'text');
 		legend.setAttribute('fill', 'black');
-		legend.innerHTML = legendData[i];
+		legend.textContent = legendData[i]; // legend.innerHTML works totaly fine, but not so on funny Chrome ;-]
 		svg_layout.appendChild(legend);
 		var tlength = legend.getComputedTextLength();
 		legend.setAttribute('y',parseInt(Math.round(radius + radius*1.5*Math.sin(Math.PI*(startAngle+sectorAngleArr[i]/2)/180))));
@@ -201,12 +248,17 @@ function drawArcs(svg_layout, pieData, legendData, type){
         var arc = makeNodeWithAtt("path", {d: d, fill: colors[i%colors.length], id: i});
 		if (type == "crimeCatChart") arc.setAttribute('title', Math.round(pieData[i]*100)/100 + " % of the crimes commited are listed under the category " + legendData[i] + ".");
 		if (type == "poiInvChart") arc.setAttribute('title', "Person of interest \""+ legendData[i] + "\" accounts for " + Math.round(pieData[i]*100)/100 + " % of the involvements in cases.");
-        svg_layout.appendChild(arc);
-        if (type == "crimeCatChart") arc.onclick = function(){alert(Math.round(pieData[this.id]*100)/100 + " % of the crimes commited are listed under the category " + legendData[this.id] + ".");}; // Optional onclick handler
+		var tooltip= document.createElementNS('http://www.w3.org/2000/svg', 'title');
+		if (type == "crimeCatChart") tooltip.textContent = Math.round(pieData[i]*100)/100 + " % of the crimes commited are listed under the category " + legendData[i] + ".";
+		if (type == "poiInvChart") tooltip.textContent = "Person of interest \""+ legendData[i] + "\" accounts for " + Math.round(pieData[i]*100)/100 + " % of the involvements in cases.";
+		arc.appendChild(tooltip);
+		svg_layout.appendChild(arc);
+        if (type == "crimeCatChart") arc.onclick = function(){alert(Math.round(pieData[this.id]*100)/100 + " % of the crimes commited are listed under the category " + legendData[this.id] + ".");}; // alternative onclick handler as chrome doesn't support tooltip on svg elements
+        if (type == "poiInvChart") arc.onclick = function(){alert("Person of interest \""+ legendData[this.id] + "\" accounts for " + Math.round(pieData[this.id]*100)/100 + " % of the involvements in cases.");};
     }
 }
 
-drawArcs(document.getElementById("crimeCatChart"), toPercent(<%=values%>), categories, "crimeCatChart"); // here is the pie chart data
+drawArcs(document.getElementById("crimeCatChart"), toPercent(<%=values%>), categories, "crimeCatChart");
 drawArcs(document.getElementById("poiInvChart"), toPercent(<%=involvements%>), firstname, "poiInvChart");
 createLineChart();
 </script>
@@ -217,6 +269,8 @@ if (true) {
 	/*
 		# Number of cases per year
 		SELECT YEAR(endDate) AS year, COUNT(*) AS numberOfCrimes FROM cases, conviction WHERE cases.idCase = conviction.idCase GROUP BY YEAR(conviction.endDate) ORDER BY year DESC;
+		# of convictions per year
+		SELECT YEAR(beginDate) AS year, COUNT(*) AS numberOfCrimes FROM conviction GROUP BY year ORDER BY year DESC LIMIT 5;
 		# Number of cases by category
 		SELECT Title, CatName, COUNT(*) FROM cases GROUP BY CatName;
 		# Number of cases per SuperCat
@@ -241,6 +295,7 @@ if (true) {
 		# Number of involvments by POI and role
 		SELECT FirstName, role, COUNT(role) FROM PersonOfInterest AS POI, involved AS inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest, role ORDER BY role, FirstName;
 		# Simply all involvments by POI
+		SELECT FirstName, LastName, COUNT(*) AS amount FROM PersonOfInterest AS POI, involved AS inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest;
 		select FirstName, count(*) from PersonOfInterest as POI, involved as inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest;
 		
 	*/
