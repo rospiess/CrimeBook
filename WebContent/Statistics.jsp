@@ -38,6 +38,16 @@ for (int i = 0; i < pairsCrimesYear.size(); i++){
 years = years.substring(0, years.length()-2) + "]";
 crimes = crimes.substring(0, crimes.length()-2) + "]";
 
+final List<Pair<Integer,Integer>> pairsConvictionsYear = (List<Pair<Integer,Integer>>) session.getAttribute("convictionsAyear");
+String yearsConv = "[";
+String convictions = "[";
+for (int i = 0; i < pairsConvictionsYear.size(); i++){
+	yearsConv = yearsConv + pairsConvictionsYear.get(i).getL() + ", ";
+	convictions = convictions + pairsConvictionsYear.get(i).getR() + ", ";
+}
+yearsConv = yearsConv.substring(0, yearsConv.length()-2) + "]";
+convictions = convictions.substring(0, convictions.length()-2) + "]";
+
 
 %>
 <div id="overlayCont" style="text-align: center;">
