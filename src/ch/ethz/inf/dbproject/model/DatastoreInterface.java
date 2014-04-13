@@ -1166,5 +1166,29 @@ public final class DatastoreInterface {
 		}
 	}
 	
+	public final List<Pair<Integer,Integer>> getStatConvictionsPerYear() {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("SELECT YEAR(beginDate) AS year, COUNT(*) AS numberOfConvictions FROM conviction GROUP BY year ORDER BY year DESC LIMIT 5;");
+
+			final List<Pair<Integer,Integer>> stats = new ArrayList<Pair<Integer,Integer>>();
+			while (rs.next()) {
+				Pair<Integer,Integer> a_year_val = new Pair<Integer, Integer>(rs.getInt("year"), rs.getInt("numberOfConvictions"));
+				stats.add(a_year_val);
+			}
+
+			rs.close();
+			stmt.close();
+
+			return stats;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+	
 
 }
