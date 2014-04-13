@@ -97,14 +97,14 @@ valuesSuper = valuesSuper.substring(0, valuesSuper.length()-2) + "]";
 	</svg>
 </div>
 
-<div id="convictionAyear" style="width:30%; height: 320px; border: thin solid; float: left; margin-top: 10px; text-align: center;" onclick="zoom('crimeAyear');">
+<div id="convictionAyear" style="width:30%; height: 320px; border: thin solid; float: left; margin-top: 10px; text-align: center;" onclick="zoom('convictionAyear');">
 	<h3 style="margin: 0 auto;">Convictions per year</h3>
 	<svg width="100%" height="300px" id="convictionAyearChart" viewBox="-40 80 1400 1000">
 
 	</svg>
 </div>
 
-<div id="crimeSuperCat" style="width:30%; height: 320px; border: thin solid; float: left;  margin-top: 10px;  margin-left: 10px;  text-align: center;"  onclick="zoom('crimeCat');">
+<div id="crimeSuperCat" style="width:30%; height: 320px; border: thin solid; float: left;  margin-top: 10px;  margin-left: 10px;  text-align: center;"  onclick="zoom('crimeSuperCat');">
 	<h3 style="margin: 0 auto;">Personal vs property crimes by percents</h3>
 	<svg width="100%" height="300px" id="crimeSuperCatChart" xmlns="http://www.w3.org/2000/svg" viewbox="-100 -100 400 400">
 	  <style type="text/css">
