@@ -389,13 +389,11 @@ public final class CaseServlet extends HttpServlet {
 			if(action != null && action.equals("link_person") && selPerson != null && role != null){
 				int selidperson = Integer.parseInt(selPerson);
 				
-				//Check for duplicate
-				
 				if (!dbInterface.isInvolvedIn(selidperson, id)){
 					dbInterface.addInvolvement(id, selidperson, role);
 					response.setHeader("Refresh", "0");
 				}
-				//TODO print some error message "already connected to case"
+				
 			}
 			
 
