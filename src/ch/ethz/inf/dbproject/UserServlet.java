@@ -295,6 +295,7 @@ public final class UserServlet extends HttpServlet {
 				this.dbInterface.openNewCase(title, descr, date, time, address,
 						catname, loggedUser.getUsername());
 				session.setAttribute("LatestAction", "Opened new Case successfully"+errorlog);
+				response.setHeader("Refresh", "0");
 			}
 			else
 			{

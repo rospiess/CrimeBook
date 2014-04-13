@@ -25,11 +25,15 @@ DONE
 
 - Prepare preparedStatements in constructor
 
+- Rename Law Enforcement Project to Crimebook, Project by...
+
+
+
+
 To-Do List
 -----------
 
 - Layout and code polishing
-- Rename Law Enforcement Project to Crimebook, Project by <our names>
 
 
 When logged in:
