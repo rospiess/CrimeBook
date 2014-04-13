@@ -127,11 +127,10 @@ function zoom(divTozoom){
 	var htmlCode = document.getElementById(divTozoom).innerHTML;
 	htmlCode = htmlCode.slice(0);
 	htmlCode = htmlCode.replace("height=\"300px\"", "height=\"90%\"");
-	htmlCode = htmlCode.replace("viewBox=\"-40 80", "viewBox=\"0 50");
-	htmlCode = htmlCode.replace(/id=\".*?\"/g, '');
-	htmlCode = htmlCode.replace("id=\"crimeAyearChart\"", "id=\"crimeAyearChartZoomed\"");
-	document.getElementById('zoomed').innerHTML = htmlCode;
-	document.getElementById('overlayCont').style.display = 'block';
+	htmlCode = htmlCode.replace("viewBox=\"-40 80", "viewBox=\"0 50"); // resituate the svg when zoomed
+	htmlCode = htmlCode.replace(/id=\".*?\"/g, ''); // regexp: delete all id's in the copied innerHTML to avoid rendering conflicts
+	document.getElementById('zoomed').innerHTML = htmlCode; // the the innerHTML of the zoomed svg
+	document.getElementById('overlayCont').style.display = 'block'; // display the needed overlay divs
 	document.getElementById('zoomed').style.display = 'block';
 	document.getElementById('overlay').style.display = 'block';
 }
