@@ -46,7 +46,7 @@ When logged in:
 
 
 
-(Design-)Questions:
+Design Questions:
 -----------
 
 - What happens to a conviction when the associated case is reopened:
