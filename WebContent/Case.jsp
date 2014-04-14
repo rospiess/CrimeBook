@@ -1,8 +1,8 @@
-<%@page import="ch.ethz.inf.dbproject.model.User"%>
-<%@page import="ch.ethz.inf.dbproject.model.Case"%>
-<%@page import="ch.ethz.inf.dbproject.model.Conviction"%>
-<%@page import="ch.ethz.inf.dbproject.util.UserManagement"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="ch.ethz.inf.dbproject.model.User" %>
+<%@ page import="ch.ethz.inf.dbproject.model.Case" %>
+<%@ page import="ch.ethz.inf.dbproject.model.Conviction" %>
+<%@ page import="ch.ethz.inf.dbproject.util.UserManagement" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="Header.jsp" %>
 <% final User user = (User) session.getAttribute(UserManagement.SESSION_USER);
 final Case caze = (Case) session.getAttribute("CurrentCase"); 
@@ -17,39 +17,39 @@ final Conviction con = (Conviction) session.getAttribute("CurrentCon");
 				<tbody>
 					<tr>
 						<th>Title</th>
-						<td><input type="text" name="title" maxlength="45" value="<%=caze.getTitle() %>" /></td>
+						<td><input type="text" name="title" maxlength="45" value="<%= caze.getTitle() %>" /></td>
 					</tr>
 					<tr>
 						<th>Description</th>
-						<td><textarea name="descr" cols="40" rows = "4" maxlength="160"/><%=caze.getDescr() %></textarea></td>
+						<td><textarea name="descr" cols="40" rows = "4" maxlength="160"/><%= caze.getDescr() %></textarea></td>
 					</tr>
 					<tr>
 						<th>Date</th>
-						<td><input type="date" name="date" value="<%=caze.getDateString() %>" /></td>
+						<td><input type="date" name="date" value="<%= caze.getDateString() %>" /></td>
 					</tr>
 					<tr>
 						<th>Time</th>
-						<td><input type="time" name="time" value="<%=caze.getTimeString() %>"/></td>
+						<td><input type="time" name="time" value="<%= caze.getTimeString() %>"/></td>
 					</tr>
 					<tr>
 						<th>Street</th>
-						<td><input type="text" name="street" maxlength="45" value="<%=caze.getAddress().getStreet() %>"/> </td>
+						<td><input type="text" name="street" maxlength="45" value="<%= caze.getAddress().getStreet() %>"/> </td>
 					</tr>
 					<tr>
 						<th>Street Number</th>
-						<td><input type="text" name="streetno" maxlength="9" value="<%=caze.getAddress().getStreetNoString() %>"/> </td>
+						<td><input type="text" name="streetno" maxlength="9" value="<%= caze.getAddress().getStreetNoString() %>"/> </td>
 					</tr>
 					<tr>
 						<th>Zip Code</th>
-						<td><input type="text" name="zipcode" maxlength="9" value="<%=caze.getAddress().getZipCodeString() %>"/> </td>
+						<td><input type="text" name="zipcode" maxlength="9" value="<%= caze.getAddress().getZipCodeString() %>"/> </td>
 					</tr>
 					<tr>
 						<th>City</th>
-						<td><input type="text" name="city" maxlength="45" value="<%=caze.getAddress().getCity() %>"/> </td>
+						<td><input type="text" name="city" maxlength="45" value="<%= caze.getAddress().getCity() %>"/> </td>
 					</tr>
 					<tr>
 						<th>Country</th>
-						<td><input type="text" name="country" maxlength="45" value="<%=caze.getAddress().getCountry() %>"/> </td>
+						<td><input type="text" name="country" maxlength="45" value="<%= caze.getAddress().getCountry() %>"/> </td>
 					</tr>
 					<tr>
 						<th align="left">Category</th>
@@ -116,7 +116,7 @@ else
 	
 	<h1>Case Details</h1>
 	
-	<%=session.getAttribute("caseTable")%>
+	<%= session.getAttribute("caseTable") %>
 	
 	
 	<%if(user != null){
@@ -184,26 +184,21 @@ else
 	<%} else { %>
 	<h1>Perpetrators</h1>
 	<%} %>
-	<%=session.getAttribute("suspectTable")
-	%>
+	<%= session.getAttribute("suspectTable") %>
 	<h1>Victims</h1>
-	<%=session.getAttribute("victimTable")
-	%>
+	<%= session.getAttribute("victimTable") %>
 	<h1>Witnesses</h1>
-	<%=session.getAttribute("witnessTable")
-	%>
+	<%= session.getAttribute("witnessTable") %>
 	<%if(!caze.getOpen()){ %>
 	<h1>Convictions</h1>
-	<%=session.getAttribute("convictionTable")
-	%>
+	<%= session.getAttribute("convictionTable") %>
 	<%} %>
 
-	<%if (user != null && caze.getOpen()){
-	%>
+	<% if (user != null && caze.getOpen()){ %>
 		<h2>Add a Person to this case</h2>
 		
 		<form action="Case" method = "post">
-			Add <%=session.getAttribute("personSelect") %> as a 
+			Add <%= session.getAttribute("personSelect") %> as a 
 			<select name="role">
 			<optgroup label="Role">
 				<option value = "Suspect">Suspect</option>

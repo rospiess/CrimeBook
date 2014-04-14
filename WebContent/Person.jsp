@@ -1,10 +1,10 @@
-<%@page import="ch.ethz.inf.dbproject.model.User"%>
-<%@page import="ch.ethz.inf.dbproject.model.Person"%>
-<%@page import="ch.ethz.inf.dbproject.util.UserManagement"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="ch.ethz.inf.dbproject.model.User" %>
+<%@ page import="ch.ethz.inf.dbproject.model.Person" %>
+<%@ page import="ch.ethz.inf.dbproject.util.UserManagement" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="Header.jsp" %>
 <% final User user = (User) session.getAttribute(UserManagement.SESSION_USER); %>
-<% final Person person = (Person) session.getAttribute("currentPerson");%>
+<% final Person person = (Person) session.getAttribute("currentPerson"); %>
 
 
 
@@ -45,7 +45,7 @@
 
 	<h1>Person Details</h1>
 
-	<%=session.getAttribute("personTable")%>
+	<%= session.getAttribute("personTable") %>
 	
 	
 	
@@ -75,8 +75,7 @@
 	}
 	%>
 <h1>Comments</h1>
-	<%=session.getAttribute("commentTable")
-	%>
+	<%=session.getAttribute("commentTable")%>
 	<%if (user != null) {
 		// User is logged in. He can add a comment
 	%>
@@ -86,8 +85,8 @@
 			<h2>Add Comment</h2>
 			<% String defaultComment = "Enter your comment to this person here ..."; // delete the default text on clicking into the textarea, and only the default text. Restore default text when left empty.%>
 				<textarea rows="4" cols="50" name="comment" 
-				onclick="txta=document.getElementsByTagName('textarea')[0]; if(txta.value=='<%=defaultComment%>'){txta.value='';}" 
-				onblur="txta=document.getElementsByTagName('textarea')[0]; if(txta.value==''){txta.value='<%=defaultComment%>';}"><%=defaultComment%></textarea>
+				onclick="txta=document.getElementsByTagName('textarea')[0]; if(txta.value=='<%= defaultComment %>'){txta.value='';}" 
+				onblur="txta=document.getElementsByTagName('textarea')[0]; if(txta.value==''){txta.value='<%= defaultComment %>';}"><%= defaultComment %></textarea>
 			<br />
 			<input type="submit" value="Submit" />
 		</form>
@@ -95,18 +94,15 @@
 	}
 	%>
 	<h1>Convictions</h1>
-	<%=session.getAttribute("convictionTable")
-	%>
+	<%= session.getAttribute("convictionTable") %>
 	<h1>Involved in following cases</h1>
-	<%=session.getAttribute("involvedTable")
-	%>
+	<%= session.getAttribute("involvedTable") %>
 	
-	<%if (user != null){
-	%>
+	<% if (user != null){ %>
 		<h2>Link to a case</h2>
 		
 		<form action="Person" method = "post">
-			Link to <%=session.getAttribute("caseSelect") %> as a 
+			Link to <%= session.getAttribute("caseSelect") %> as a 
 			<select name="role">
 			<optgroup label="Role">
 				<option value = "Suspect">Suspect</option>
@@ -123,4 +119,4 @@
 	<%} %>
 <%} %>
 
-<%@ include file="Footer.jsp"%>
+<%@ include file="Footer.jsp" %>

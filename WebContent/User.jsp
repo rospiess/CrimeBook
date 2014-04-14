@@ -1,5 +1,5 @@
-<%@page import="ch.ethz.inf.dbproject.UserServlet"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="ch.ethz.inf.dbproject.UserServlet" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="Header.jsp" %>
 
 
@@ -7,11 +7,11 @@
 if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 	// User is logged in. Display the details:
 %>
-<%if((Boolean)session.getAttribute("ChangingPassword")){ %>
+<%if((Boolean)session.getAttribute("ChangingPassword")){%>
 <h3>Change your Password</h3><hr/>
 <font color="#FF0000">
-<%=session.getAttribute("Error")
-	%></font>
+	<%=session.getAttribute("Error")%>
+</font>
 	
 	<form action="User" method="post" style="display:inline">
 	<table>
@@ -46,8 +46,8 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 <%} else if((Boolean)session.getAttribute("AddingPerson")){ %>
 <h3>Add a new Person of Interest</h3><hr/>
 <font color="#FF0000">
-<%=session.getAttribute("Error")
-	%></font>
+	<%=session.getAttribute("Error")%>
+</font>
 <form action="User" method="post" style="display:inline">
 	<table>
 		<tr>
@@ -78,8 +78,8 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 <%} else if((Boolean)session.getAttribute("OpeningCase")){ %>
 <h3>Add a new Case</h3><hr/>
 <font color="#FF0000">
-<%=session.getAttribute("Error")
-	%></font>
+	<%=session.getAttribute("Error")%>
+</font>
 <form action="User" method="post" style="display:inline">
 	<table>
 		<tr>
@@ -176,16 +176,16 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 		</tr>
 	</table>
 <h2>Your Cases</h2>
-<%=session.getAttribute("UserCases")
-	%>
+<%= session.getAttribute("UserCases") %>
 <%}
 
 	
 } else {
 	%> 
-<h3>Login</h3><hr/><font color="#FF0000">
-<%=session.getAttribute("FailedLogin")
-	%> </font>
+<h3>Login</h3><hr/>
+<font color="#FF0000">
+	<%=session.getAttribute("FailedLogin")%>
+</font>
 	<form action="User" method="get">
 	<input type="hidden" name="action" value="login" />
 	<table>

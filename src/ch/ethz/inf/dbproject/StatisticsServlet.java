@@ -35,6 +35,7 @@ public final class StatisticsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	final HttpSession session = request.getSession(true);
     	
+    	// Class pair is a self defined class in package .model
     	List<Pair<String,Integer>> crimeNbrCat = dbInterface.getStatCategories();
     	session.setAttribute("crimeCatStats", crimeNbrCat);
     	
