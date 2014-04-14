@@ -58,6 +58,16 @@ for (int i = 0; i < pairSuperCrimesCat.size(); i++){
 categoriesSuper = categoriesSuper.substring(0, categoriesSuper.length()-3) + "]";
 valuesSuper = valuesSuper.substring(0, valuesSuper.length()-2) + "]";
 
+final List<Pair<String,Integer>> average_ages = (List<Pair<String,Integer>>) session.getAttribute("crimeSuperCatStats");
+String categoriesAges = "['";
+String averageAges = "[";
+for (int i = 0; i < average_ages.size(); i++){
+	categoriesAges = categoriesAges + average_ages.get(i).getL() + "'" + ", '";
+	averageAges = averageAges + average_ages.get(i).getR() + ", ";
+}
+categoriesAges = categoriesAges.substring(0, categoriesAges.length()-3) + "]";
+averageAges = averageAges.substring(0, averageAges.length()-2) + "]";
+
 
 %>
 <div id="overlayCont" style="text-align: center;">
@@ -112,6 +122,13 @@ valuesSuper = valuesSuper.substring(0, valuesSuper.length()-2) + "]";
 	      opacity: 0.8;
 	    }
 	  </style>
+	</svg>
+</div>
+
+<div id="averageAges" style="width:30%; height: 320px; border: thin solid; float: left; margin-top: 10px; margin-left: 10px; text-align: center;" onclick="zoom('convictionAyear');">
+	<h3 style="margin: 0 auto;">Average ages by person categories</h3>
+	<svg width="100%" height="300px" id="averageAgesChart" viewBox="-40 80 1400 1000">
+
 	</svg>
 </div>
 
@@ -199,16 +216,16 @@ function makeLineChart(svg_layout, xAxisData, valuesData, legendData){
 		gLegend.appendChild(vLabel);
 	}
 	
-	for (var i=0; i<years.length; i++){
+	for (var i=0; i<xAxisData.length; i++){
 		var hLabel = makeNodeWithAtt("text", {x: 80 + i*250, y: 1050});
-		hLabel.textContent = years[years.length-1-i];
+		hLabel.textContent = xAxisData[xAxisData.length-1-i];
 		gLegend.appendChild(hLabel);
 	}
 	
 	// coords
 	var unit = 750/maxL;
 	// legend: value of last point
-	var lastpoint = (1000 - valuesData[valuesData.length-1]*unit);
+	var lastpoint = (1000 - valuesData[0]*unit);
 	var endValue = makeNodeWithAtt("text", {x: 1150, y: lastpoint});
 	endValue.textContent = valuesData[valuesData.length-1];
 	gLegend.appendChild(endValue);
@@ -218,7 +235,7 @@ function makeLineChart(svg_layout, xAxisData, valuesData, legendData){
 	// Graph
 	var coords = "100 ?.?, 350 ?.?, 600 ?.?, 850 ?.?, 1100 ?.?";
 	for (var i=0; i<valuesData.length; i++){
-		coords = coords.replace("?.?",(1000 - valuesData[i]*unit));
+		coords = coords.replace("?.?",(1000 - valuesData[valuesData.length-1-i]*unit));
 	}
 	var polyline = makeNodeWithAtt("polyline", {filter: "url(#drop-shadow)", points: coords, style: "stroke:red; stroke-width: 3; fill : none;"});
 	svg_layout.appendChild(polyline);
@@ -301,10 +318,64 @@ function drawArcs(svg_layout, pieData, legendData, type){
     }
 }
 
+function barChart(svg_layout, xAxisData, barData, legendData, type){
+	var gxAxis = makeNodeWithAtt("g", {style: "stroke-width:3; stroke:black"});
+	var xAxis = makeNodeWithAtt("path", {d: "M 105 1000 L 1095 1000 Z"});
+	gxAxis.appendChild(xAxis);
+	svg_layout.appendChild(gxAxis);
+	
+	var gHoriz = makeNodeWithAtt("g", {filter: "url(#drop-shadow)", style: "fill:none; stroke:#B0B0B0; stroke-width:2.3; stroke-dasharray:2.3 4.7;"});
+	for (var i=0; i<5; i++){
+		var horiz = makeNodeWithAtt("path", {d: "M 100 " + (250 + i*150) + " L 1100 " + (250 + i*150) + " Z"});
+		gHoriz.appendChild(horiz);
+	}
+	svg_layout.appendChild(gHoriz);
+	
+	// Legends
+	var gLegend = makeNodeWithAtt("g", {style: "font-size: 250%;"});
+	
+	var xLabel= makeNodeWithAtt("text", {x: 1180, y: 1000});
+	xLabel.textContent = legendData[1];
+	gLegend.appendChild(xLabel);
+	var yLabel= makeNodeWithAtt("text", {style: "font-size: 150%;", x: 0, y: 110});
+	yLabel.textContent = legendData[0];
+	gLegend.appendChild(yLabel);
+	
+	var sorted = barData.slice(0).sort();
+	var maxV = sorted[sorted.length-1];
+	var maxL;
+	var min = sorted[0];
+	var step = Math.ceil(maxV/5);
+	for (var i=0; i<5; i++){
+		var vLabel = makeNodeWithAtt("text", {x: 45, y: 860 - i*150});
+		maxL = (i+1)*step;
+		vLabel.textContent = maxL;
+		gLegend.appendChild(vLabel);
+	}
+	
+	for (var i=0; i<xAxisData.length; i++){
+		var hLabel = makeNodeWithAtt("text", {x: 80 + i*250, y: 1050});
+		hLabel.textContent = xAxisData[xAxisData.length-1-i];
+		gLegend.appendChild(hLabel);
+	}
+	
+	svg_layout.appendChild(gLegend);
+
+	var bar = makeNodeWithAtt("rect", {x: 105, y: 600, width: 80, height: 400, style: "fill:rgb(128,183,40);"});
+	svg_layout.appendChild(bar);
+	var bar2 = makeNodeWithAtt("rect", {x: 305, y: 600, width: 80, height: 400, style: "fill:rgb(128,183,40);"});
+	svg_layout.appendChild(bar2);
+	var bar3 = makeNodeWithAtt("rect", {x: 505, y: 600, width: 80, height: 400, style: "fill:rgb(128,183,40);"});
+	svg_layout.appendChild(bar3);
+	var bar4 = makeNodeWithAtt("rect", {x: 705, y: 600, width: 80, height: 400, style: "fill:rgb(128,183,40);"});
+	svg_layout.appendChild(bar4);
+}
+
 drawArcs(document.getElementById("crimeCatChart"), toPercent(<%=values%>), categories, "crimeCatChart");
 drawArcs(document.getElementById("poiInvChart"), toPercent(<%=involvements%>), firstname, "poiInvChart");
 drawArcs(document.getElementById("crimeSuperCatChart"), toPercent(<%=valuesSuper%>), <%=categoriesSuper%>, "crimeSuperCatChart");
 createLineChart();
+barChart(document.getElementById("averageAgesChart"), [<%=categoriesAges%>], [<%=averageAges%>], ["Age", "Categories"], "averageAgesChart");
 </script>
 
 <%

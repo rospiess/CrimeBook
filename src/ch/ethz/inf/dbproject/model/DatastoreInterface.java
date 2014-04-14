@@ -1215,5 +1215,30 @@ public final class DatastoreInterface {
 
 	}
 	
+	public final List<Pair<String,Integer>> getAverageAges() {
+		try {
+
+			final Statement stmt = this.sqlConnection.createStatement();
+			final ResultSet rs = stmt
+					.executeQuery("SELECT * FROM ((SELECT 'Person of interest' as 'Registered as', AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) as 'age' FROM personOfInterest) UNION (SELECT 'Convicted'  as 'Registered as', AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) as 'age' FROM personOfInterest AS p, conviction AS c WHERE p.idPersonOfINterest = c.idpersonofinterest) UNION (SELECT CatName as 'Registered as', AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) as 'age' FROM personOfInterest AS p, conviction AS conv, cases WHERE p.idPersonOfINterest = conv.idpersonofinterest and cases.idCase = conv.idCase GROUP BY CatName)) AS allAges;");
+
+			final List<Pair<String,Integer>> stats = new ArrayList<Pair<String,Integer>>();
+			while (rs.next()) {
+				Pair<String,Integer> a_persons_ages = new Pair<String, Integer>(rs.getString("Registered as"), rs.getInt("age"));
+				stats.add(a_persons_ages);
+			}
+
+			rs.close();
+			stmt.close();
+
+			return stats;
+
+		} catch (final SQLException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+
+	}
+	
 
 }
