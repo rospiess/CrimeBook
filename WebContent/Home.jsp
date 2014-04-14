@@ -3,7 +3,7 @@
 <%@page import="ch.ethz.inf.dbproject.util.UserManagement"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="Header.jsp" %>
-<div style="width: 101.5%; height: 104%; margin: -26px 0px -10px -10px; background-clip: padding-box; background-image: url('./ETH_image.png'); background-size: auto 100%; text-shadow:3px 3px 10px #FFFFFF;">
+<div style="width: 101.5%; height: 104%; margin: -26px 0px -10px -10px; background-clip: padding-box; background-image: url('./ETH_image.png'); background-size: auto 100%; text-shadow:3px 3px 10px #FFFFFF, 3px 3px 5px #FFFFFF,0px 0px 5px #FFFFFF;">
 <div style="text-align: center;">
 <%
 final User user = (User) session.getAttribute(UserManagement.SESSION_USER);

@@ -125,7 +125,7 @@ averageAges = averageAges.substring(0, averageAges.length()-2) + "]";
 	</svg>
 </div>
 
-<div id="averageAges" style="width:30%; height: 320px; border: thin solid; float: left; margin-top: 10px; margin-left: 10px; text-align: center;" onclick="zoom('convictionAyear');">
+<div id="averageAges" style="width:30%; height: 320px; border: thin solid; float: left; margin-top: 10px; margin-left: 10px; text-align: center;" onclick="zoom('averageAges');">
 	<h3 style="margin: 0 auto;">Average ages by person categories</h3>
 	<svg width="100%" height="300px" id="averageAgesChart" viewBox="-40 80 1400 1000">
 
@@ -366,6 +366,9 @@ function barChart(svg_layout, xAxisData, barData, legendData, type){
 	
 	for (var i=0; i<barData.length; i++){
 		var bar = makeNodeWithAtt("rect", {x: 150 + i*210, y: 1000 - barData[barData.length-1-i]*unit, width: 80, height: barData[barData.length-1-i]*unit, fill: colors[(colors.length-i)%colors.length]});
+		var tooltip= document.createElementNS('http://www.w3.org/2000/svg', 'title');
+		if (type == "averageAgesChart") tooltip.textContent = "The average age of people listed under \""+ xAxisData[i] + "\" is " + Math.round(barData[barData.length-1-i]*100)/100 + " years.";
+		bar.appendChild(tooltip);
 		svg_layout.appendChild(bar);
 	} 
 	
@@ -379,8 +382,7 @@ barChart(document.getElementById("averageAgesChart"), <%=categoriesAges%>, <%=av
 </script>
 
 <%
-if (true) {
-	//
+// ideas for additional queries
 	/*
 		# Number of cases per year
 		SELECT YEAR(endDate) AS year, COUNT(*) AS numberOfCrimes FROM cases, conviction WHERE cases.idCase = conviction.idCase GROUP BY YEAR(conviction.endDate) ORDER BY year DESC;
@@ -414,10 +416,6 @@ if (true) {
 		select FirstName, count(*) from PersonOfInterest as POI, involved as inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest;
 		
 	*/
-%>
-
-<%
-}
 %>
 
 <%@ include file="Footer.jsp" %>

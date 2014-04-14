@@ -16,7 +16,7 @@ Insert into category(CatName, SuperCat) values ('OtherProp', 'Property Crime');
 
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Andre', 'Rubbia', '1950-12-31');
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Jürg', 'Gutknecht', '1921-4-13');
-Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Bertrand', 'Meyer', '1921-4-14');
+Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Bertrand', 'Meyer', '1928-4-14');
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Frank', 'Gürkaynak', '1967-9-2');
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Emo', 'Welzl', '1971-3-25');
 Insert into personofinterest(FirstName, LastName, DateOfBirth) values ('Timothy', 'Roscoe', '1961-6-1');
@@ -43,7 +43,8 @@ Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) v
 Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Daten Verkauf', 'ETH Daten an ausländischen Geheimdienst verkauft', true, null, null, 'OtherProp', 3,'Max Muster');
 Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Mensa-Essen vergiftet','Alle Studenten bekamen Bauchweh.', true, '2012-10-11','12:00:00', 'OtherPers', 1, 'Max Muster');
 Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Uranentwendung','Uran wurde aus dem ETH Forschungsreaktor entwendet', true, '2012-03-13','03:07:16', 'Burglary', 1, 'Test');
-Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Tintin entführt','Auf der Insel Île d\'Yeu wurde Tintin entführt.', false, '2008-08-17','14:13:12', 'Kidnapping', 4, 'Test');
+Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Tintin entführt','Auf der Insel Île d\'Yeu wurde Tintin entführt.', false, '2009-08-17','14:13:12', 'Kidnapping', 4, 'Test');
+Insert into cases(Title,Description,open,date,time,CatName,idAddress,username) values ('Kap Haddock Whiskydiebstahl', 'Kapitän Haddock hat seine Whiskyflasche abgestellt. Auf einmal war sie weg...', false, '2001-10-30', '13:45:00',  'Theft', 4,'Test');
 Insert into notecase(idCase,text,username) values ('2', 'Opfer war bekannt dafür, Witze über die Programmiersprache Eiffel zu reissen.','Max Muster');
 Insert into notecase(idCase,text,username) values (7, '"Alle Professoren sind mit einem ausländischen Geheimdienst unter einer Decke" - angebliches Zitat von D.K.','Max Muster');
 
@@ -51,7 +52,7 @@ Insert into conviction(beginDate,endDate,idCase,idPersonOfInterest) values ('201
 Insert into conviction(beginDate,endDate,idCase,idPersonOfInterest) values ('2011-3-5','2011-9-13',6,5);
 Insert into conviction(beginDate,endDate,idCase,idPersonOfInterest) values ('2013-7-5','2018-4-28',5,4);
 Insert into conviction(beginDate,endDate,idCase,idPersonOfInterest) values ('2010-11-3','2012-3-22',1,1);
-Insert into conviction(beginDate,endDate,idCase,idPersonOfInterest) values ('2008-08-17','2012-3-22',10,8);
+Insert into conviction(beginDate,endDate,idCase,idPersonOfInterest) values ('2009-08-17','2012-3-22',10,8);
 
 Insert into involved(idPerson,idCase,role) values (3,1,'Suspect');
 Insert into involved(idPerson,idCase,role) values (5,6,'Suspect');
