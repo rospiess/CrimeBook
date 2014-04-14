@@ -227,7 +227,7 @@ function makeLineChart(svg_layout, xAxisData, valuesData, legendData){
 	// legend: value of last point
 	var lastpoint = (1000 - valuesData[0]*unit);
 	var endValue = makeNodeWithAtt("text", {x: 1150, y: lastpoint});
-	endValue.textContent = valuesData[valuesData.length-1];
+	endValue.textContent = valuesData[0];
 	gLegend.appendChild(endValue);
 	
 	svg_layout.appendChild(gLegend);
