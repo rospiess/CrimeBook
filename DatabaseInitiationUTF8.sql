@@ -50,7 +50,7 @@ Insert into notecase(idCase,text,username) values (7, '"Alle Professoren sind mi
 
 Insert into conviction(beginDate,endDate,idCase,idPersonOfInterest) values ('2010-11-2','2010-12-2',1,3);
 Insert into conviction(beginDate,endDate,idCase,idPersonOfInterest) values ('2011-3-5','2011-9-13',6,5);
-Insert into conviction(beginDate,endDate,idCase,idPersonOfInterest) values ('2013-7-5','2018-4-28',5,4);
+Insert into conviction(beginDate,endDate,idCase,idPersonOfInterest) values ('2012-7-5','2018-4-28',5,4);
 Insert into conviction(beginDate,endDate,idCase,idPersonOfInterest) values ('2010-11-3','2012-3-22',1,1);
 Insert into conviction(beginDate,endDate,idCase,idPersonOfInterest) values ('2009-08-17','2012-3-22',10,8);
 

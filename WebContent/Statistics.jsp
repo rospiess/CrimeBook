@@ -277,8 +277,8 @@ var categories = (<%=categories%>);
 var firstname = (<%=firstname%>);
 
 function drawArcs(svg_layout, pieData, legendData, type){
-    var total = pieData.reduce(function (accu, that) { return that + accu; }, 0);
-    var sectorAngleArr = pieData.map(function (v) { return 360 * v / total; });
+    var total = pieData.reduce(function (accu, that) { return that + accu; }, 0); // The reduce() method applies a function against an accumulator and each value of the array (from left-to-right) has to reduce it to a single value.
+    var sectorAngleArr = pieData.map(function (v) { return 360 * v / total; }); //The map() method creates a new array with the results of calling a provided function on every element in this array.
 
     var startAngle = 0;
     var endAngle = 0;
@@ -384,14 +384,33 @@ barChart(document.getElementById("averageAgesChart"), <%=categoriesAges%>, <%=av
 <%
 // ideas for additional queries
 	/*
+	
+		# Would have been nice, but hard to visualize: 
+		#Number of involvments by grouped by role and then by POI
+		SELECT role, CONCAT(CONCAT(FirstName, ' '), LastName), COUNT(role) FROM PersonOfInterest AS POI, involved AS inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest, role ORDER BY role, FirstName;
+		
+
+#Total number of case note and person notes by a user
+SELECT allNotes.UserName, COUNT(*) FROM (
+		(
+		SELECT u.UserName FROM user AS u, notecase AS nc WHERE u.UserName = nc.UserName
+		) UNION ALL (
+		SELECT u.UserName FROM user AS u, noteperson AS np WHERE u.UserName =  np.UserName
+		)
+	) AS allNotes GROUP BY allNotes.UserName;
+
+# Simply all involvments by POI
+SELECT FirstName, LastName, COUNT(*) AS amount FROM PersonOfInterest AS POI, involved AS inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest;
+select FirstName, count(*) from PersonOfInterest as POI, involved as inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest;
+
 		# Number of cases per year
 		SELECT YEAR(endDate) AS year, COUNT(*) AS numberOfCrimes FROM cases, conviction WHERE cases.idCase = conviction.idCase GROUP BY YEAR(conviction.endDate) ORDER BY year DESC;
 		# of convictions per year
 		SELECT YEAR(beginDate) AS year, COUNT(*) AS numberOfCrimes FROM conviction GROUP BY year ORDER BY year DESC LIMIT 5;
 		# Number of cases by category
-		SELECT Title, CatName, COUNT(*) FROM cases GROUP BY CatName;
+		SELECT CatName, COUNT(*) FROM cases GROUP BY CatName;
 		# Number of cases per SuperCat
-		SELECT Title, category.SuperCat, COUNT(*) FROM cases, category WHERE cases.CatName = category.CatName GROUP BY category.SuperCat;
+		SELECT category.SuperCat, COUNT(*) FROM cases, category WHERE cases.CatName = category.CatName GROUP BY category.SuperCat;
 		
 		#Average of age of POI
 		SELECT AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) FROM personOfInterest;
@@ -400,20 +419,6 @@ barChart(document.getElementById("averageAgesChart"), <%=categoriesAges%>, <%=av
 		SELECT AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) FROM personOfInterest AS p, conviction AS c WHERE p.idPersonOfINterest = c.idpersonofinterest;
 		#Average age by crime type:
 		SELECT AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) FROM personOfInterest AS p, conviction AS conv, cases WHERE p.idPersonOfINterest = conv.idpersonofinterest and cases.idCase = conv.idCase GROUP BY CatName;
-		#Total number of case note and person notes by a user
-		SELECT allNotes.UserName, COUNT(*) FROM (
-				(
-				SELECT u.UserName FROM user AS u, notecase AS nc WHERE u.UserName = nc.UserName
-				) UNION ALL (
-				SELECT u.UserName FROM user AS u, noteperson AS np WHERE u.UserName =  np.UserName
-				)
-			) AS allNotes GROUP BY allNotes.UserName;
-		
-		# Number of involvments by POI and role
-		SELECT FirstName, role, COUNT(role) FROM PersonOfInterest AS POI, involved AS inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest, role ORDER BY role, FirstName;
-		# Simply all involvments by POI
-		SELECT FirstName, LastName, COUNT(*) AS amount FROM PersonOfInterest AS POI, involved AS inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest;
-		select FirstName, count(*) from PersonOfInterest as POI, involved as inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest;
 		
 	*/
 %>
