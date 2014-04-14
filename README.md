@@ -2,30 +2,34 @@ CrimeBook
 =========
 
 Database Project 2014
+by Robin Spiess, Lukas Striebel and François Wirz
 
 
 DONE
 -----------
-(needing code review)
+(code reviewed)
 
-- Case detail view: Show all associated convictions with links to their detailed view.
+- Case detail view: Show all associated convictions with links to their detailed view. ✓
 
-- Person detail view: Show all associated convictions / open cases (with role)  with links to their detailed view.
+- Person detail view: Show all associated convictions / open cases (with role)  with links to their detailed view. ✓
 
-- Close/reopen case with convictions created/deleted.
+- Close/reopen case with convictions created/deleted. ✓
 
-- Case creation
-- Person of interest creation
-- Register new users.
+- Case creation ✓
 
-- Manage NULL values in case and person creation.
+- Person of interest creation ✓
 
-- Edit cases and persons.
-- Link person to case.
+- Register new users. ✓
 
-- Prepare preparedStatements in constructor
+- Manage NULL values in case and person creation. ✓
 
-- Rename Law Enforcement Project to Crimebook, Project by...
+- Edit cases and persons. ✓
+
+- Link person to case. ✓
+
+- Prepare preparedStatements in constructor ✓
+
+- Rename Law Enforcement Project to Crimebook, Project by... ✓
 
 
 
@@ -33,7 +37,7 @@ DONE
 To-Do List
 -----------
 
-- Layout and code polishing
+- Layout and code polishing: DONE
 
 
 When logged in:
@@ -45,26 +49,27 @@ When logged in:
 (Design-)Questions:
 -----------
 
-- What happens to a conviction when the associated case is reopened?
+- What happens to a conviction when the associated case is reopened:
     -> delete convictions
 
 
-- When closing a case, should we prompt the user to set date for each conviction right then, or set default values and let him edit them later?
+- When closing a case, should we prompt the user to set date for each conviction right then, or set default values and let him edit them later:
     -> default values
 
-- Should unlinking a person from a case also be possible from the persons detail view?
+- Should unlinking a person from a case also be possible from the persons detail view:
+    -> No
 
-- Should it be possible to add comments when a case is closed?
+- Should it be possible to add comments when a case is closed:
     -> Yes
 
 Ideas and Nice-to-have:
 -----------
 
 - Bounty
-- Victims (Implemented)
+- Victims (Implemented) ✓
 - Statistics (SQL queries are done, will push the commit as soon as the frontend follows)
-  - # cases per category
-  - # cases per year
-  - average age
-  - user activity (# comments etc.)
-  - Most convictions / suspect- / witnessroles
+  - # cases per category ✓
+  - # cases per year ✓
+  - average age ✓
+  - user activity (# comments etc.) ❌
+  - Most convictions / suspect- / witnessroles ✓ for involvments ❌ for the rest, corresponding query in  comments
