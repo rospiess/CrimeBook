@@ -140,8 +140,7 @@ var years = (<%=years%>);
 var convictions = (<%=convictions%>);
 var yearsConv = (<%=yearsConv%>);
 
-var test1 = <%=categoriesAges%>;
-var test2 = <%=averageAges%>;
+var colors = ["rgb(111,173,12)", "rgb(128,183,40)", "rgb(145,194,69)", "rgb(179,213,126)", "rgb(196,223,156)", "rgb(216,238,186)"];
 
 function zoom(divTozoom){
 	var htmlCode = document.getElementById(divTozoom).innerHTML;
@@ -306,7 +305,6 @@ function drawArcs(svg_layout, pieData, legendData, type){
 
         var d = "M"+radius+","+radius+"  L" + x1 + "," + y1 + "  A"+radius+","+radius+" 0 " + ((endAngle-startAngle > 180) ? 1 : 0) + ",1 " + x2 + "," + y2 + " z";
         var c = 360;
-		var colors = ["rgb(111,173,12)", "rgb(128,183,40)", "rgb(145,194,69)", "rgb(179,213,126)", "rgb(196,223,156)", "rgb(216,238,186)"]
         var arc = makeNodeWithAtt("path", {d: d, fill: colors[i%colors.length], id: i});
 		if (type == "crimeCatChart") arc.setAttribute('title', Math.round(pieData[i]*100)/100 + " % of the crimes commited are listed under the category " + legendData[i] + ".");
 		if (type == "poiInvChart") arc.setAttribute('title', "Person of interest \""+ legendData[i] + "\" accounts for " + Math.round(pieData[i]*100)/100 + " % of the involvements in cases.");
@@ -367,7 +365,7 @@ function barChart(svg_layout, xAxisData, barData, legendData, type){
 	svg_layout.appendChild(gLegend);
 	
 	for (var i=0; i<barData.length; i++){
-		var bar = makeNodeWithAtt("rect", {x: 150 + i*210, y: 1000 - barData[barData.length-1-i]*unit, width: 80, height: barData[barData.length-1-i]*unit, style: "fill:rgb(128,183,40);"});
+		var bar = makeNodeWithAtt("rect", {x: 150 + i*210, y: 1000 - barData[barData.length-1-i]*unit, width: 80, height: barData[barData.length-1-i]*unit, fill: colors[(colors.length-i)%colors.length]});
 		svg_layout.appendChild(bar);
 	} 
 	
