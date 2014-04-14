@@ -58,12 +58,12 @@ for (int i = 0; i < pairSuperCrimesCat.size(); i++){
 categoriesSuper = categoriesSuper.substring(0, categoriesSuper.length()-3) + "]";
 valuesSuper = valuesSuper.substring(0, valuesSuper.length()-2) + "]";
 
-final List<Pair<String,Integer>> average_ages = (List<Pair<String,Integer>>) session.getAttribute("crimeSuperCatStats");
+final List<Pair<String,Integer>> pairAgesCat = (List<Pair<String,Integer>>) session.getAttribute("people_average_ages");
 String categoriesAges = "['";
 String averageAges = "[";
-for (int i = 0; i < average_ages.size(); i++){
-	categoriesAges = categoriesAges + average_ages.get(i).getL() + "'" + ", '";
-	averageAges = averageAges + average_ages.get(i).getR() + ", ";
+for (int i = 0; i < pairAgesCat.size(); i++){
+	categoriesAges = categoriesAges + pairAgesCat.get(i).getL() + "'" + ", '";
+	averageAges = averageAges + pairAgesCat.get(i).getR() + ", ";
 }
 categoriesAges = categoriesAges.substring(0, categoriesAges.length()-3) + "]";
 averageAges = averageAges.substring(0, averageAges.length()-2) + "]";
@@ -139,6 +139,9 @@ var years = (<%=years%>);
 
 var convictions = (<%=convictions%>);
 var yearsConv = (<%=yearsConv%>);
+
+var test1 = <%=categoriesAges%>;
+var test2 = <%=averageAges%>;
 
 function zoom(divTozoom){
 	var htmlCode = document.getElementById(divTozoom).innerHTML;
@@ -353,29 +356,28 @@ function barChart(svg_layout, xAxisData, barData, legendData, type){
 		gLegend.appendChild(vLabel);
 	}
 	
+	var unit = 750/maxL;
+	
 	for (var i=0; i<xAxisData.length; i++){
-		var hLabel = makeNodeWithAtt("text", {x: 80 + i*250, y: 1050});
+		var hLabel = makeNodeWithAtt("text", {'text-anchor': 'middle', x: 190 + i*210, y: 1050});
 		hLabel.textContent = xAxisData[xAxisData.length-1-i];
 		gLegend.appendChild(hLabel);
 	}
 	
 	svg_layout.appendChild(gLegend);
-
-	var bar = makeNodeWithAtt("rect", {x: 105, y: 600, width: 80, height: 400, style: "fill:rgb(128,183,40);"});
-	svg_layout.appendChild(bar);
-	var bar2 = makeNodeWithAtt("rect", {x: 305, y: 600, width: 80, height: 400, style: "fill:rgb(128,183,40);"});
-	svg_layout.appendChild(bar2);
-	var bar3 = makeNodeWithAtt("rect", {x: 505, y: 600, width: 80, height: 400, style: "fill:rgb(128,183,40);"});
-	svg_layout.appendChild(bar3);
-	var bar4 = makeNodeWithAtt("rect", {x: 705, y: 600, width: 80, height: 400, style: "fill:rgb(128,183,40);"});
-	svg_layout.appendChild(bar4);
+	
+	for (var i=0; i<barData.length; i++){
+		var bar = makeNodeWithAtt("rect", {x: 150 + i*210, y: 1000 - barData[barData.length-1-i]*unit, width: 80, height: barData[barData.length-1-i]*unit, style: "fill:rgb(128,183,40);"});
+		svg_layout.appendChild(bar);
+	} 
+	
 }
 
 drawArcs(document.getElementById("crimeCatChart"), toPercent(<%=values%>), categories, "crimeCatChart");
 drawArcs(document.getElementById("poiInvChart"), toPercent(<%=involvements%>), firstname, "poiInvChart");
 drawArcs(document.getElementById("crimeSuperCatChart"), toPercent(<%=valuesSuper%>), <%=categoriesSuper%>, "crimeSuperCatChart");
 createLineChart();
-barChart(document.getElementById("averageAgesChart"), [<%=categoriesAges%>], [<%=averageAges%>], ["Age", "Categories"], "averageAgesChart");
+barChart(document.getElementById("averageAgesChart"), <%=categoriesAges%>, <%=averageAges%>, ["Age", "Categories"], "averageAgesChart");
 </script>
 
 <%

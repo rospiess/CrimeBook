@@ -1220,7 +1220,7 @@ public final class DatastoreInterface {
 
 			final Statement stmt = this.sqlConnection.createStatement();
 			final ResultSet rs = stmt
-					.executeQuery("SELECT * FROM ((SELECT 'Person of interest' as 'Registered as', AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) as 'age' FROM personOfInterest) UNION (SELECT 'Convicted'  as 'Registered as', AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) as 'age' FROM personOfInterest AS p, conviction AS c WHERE p.idPersonOfINterest = c.idpersonofinterest) UNION (SELECT CatName as 'Registered as', AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) as 'age' FROM personOfInterest AS p, conviction AS conv, cases WHERE p.idPersonOfINterest = conv.idpersonofinterest and cases.idCase = conv.idCase GROUP BY CatName)) AS allAges;");
+					.executeQuery("SELECT * FROM ((SELECT 'Convicted'  as 'Registered as', AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) as 'age' FROM personOfInterest AS p, conviction AS c WHERE p.idPersonOfINterest = c.idpersonofinterest) UNION (SELECT CatName as 'Registered as', AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) as 'age' FROM personOfInterest AS p, conviction AS conv, cases WHERE p.idPersonOfINterest = conv.idpersonofinterest and cases.idCase = conv.idCase GROUP BY CatName) UNION (SELECT 'Person of interest' as 'Registered as', AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) as 'age' FROM personOfInterest)) AS allAges;");
 
 			final List<Pair<String,Integer>> stats = new ArrayList<Pair<String,Integer>>();
 			while (rs.next()) {
