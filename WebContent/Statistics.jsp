@@ -125,7 +125,7 @@ averageAges = averageAges.substring(0, averageAges.length()-2) + "]";
 	</svg>
 </div>
 
-<div id="averageAges" style="width:30%; height: 320px; border: thin solid; float: left; margin-top: 10px; margin-left: 10px; text-align: center;" onclick="zoom('convictionAyear');">
+<div id="averageAges" style="width:30%; height: 320px; border: thin solid; float: left; margin-top: 10px; margin-left: 10px; text-align: center;" onclick="zoom('averageAges');">
 	<h3 style="margin: 0 auto;">Average ages by person categories</h3>
 	<svg width="100%" height="300px" id="averageAgesChart" viewBox="-40 80 1400 1000">
 
