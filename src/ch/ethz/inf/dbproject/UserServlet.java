@@ -45,8 +45,8 @@ public final class UserServlet extends HttpServlet {
 				.getCurrentlyLoggedInUser(session);
 
 		session.setAttribute("FailedLogin", "");
-		session.setAttribute("FailedChanging", "");
 		session.setAttribute("RegistrationStatus", "");
+		session.setAttribute("Error", "");
 		session.setAttribute("OpeningCase", false);
 		session.setAttribute("ChangingPassword", false);
 		session.setAttribute("AddingPerson", false);
@@ -174,12 +174,12 @@ public final class UserServlet extends HttpServlet {
 			final String newpassword = request.getParameter("new");
 			final String confirmnew = request.getParameter("confirmnew");
 			if (!old.equals(dbInterface.getPassword(loggedUser.getUsername())))
-				session.setAttribute("FailedChanging", "Incorrect Old Password");
+				session.setAttribute("Error", "Incorrect Old Password");
 			else if (newpassword.equals(""))
-				session.setAttribute("FailedChanging",
+				session.setAttribute("Error",
 						"Please enter a new password");
 			else if (!newpassword.equals(confirmnew))
-				session.setAttribute("FailedChanging",
+				session.setAttribute("Error",
 						"Passwords have to agree");
 			else
 			{
@@ -191,38 +191,36 @@ public final class UserServlet extends HttpServlet {
 		
 		else if (action != null && action.trim().equals("submitadd"))// Add new Person
 		{
-			session.setAttribute("AddingPerson", false);
 			
 			String errorlog = "";
 			String firstname = request.getParameter("firstname");
 			String lastname = request.getParameter("lastname");
 			String date = request.getParameter("date");
 			
-			if (firstname.isEmpty()){
-				firstname = "???"; // Unknown value
-				errorlog = errorlog.concat(", empty firstname");
-			}
-			if (lastname.isEmpty()){
-				lastname = "???";
-				errorlog = errorlog.concat(", empty lastname");
-			}
+			if (!firstname.isEmpty()){
+			if (!lastname.isEmpty()){
 			
 			try{
 				java.sql.Date.valueOf(date);
 			}catch(IllegalArgumentException e){
 				date = "0001-01-01"; // default = unknown value
-				errorlog = errorlog.concat(", invalid date");
+				errorlog = errorlog.concat(", date of birth unknown");
 			}
 			
-			
+			session.setAttribute("AddingPerson", false);
 			this.dbInterface.addNewPerson(firstname, lastname, date);
 			session.setAttribute("LatestAction", "Added new Person successfully"+errorlog);
+			}
+			else
+				session.setAttribute("Error", "Last Name cannot be empty");
+			}
+			else
+			session.setAttribute("Error", "First Name cannot be empty");
 		}
 
 		
 		else if (action != null && action.trim().equals("submitopen"))// Open new Case
 		{
-			session.setAttribute("OpeningCase", false);
 			final String title = request.getParameter("title");
 			if (title != ""){
 				
@@ -295,12 +293,11 @@ public final class UserServlet extends HttpServlet {
 				this.dbInterface.openNewCase(title, descr, date, time, address,
 						catname, loggedUser.getUsername());
 				session.setAttribute("LatestAction", "Opened new Case successfully"+errorlog);
+				session.setAttribute("OpeningCase", false);
+//				response.setHeader("Refresh", "0");
 			}
-			else
-			{
-				//TODO add meaningful way to handle empty title (The only thing which must be set)
-				session.setAttribute("LatestAction", "Title cannot be empty");
-			}
+			else				
+				session.setAttribute("Error", "Case Title cannot be empty");
 		}
 		// Finally, proceed to the User.jsp page which will renden the profile
 				this.getServletContext().getRequestDispatcher("/User.jsp")

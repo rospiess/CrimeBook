@@ -54,7 +54,7 @@
 <form method="get" action="Search">
 <div>
 	<input type="hidden" name="filter" value="date" />
-	Search Conviction By Date (yyyy-mm-dd):
+	Search Conviction By Date:
 	<input type="date" name="date" />
 	<input type="submit" value="Search" title="Search by Date of Conviction" />
 </div>

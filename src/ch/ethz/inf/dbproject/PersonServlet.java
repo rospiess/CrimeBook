@@ -210,27 +210,18 @@ public final class PersonServlet extends HttpServlet {
 			String role = request.getParameter("role");
 			if(action != null && action.equals("link_case") && selCase != null && role != null){
 				int selidcase = Integer.parseInt(selCase);
-				
-				//Check for duplicate
-				/*boolean not_duplicate = true;
-				List<Involved> inv = dbInterface.getInvolvedByPersonId(id);
-				for(Involved i:inv){
-					if (i.getIdcase() == selidcase){
-						not_duplicate = false;
-						break;
-					}
-				}*/
+
 				if (!dbInterface.isInvolvedIn(id, selidcase)){
 					dbInterface.addInvolvement(selidcase, id, role);
 					response.setHeader("Refresh", "0");
 				}
-				//TODO print some error message "already connected to case"
+				
 			}
 			
 			else if (action != null && action.trim().equals("delete"))
 			{
 				dbInterface.deletePerson(id);
-				response.sendRedirect(request.getRequestURL().toString() + "s");return;
+				response.sendRedirect(request.getRequestURL().toString() + "sOfInterest");return;
 			}
 			else if (action != null && action.trim().equals("submitEdit"))
 			{

@@ -95,11 +95,11 @@ final Conviction con = (Conviction) session.getAttribute("CurrentCon");
 	<input type="hidden" name="action" value="submitdates" />
 	<table>
 		<tr>
-			<th align="left">Start date (yyyy-mm-dd)</th>
+			<th align="left">Start date:</th>
 			<td><input type="date" name="begindate" value= "<%=con.getDate() %>" /></td>
 		</tr>
 		<tr>
-			<th align="left">End date (yyyy-mm-dd)</th>
+			<th align="left">End date:</th>
 			<td><input type="date" name="enddate" value="<%=con.getEnddate()%>" /></td>
 		</tr>
 		<tr>

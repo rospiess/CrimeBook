@@ -10,7 +10,7 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 <%if((Boolean)session.getAttribute("ChangingPassword")){ %>
 <h3>Change your Password</h3><hr/>
 <font color="#FF0000">
-<%=session.getAttribute("FailedChanging")
+<%=session.getAttribute("Error")
 	%></font>
 	
 	<form action="User" method="post" style="display:inline">
@@ -45,6 +45,9 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 
 <%} else if((Boolean)session.getAttribute("AddingPerson")){ %>
 <h3>Add a new Person of Interest</h3><hr/>
+<font color="#FF0000">
+<%=session.getAttribute("Error")
+	%></font>
 <form action="User" method="post" style="display:inline">
 	<table>
 		<tr>
@@ -74,6 +77,9 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 
 <%} else if((Boolean)session.getAttribute("OpeningCase")){ %>
 <h3>Add a new Case</h3><hr/>
+<font color="#FF0000">
+<%=session.getAttribute("Error")
+	%></font>
 <form action="User" method="post" style="display:inline">
 	<table>
 		<tr>
@@ -173,7 +179,6 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 <%=session.getAttribute("UserCases")
 	%>
 <%}
-//TODO: Display cases opened by the user
 
 	
 } else {
@@ -200,7 +205,9 @@ if ((Boolean) session.getAttribute(UserServlet.SESSION_USER_LOGGED_IN)) {
 	</table>
 	</form>
 	<br> <br> <br>
-	<h3>Registration</h3><hr/><font color="#FF0000">
+	<h3>Registration</h3><hr/><%if(((String)session.getAttribute("RegistrationStatus")).startsWith("Registration"))
+		{%><font color="#7FFF00">
+		<%}else %> <font color="#FF0000">
 	<%=session.getAttribute("RegistrationStatus")
 	%> </font>
 	<form action="User" method="get">

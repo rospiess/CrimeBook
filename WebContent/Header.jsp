@@ -12,7 +12,7 @@
 	<head>
 	    <link href="style.css" rel="stylesheet" type="text/css">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Law Enforcement Project</title>
+		<title>Crimebook</title>
 	</head>
 
 	<body>
@@ -22,8 +22,8 @@
 		<table id="masterTable" cellpadding="0" cellspacing="0">
 			<tr>
 				<th id="masterHeader" colspan="2">
-					<h1>Law Enforcement Project</h1>
-					Project by Crimebook <br> <br> &nbsp;
+					<h1>Crimebook</h1>
+					Project by François, Lukas and Robin <br> <br> &nbsp;
 					<%
 if (u != null) {
 	// User is logged in. He can add a comment

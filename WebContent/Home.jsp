@@ -10,16 +10,15 @@ final User user = (User) session.getAttribute(UserManagement.SESSION_USER);
 if (user != null) {
 	// There is a user logged in! Display a greeting!
 %>
-	Welcome back <%=user.getUsername()%>
+	<h2>Welcome back, <%=user.getUsername()%>!</h2>
 <%
 } else {
 	// No user logged in.%>
-	Welcome!
+	<h2>Welcome!</h2>
 <%
 }
 %>
 
-<br /><br />
 See all available <a href="Cases">cases</a> and <a href="PersonsOfInterest">persons of interest</a>.
 
 <%@ include file="Footer.jsp" %>
