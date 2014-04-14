@@ -1,10 +1,10 @@
-<%@page import="ch.ethz.inf.dbproject.StatisticsServlet"%>
-<%@page import="ch.ethz.inf.dbproject.model.User"%>
-<%@page import="ch.ethz.inf.dbproject.HomeServlet"%>
-<%@page import="ch.ethz.inf.dbproject.util.UserManagement"%>
-<%@page import="ch.ethz.inf.dbproject.model.Pair"%>
-<%@page import="java.util.List"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="ch.ethz.inf.dbproject.StatisticsServlet" %>
+<%@ page import="ch.ethz.inf.dbproject.model.User" %>
+<%@ page import="ch.ethz.inf.dbproject.HomeServlet" %>
+<%@ page import="ch.ethz.inf.dbproject.util.UserManagement" %>
+<%@ page import="ch.ethz.inf.dbproject.model.Pair" %>
+<%@ page import="java.util.List" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="Header.jsp" %>
 
 <% 
@@ -132,11 +132,11 @@ averageAges = averageAges.substring(0, averageAges.length()-2) + "]";
 
 <script>
 
-var crimes = (<%=crimes%>);
-var years = (<%=years%>);
+var crimes = <%= crimes %>;
+var years = <%= years %>;
 
-var convictions = (<%=convictions%>);
-var yearsConv = (<%=yearsConv%>);
+var convictions = <%= convictions %>;
+var yearsConv = <%= yearsConv %>;
 
 var colors = ["rgb(111,173,12)", "rgb(128,183,40)", "rgb(145,194,69)", "rgb(179,213,126)", "rgb(196,223,156)", "rgb(216,238,186)"];
 
@@ -262,8 +262,8 @@ function makeNodeWithAtt(tag, attrs) {
     return el;
 }
 
-var categories = (<%=categories%>);
-var firstname = (<%=firstname%>);
+var categories = (<%= categories %>);
+var firstname = (<%= firstname %>);
 
 function drawArcs(svg_layout, pieData, legendData, type){
     var total = pieData.reduce(function (accu, that) { return that + accu; }, 0); // The reduce() method applies a function against an accumulator and each value of the array (from left-to-right) has to reduce it to a single value.
@@ -366,11 +366,11 @@ function barChart(svg_layout, xAxisData, barData, legendData, type){
 	
 }
 
-drawArcs(document.getElementById("crimeCatChart"), toPercent(<%=values%>), categories, "crimeCatChart");
-drawArcs(document.getElementById("poiInvChart"), toPercent(<%=involvements%>), firstname, "poiInvChart");
-drawArcs(document.getElementById("crimeSuperCatChart"), toPercent(<%=valuesSuper%>), <%=categoriesSuper%>, "crimeSuperCatChart");
+drawArcs(document.getElementById("crimeCatChart"), toPercent(<%= values %>), categories, "crimeCatChart");
+drawArcs(document.getElementById("poiInvChart"), toPercent(<%= involvements %>), firstname, "poiInvChart");
+drawArcs(document.getElementById("crimeSuperCatChart"), toPercent(<%= valuesSuper %>), <%= categoriesSuper %>, "crimeSuperCatChart");
 createLineChart();
-barChart(document.getElementById("averageAgesChart"), <%=categoriesAges%>, <%=averageAges%>, ["Age", "Categories"], "averageAgesChart");
+barChart(document.getElementById("averageAgesChart"), <%= categoriesAges %>, <%= averageAges %>, ["Age", "Categories"], "averageAgesChart");
 </script>
 
 <%
@@ -382,18 +382,18 @@ barChart(document.getElementById("averageAgesChart"), <%=categoriesAges%>, <%=av
 		SELECT role, CONCAT(CONCAT(FirstName, ' '), LastName), COUNT(role) FROM PersonOfInterest AS POI, involved AS inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest, role ORDER BY role, FirstName;
 		
 
-#Total number of case note and person notes by a user
-SELECT allNotes.UserName, COUNT(*) FROM (
-		(
-		SELECT u.UserName FROM user AS u, notecase AS nc WHERE u.UserName = nc.UserName
-		) UNION ALL (
-		SELECT u.UserName FROM user AS u, noteperson AS np WHERE u.UserName =  np.UserName
-		)
-	) AS allNotes GROUP BY allNotes.UserName;
-
-# Simply all involvments by POI
-SELECT FirstName, LastName, COUNT(*) AS amount FROM PersonOfInterest AS POI, involved AS inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest;
-select FirstName, count(*) from PersonOfInterest as POI, involved as inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest;
+		#Total number of case note and person notes by a user
+		SELECT allNotes.UserName, COUNT(*) FROM (
+				(
+				SELECT u.UserName FROM user AS u, notecase AS nc WHERE u.UserName = nc.UserName
+				) UNION ALL (
+				SELECT u.UserName FROM user AS u, noteperson AS np WHERE u.UserName =  np.UserName
+				)
+			) AS allNotes GROUP BY allNotes.UserName;
+		
+		# Simply all involvments by POI
+		SELECT FirstName, LastName, COUNT(*) AS amount FROM PersonOfInterest AS POI, involved AS inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest;
+		select FirstName, count(*) from PersonOfInterest as POI, involved as inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest;
 
 		# Number of cases per year
 		SELECT YEAR(endDate) AS year, COUNT(*) AS numberOfCrimes FROM cases, conviction WHERE cases.idCase = conviction.idCase GROUP BY YEAR(conviction.endDate) ORDER BY year DESC;
