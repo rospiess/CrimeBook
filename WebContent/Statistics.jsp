@@ -67,9 +67,8 @@ for (int i = 0; i < pairAgesCat.size(); i++){
 }
 categoriesAges = categoriesAges.substring(0, categoriesAges.length()-3) + "]";
 averageAges = averageAges.substring(0, averageAges.length()-2) + "]";
-
-
 %>
+
 <div id="overlayCont" style="text-align: center;">
 	<div id="overlay" style="position:absolute; left:220px; top:115px; width: 100%; height: 100%; background-color: black; opacity:0.8; display: none;" onclick="this.parentNode.style.display = 'none'">
 	</div>
@@ -98,7 +97,6 @@ averageAges = averageAges.substring(0, averageAges.length()-2) + "]";
 	  </style>
 	</svg>
 </div>
-
 
 <div id="crimeAyear" style="width:30%; height: 320px; border: thin solid; float: left; margin-left: 10px; text-align: center;" onclick="zoom('crimeAyear');">
 	<h3 style="margin: 0 auto;">Crimes per year</h3>
@@ -257,15 +255,6 @@ function toPercent(values){
 	return values;
 }
 
-function toStringArr(categories){
-	//return categories.slice(1,categories.length).split(',');
-	return categories;
-}
-
-function clickHandler() {
-    alert("You clicked the pie chart.");
-}
-
 function makeNodeWithAtt(tag, attrs) {
     var el= document.createElementNS('http://www.w3.org/2000/svg', tag);
     for (var k in attrs)
@@ -320,11 +309,13 @@ function drawArcs(svg_layout, pieData, legendData, type){
 }
 
 function barChart(svg_layout, xAxisData, barData, legendData, type){
+	// Axes
 	var gxAxis = makeNodeWithAtt("g", {style: "stroke-width:3; stroke:black"});
 	var xAxis = makeNodeWithAtt("path", {d: "M 105 1000 L 1095 1000 Z"});
 	gxAxis.appendChild(xAxis);
 	svg_layout.appendChild(gxAxis);
 	
+	// Guiding lines
 	var gHoriz = makeNodeWithAtt("g", {filter: "url(#drop-shadow)", style: "fill:none; stroke:#B0B0B0; stroke-width:2.3; stroke-dasharray:2.3 4.7;"});
 	for (var i=0; i<5; i++){
 		var horiz = makeNodeWithAtt("path", {d: "M 100 " + (250 + i*150) + " L 1100 " + (250 + i*150) + " Z"});
@@ -356,6 +347,7 @@ function barChart(svg_layout, xAxisData, barData, legendData, type){
 	
 	var unit = 750/maxL;
 	
+	// Text labels
 	for (var i=0; i<xAxisData.length; i++){
 		var hLabel = makeNodeWithAtt("text", {'text-anchor': 'middle', x: 190 + i*210, y: 1050});
 		hLabel.textContent = xAxisData[xAxisData.length-1-i];
