@@ -8,7 +8,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
-	
+
 	<head>
 	    <link href="style.css" rel="stylesheet" type="text/css">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -18,7 +18,7 @@
 	<body>
 
 		<!-- Header -->
-		
+
 		<table id="masterTable" cellpadding="0" cellspacing="0">
 			<tr>
 				<th id="masterHeader" colspan="2">
@@ -36,9 +36,9 @@ if (u != null) {
 
 			</tr>
 			<tr id="masterContent">
-			
+
 				<td id="masterContentMenu">
-					
+
 					<div class="menuDiv1"></div>
 					<div class="menuDiv1"><a href="Home">Home</a></div>
 					<div class="menuDiv1"><a href="Cases">All cases</a></div>
@@ -68,10 +68,12 @@ if (u != null) {
 					<div class="menuDiv1"><a href="PersonsOfInterest">Persons of Interest</a></div>
 					<div class="menuDiv1"><a href="Search">Search</a></div>
 					<div class="menuDiv1"><a href="Statistics">Statistics</a></div>
+					<%if(u != null) {%>
 					<div class="menuDiv1"><a href="User">User Profile</a></div>
-					
+					<%}else  {%>					
+					<div class="menuDiv1"><a href="User">Login</a></div>
+					<%} %>
 				</td>
-				
+
 				<td id="masterContentPlaceholder">
-				
-		
+
