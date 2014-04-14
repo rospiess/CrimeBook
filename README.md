@@ -37,7 +37,7 @@ DONE
 To-Do List
 -----------
 
-- Layout and code polishing: DONE
+- Layout and code polishing ✓
 
 
 When logged in:
@@ -50,17 +50,21 @@ When logged in:
 -----------
 
 - What happens to a conviction when the associated case is reopened:
-    -> delete convictions
+
+     	→  delete convictions
 
 
 - When closing a case, should we prompt the user to set date for each conviction right then, or set default values and let him edit them later:
-    -> default values
+
+     	→  default values
 
 - Should unlinking a person from a case also be possible from the persons detail view:
-    -> No
+
+     	→  No
 
 - Should it be possible to add comments when a case is closed:
-    -> Yes
+
+     	→  Yes
 
 Ideas and Nice-to-have:
 -----------
