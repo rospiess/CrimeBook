@@ -359,7 +359,7 @@ function barChart(svg_layout, xAxisData, barData, legendData, type){
 	for (var i=0; i<barData.length; i++){
 		var bar = makeNodeWithAtt("rect", {x: 150 + i*210, y: 1000 - barData[barData.length-1-i]*unit, width: 80, height: barData[barData.length-1-i]*unit, fill: colors[(colors.length-i)%colors.length]});
 		var tooltip= document.createElementNS('http://www.w3.org/2000/svg', 'title');
-		if (type == "averageAgesChart") tooltip.textContent = "The average age of people listed under \""+ xAxisData[i] + "\" is " + Math.round(barData[barData.length-1-i]*100)/100 + " years.";
+		if (type == "averageAgesChart") tooltip.textContent = "The average age of people listed under \""+ xAxisData[xAxisData.length-1-i] + "\" is " + Math.round(barData[barData.length-1-i]*100)/100 + " years.";
 		bar.appendChild(tooltip);
 		svg_layout.appendChild(bar);
 	} 
