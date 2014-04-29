@@ -1,6 +1,6 @@
 package ch.ethz.inf.dbproject.model;
 
-import java.sql.Date;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -9,9 +9,9 @@ public class Person {
 	private final int idperson;
 	private final String firstname;
 	private final String lastname;
-	private final Date bdate;
+	private final String bdate;
 
-	public Person( final int idperson, final String firstname, final String lastname, final Date bdate
+	public Person( final int idperson, final String firstname, final String lastname, final String bdate
 			) {
 
 		this.idperson = idperson;
@@ -27,7 +27,7 @@ public class Person {
 		this.idperson = rs.getInt("idpersonofinterest");
 		this.firstname = rs.getString("firstname");
 		this.lastname = rs.getString("lastname");
-		this.bdate = rs.getDate("dateofbirth");
+		this.bdate = rs.getString("dateofbirth");
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class Person {
 		return lastname;
 	}
 
-	public Date getBdate() {
+	public String getBdate() {
 		return bdate;
 	}
 	

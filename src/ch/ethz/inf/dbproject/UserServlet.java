@@ -43,7 +43,6 @@ public final class UserServlet extends HttpServlet {
 		final HttpSession session = request.getSession(true);
 		final User loggedUser = UserManagement
 				.getCurrentlyLoggedInUser(session);
-
 		session.setAttribute("FailedLogin", "");
 		session.setAttribute("RegistrationStatus", "");
 		session.setAttribute("Error", "");
@@ -104,6 +103,8 @@ public final class UserServlet extends HttpServlet {
 			}
 		} else {
 			// Logged in
+			String s = (String) session.getAttribute("LatestAction");
+			if(!(s != null && s.startsWith("Opened")))
 			session.setAttribute("LatestAction", "Welcome "+loggedUser.getUsername());
 			session.setAttribute(SESSION_USER_LOGGED_IN, true);
 			
@@ -294,7 +295,7 @@ public final class UserServlet extends HttpServlet {
 						catname, loggedUser.getUsername());
 				session.setAttribute("LatestAction", "Opened new Case successfully"+errorlog);
 				session.setAttribute("OpeningCase", false);
-//				response.setHeader("Refresh", "0");
+				response.setHeader("Refresh", "0");
 			}
 			else				
 				session.setAttribute("Error", "Case Title cannot be empty");

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
+import ch.ethz.inf.dbproject.model.DatastoreInterfaceSimpleDatabase;
 import ch.ethz.inf.dbproject.model.Person;
 import ch.ethz.inf.dbproject.util.html.BeanTableHelper;
 
@@ -18,7 +19,7 @@ import ch.ethz.inf.dbproject.util.html.BeanTableHelper;
 public final class PersonsServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private final DatastoreInterface dbInterface = new DatastoreInterface();
+	private final DatastoreInterfaceSimpleDatabase dbInterface = new DatastoreInterfaceSimpleDatabase();
 
 	/**
 	 * @see HttpServlet#HttpServlet()

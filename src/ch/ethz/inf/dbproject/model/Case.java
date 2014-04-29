@@ -1,6 +1,5 @@
 package ch.ethz.inf.dbproject.model;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
@@ -13,7 +12,7 @@ public final class Case {
 	private final int idcase;
 	private final String title;
 	private final String descr;
-	private final Date date;
+	private final String date;
 	private final Time time;
 	private final Address loc;
 	private final Category cat;
@@ -24,7 +23,7 @@ public final class Case {
 	 * 
 	 * @param descr		The name of the case
 	 */
-	public Case( final int idcase, final String title, final String descr, final Date date,
+	public Case( final int idcase, final String title, final String descr, final String date,
 			final Time time, final Address loc, final Category cat, final boolean open) {
 
 		this.idcase = idcase;
@@ -43,7 +42,7 @@ public final class Case {
 		this.idcase = rs.getInt("idcase");
 		this.descr = rs.getString("description");
 		this.title = rs.getString("title");
-		this.date = rs.getDate("date");
+		this.date = rs.getString("date");
 		this.time = rs.getTime("time");
 		
 		//Address information might not always be provided
@@ -78,7 +77,7 @@ public final class Case {
 		return descr;
 	}
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 	

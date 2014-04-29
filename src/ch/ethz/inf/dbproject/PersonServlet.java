@@ -14,6 +14,7 @@ import ch.ethz.inf.dbproject.model.Case;
 import ch.ethz.inf.dbproject.model.Conviction;
 import ch.ethz.inf.dbproject.model.Comment;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
+import ch.ethz.inf.dbproject.model.DatastoreInterfaceSimpleDatabase;
 import ch.ethz.inf.dbproject.model.Involved;
 import ch.ethz.inf.dbproject.model.Person;
 import ch.ethz.inf.dbproject.model.User;
@@ -28,7 +29,7 @@ import ch.ethz.inf.dbproject.util.html.SelectHelper;
 public final class PersonServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private final DatastoreInterface dbInterface = new DatastoreInterface();
+	private final DatastoreInterfaceSimpleDatabase dbInterface = new DatastoreInterfaceSimpleDatabase();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -99,7 +100,7 @@ public final class PersonServlet extends HttpServlet {
 				ctable.addLinkColumn("Delete", "<img src='./s_cancel.png'></img>", "Person?action=deleteNote&uname="+loggedUser.getUsername()+"&delete=", "idnote");
 			}
 				
-			ctable.addObjects(comlist);		
+//			ctable.addObjects(comlist);		
 
 			session.setAttribute("commentTable", ctable);
 			
@@ -115,7 +116,7 @@ public final class PersonServlet extends HttpServlet {
 			contable.addBeanColumn("End Date", "enddateString");
 			contable.addLinkColumn("", "View Case", "Case?id=", "idcase");
 			
-			contable.addObjects(conlist);	
+//			contable.addObjects(conlist);	
 
 			session.setAttribute("convictionTable", contable);
 			
@@ -130,7 +131,7 @@ public final class PersonServlet extends HttpServlet {
 			invtable.addBeanColumn("Role", "role");
 			invtable.addLinkColumn("", "View Case", "Case?id=", "idcase");
 
-			invtable.addObjects(invlist);	
+//			invtable.addObjects(invlist);	
 
 			session.setAttribute("involvedTable", invtable);
 			
@@ -142,7 +143,7 @@ public final class PersonServlet extends HttpServlet {
 					"idcase",
 					Case.class
 					);
-			caseselect.addObjects(this.dbInterface.getCasesUninvolvedIn(aPerson.getIdperson()));
+//			caseselect.addObjects(this.dbInterface.getCasesUninvolvedIn(aPerson.getIdperson()));
 			
 			session.setAttribute("caseSelect",caseselect);
 			

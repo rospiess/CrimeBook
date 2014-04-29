@@ -1,0 +1,10 @@
+Personal Crime, null
+Assault,Personal Crime
+Murder,Personal Crime
+Kidnapping,Personal Crime
+OtherPers,Personal Crime
+Property Crime, null
+Theft,Property Crime
+Fraud,Property Crime
+Burglary,Property Crime
+OtherProp,Property Crime

@@ -15,6 +15,7 @@ import ch.ethz.inf.dbproject.model.Comment;
 import ch.ethz.inf.dbproject.model.Conviction;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
 import ch.ethz.inf.dbproject.model.Case;
+import ch.ethz.inf.dbproject.model.DatastoreInterfaceSimpleDatabase;
 import ch.ethz.inf.dbproject.model.Person;
 import ch.ethz.inf.dbproject.model.User;
 import ch.ethz.inf.dbproject.util.UserManagement;
@@ -28,7 +29,7 @@ import ch.ethz.inf.dbproject.util.html.SelectHelper;
 public final class CaseServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private final DatastoreInterface dbInterface = new DatastoreInterface();
+	private final DatastoreInterfaceSimpleDatabase dbInterface = new DatastoreInterfaceSimpleDatabase();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -110,7 +111,7 @@ public final class CaseServlet extends HttpServlet {
 				ctable.addLinkColumn("Delete", "<img src='./s_cancel.png'></img>", "Case?action=deleteNote&uname="+loggedUser.getUsername()+"&delete=", "idnote");
 			}
 
-			ctable.addObjects(clist);
+//			ctable.addObjects(clist);
 
 			session.setAttribute("commentTable", ctable);
 
@@ -127,7 +128,7 @@ public final class CaseServlet extends HttpServlet {
 				ptable.addLinkColumn("Erase Suspicion","Reprieve", "Case?action=deleteSuspect&idperson=", "idperson");
 			}
 
-			ptable.addObjects(plist);
+//			ptable.addObjects(plist);
 
 			session.setAttribute("suspectTable", ptable);
 			
@@ -144,7 +145,7 @@ public final class CaseServlet extends HttpServlet {
 				wtable.addLinkColumn("Unlink from case","Unlink", "Case?action=deleteWitness&idperson=", "idperson");
 			}
 
-			wtable.addObjects(wlist);
+//			wtable.addObjects(wlist);
 
 			session.setAttribute("witnessTable", wtable);
 			
@@ -162,7 +163,7 @@ public final class CaseServlet extends HttpServlet {
 				vtable.addLinkColumn("Unlink from case","Unlink", "Case?action=deleteWitness&idperson=", "idperson");
 			}
 
-			vtable.addObjects(vlist);
+//			vtable.addObjects(vlist);
 
 			session.setAttribute("victimTable", vtable);
 			
@@ -184,7 +185,7 @@ public final class CaseServlet extends HttpServlet {
 				convtable.addLinkColumn("", "Edit dates", "Case?action=convDate&idcon=", "idcon");
 			}
 
-			convtable.addObjects(convlist);
+//			convtable.addObjects(convlist);
 
 			session.setAttribute("convictionTable", convtable);
 			
@@ -196,7 +197,7 @@ public final class CaseServlet extends HttpServlet {
 					"idperson",
 					Person.class
 					);
-			personselect.addObjects(this.dbInterface.getUninvolvedInCase(aCase.getIdcase()));
+//			personselect.addObjects(this.dbInterface.getUninvolvedInCase(aCase.getIdcase()));
 			
 			session.setAttribute("personSelect",personselect);
 			
