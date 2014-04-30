@@ -131,7 +131,7 @@ public final class PersonServlet extends HttpServlet {
 			invtable.addBeanColumn("Role", "role");
 			invtable.addLinkColumn("", "View Case", "Case?id=", "idcase");
 
-//			invtable.addObjects(invlist);	
+			invtable.addObjects(invlist);	
 
 			session.setAttribute("involvedTable", invtable);
 			
@@ -143,7 +143,7 @@ public final class PersonServlet extends HttpServlet {
 					"idcase",
 					Case.class
 					);
-//			caseselect.addObjects(this.dbInterface.getCasesUninvolvedIn(aPerson.getIdperson()));
+			caseselect.addObjects(this.dbInterface.getCasesUninvolvedIn(aPerson.getIdperson()));
 			
 			session.setAttribute("caseSelect",caseselect);
 			
@@ -203,7 +203,7 @@ public final class PersonServlet extends HttpServlet {
 			
 
 			if(action != null && action.equals("add_comment")&& comment  != null && !comment.isEmpty()){
-				this.dbInterface.insertComment(id, comment, loggedUser.getUsername(), "person");
+				this.dbInterface.insertComment(id, comment, loggedUser.getUsername(), "Persons");
 				response.setHeader("Refresh", "0");
 			}
 			

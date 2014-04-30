@@ -194,7 +194,7 @@ public final class CaseServlet extends HttpServlet {
 					"idperson",
 					Person.class
 					);
-//			personselect.addObjects(this.dbInterface.getUninvolvedInCase(aCase.getIdcase()));
+			personselect.addObjects(this.dbInterface.getUninvolvedInCase(aCase.getIdcase()));
 			
 			session.setAttribute("personSelect",personselect);
 			
@@ -276,7 +276,7 @@ public final class CaseServlet extends HttpServlet {
 					&& comment != null && !comment.isEmpty())
 			{
 				this.dbInterface.insertComment(id, comment,
-						loggedUser.getUsername(), "case");
+						loggedUser.getUsername(), "Cases");
 				response.setHeader("Refresh",  "0");
 			}
 			if (action != null && action.trim().equals("delete"))

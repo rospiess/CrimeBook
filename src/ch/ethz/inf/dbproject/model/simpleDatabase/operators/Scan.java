@@ -17,6 +17,9 @@ import ch.ethz.inf.dbproject.model.simpleDatabase.TupleSchema;
  * values of a tuple. The line a comma separated.
  */
 public class Scan extends Operator {
+	
+	final String absolutePath = "C:/Users/Lukas/Downloads/CrimeBook/Tables/";
+	
 
 	private final TupleSchema schema;
 	private final BufferedReader reader;
@@ -38,8 +41,9 @@ public class Scan extends Operator {
 
 		try {
 			//IMPORTANT: Add Tables to your build path as a source (Right click on Tables -> Build Path -> Use as source folder
-			reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/"+fileName)));
-		} catch (final NullPointerException e) {
+//			reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/"+fileName)));
+			reader = new BufferedReader(new FileReader(absolutePath + fileName));
+		} catch (final Exception e) {
 			throw new RuntimeException("could not find file " + fileName);
 		}
 		this.reader = reader;
@@ -63,14 +67,14 @@ public class Scan extends Operator {
 		
 		try {
 			String input = reader.readLine();
-			if(input == null)
-				reader.close();
-			else
+			if(input != null)
 			{
 				String[] values = input.split(",");
 				current = new Tuple(schema, values);
 				return true;
-			}
+			}			
+//			else
+//				reader.close();
 			return false;
 			
 		} catch (final IOException e) {

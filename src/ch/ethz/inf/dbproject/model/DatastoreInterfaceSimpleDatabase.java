@@ -1,7 +1,11 @@
 package ch.ethz.inf.dbproject.model;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import ch.ethz.inf.dbproject.model.simpleDatabase.operators.*;
@@ -19,7 +23,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	final String[] schemaCaseAddress = new String[] { "idcase", "title", "descr", "date", "time", "cat", "open", "country", "zip", "city", "street", "streetno" };
 	final String[] schemaCategory = new String[] { "cat", "supercat"};
 	final String[] schemaConviction = new String[] {"idcon", "startdate", "enddate", "idcase", "idperson" };
-	final String[] schemaInvovled = new String[] { "idperson", "idcase", "role"};
+	final String[] schemaInvolved = new String[] { "idperson", "idcase", "role"};
 	final String[] schemaPerson = new String[] { "idperson", "firstname", "lastname", "birth" };
 	
 	public DatastoreInterfaceSimpleDatabase() {
@@ -70,19 +74,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public void insertComment(final int id, final String text, final String username, String type) {
-		/*
-		 * try {
-		 * 
-		 * final PreparedStatement stmt; if (type.equals("case")){ stmt =
-		 * ps_insertCaseComment; }
-		 * 
-		 * else{ stmt = ps_insertPersonComment; }
-		 * 
-		 * stmt.setInt(1, id); stmt.setString(2, text); stmt.setString(3,
-		 * username); stmt.execute();
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
+			Insert.insertIntoGenerateKey("Note"+type+".txt", new String[]{"idnote",id+"",text,username});
 
 	}
 
@@ -130,43 +122,41 @@ public final class DatastoreInterfaceSimpleDatabase {
 		// Returns list of involvement of a person by their id.
 		// The Involved class contains information about the case and the
 		// person.
-		return null;/*
-					 * try {
-					 * 
-					 * final Statement stmt =
-					 * this.sqlConnection.createStatement(); final ResultSet rs
-					 * = stmt .executeQuery(
-					 * "Select * from involved, cases, personofinterest" +
-					 * " where involved.idperson = " + pid +
-					 * " and personofinterest.idpersonofinterest = " + pid +
-					 * " and cases.idCase = involved.idcase ORDER BY title ASC"
-					 * ); final List<Involved> invlist = new
-					 * ArrayList<Involved>(); while (rs.next()) {
-					 * invlist.add(new Involved(rs)); }
-					 * 
-					 * rs.close(); stmt.close();
-					 * 
-					 * return invlist;
-					 * 
-					 * } catch (final SQLException ex) { ex.printStackTrace();
-					 * return null; }
-					 */
+		
+		final Scan scan = new Scan("Involved.txt", schemaInvolved);
+		final Scan scan2 = new Scan("Cases.txt", schemaCase);
+		
+	
+		final Select<Integer> select = new Select<Integer>(scan,"idperson",pid);
+		
+		final Join join = new Join(scan2, select, "idcase", new String[]{"role","idcase","title"});
+		
+		List<Involved> invlist = new ArrayList<Involved>();
+		
+		while(join.moveNext())
+		{
+			Tuple tuple = join.current();
+			Involved i = new Involved(tuple.getString(0),null, 
+					new Case(tuple.getInt(1),tuple.getString(2),null,null,null,null, null, false));
+			invlist.add(i);
+		}
+		
+		return invlist;
 
 	}
 
 	public final boolean isInvolvedIn(final int pid, final int cid) {
-		return false;/*
-					 * try{ final Statement stmt =
-					 * sqlConnection.createStatement(); ResultSet rs =
-					 * stmt.executeQuery
-					 * ("SELECT count(*)>0 FROM involved WHERE idperson ="
-					 * +pid+" AND idcase="+cid); if (rs.next()) return
-					 * rs.getBoolean(1); return false; }catch(final SQLException
-					 * ex){ ex.printStackTrace(); return true; }
-					 */
+
+		final Scan scan = new Scan("Involved.txt", schemaInvolved);
+		
+		final Select<Integer> select = new Select<Integer>(scan,"idcase",cid);
+		
+		final Select<Integer> select2 = new Select<Integer>(select,"idperson",pid);
+		
+		return select2.moveNext();
 	}
 
-	@SuppressWarnings("deprecation")
+
 	public final void setCaseOpen(int id, boolean open) {
 		/*
 		 * try { PreparedStatement s = ps_setCaseOpen; s.setString(1, open ? "1"
@@ -214,14 +204,8 @@ public final class DatastoreInterfaceSimpleDatabase {
 		 */
 	}
 
-	private final Date getCurrentDate() {
-		return null;/*
-					 * try{ final Statement stmt =
-					 * this.sqlConnection.createStatement(); final ResultSet rs
-					 * = stmt.executeQuery("SELECT CURDATE()"); if(rs.next())
-					 * return rs.getDate(1); }catch(final SQLException ex){
-					 * ex.printStackTrace(); } return null;
-					 */
+	private final String getCurrentDate() {
+		return new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 	}
 
 	public void deleteInvolved(int idcase, int idperson, String type) {
@@ -271,22 +255,9 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final void openNewCase(String title, String descr, String date, String time, Address address, String catname, String username) {
-
-		/*
-		 * try { PreparedStatement s = ps_insertAddress; s.setString(1,
-		 * address.getCountry()); s.setString(2, address.getCity());
-		 * s.setString(3, address.getStreet()); s.setInt(4,
-		 * address.getZipCode()); s.setInt(5, address.getStreetNo());
-		 * s.execute(); ResultSet rs = s.getGeneratedKeys(); rs.next(); s =
-		 * ps_insertCase; s.setString(1, title); s.setString(2, descr);
-		 * s.setString(3, date); s.setString(4, time); s.setInt(5,
-		 * rs.getInt(1)); s.setString(6, catname); s.setString(7, username);
-		 * s.execute();
-		 * 
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
-
+//		TODO: check if Address already exists
+		int idAddress = Insert.insertIntoGenerateKey("Addresses.txt", new String[]{address.getCountry(), address.getZipCodeString(), address.getCity(), address.getStreet(),address.getStreetNoString()});
+		Insert.insertIntoGenerateKey("Cases.txt", new String[]{title,descr,date,time,""+idAddress,catname,"true",username});
 	}
 
 	public final void updateAddress(int id, Address address) {
@@ -337,14 +308,11 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	private final int getIdAddressByCase(int idcase) {
-		return 0;
-		/*
-		 * try{ final Statement s = sqlConnection.createStatement(); final
-		 * ResultSet rs = s.executeQuery("Select idAddress FROM Cases c" +
-		 * " WHERE c.idcase = "+idcase); if(rs.next()){ return
-		 * rs.getInt("idAddress"); } } catch(final SQLException ex){
-		 * ex.printStackTrace(); } return -1;
-		 */
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final Select<Integer> select = new Select<Integer>(scan, "idcase", idcase);
+		if(select.moveNext())
+			return select.current().getInt(5);
+		return -1;
 	}
 
 	public final List<Case> getCasesByUser(String username) {
@@ -537,56 +505,70 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Person> getUninvolvedInCase(int idcase) {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery("SELECT * from personofinterest p "
-		 * + "WHERE p.idpersonofinterest NOT IN (SELECT p2.idpersonofinterest "
-		 * + "FROM personofinterest p2, involved i2 " +
-		 * "WHERE p2.idpersonofinterest = i2.idperson AND i2.idcase = " + idcase
-		 * +")"+ " ORDER BY p.LastName ASC");
-		 * 
-		 * final List<Person> persons = new ArrayList<Person>(); while
-		 * (rs.next()) { persons.add(new Person(rs)); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return persons;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Involved.txt", schemaInvolved);
+		final Scan scan1 = new Scan("Involved.txt", schemaInvolved);
+		final Scan scan2 = new Scan("Persons.txt", schemaPerson);
+		
+	
+		final Select<Integer> select = new Select<Integer>(scan,"idcase",idcase);
+		
+		final Minus minus = new Minus(scan1,select,"idperson"); 
+		
+		final Join join = new Join(scan2, minus, "idperson", new String[]{"idperson","firstname","lastname"});
+		
+		final List<Person> persons = new ArrayList<Person>();
+		final HashSet<Integer> h = new HashSet<Integer>();
+		
+		while(join.moveNext())
+		{
+			Tuple tuple = join.current();
+			int id = tuple.getInt(0);
+			Person p = new Person(id,tuple.getString(1),tuple.getString(2), null);
+			if(!h.contains(id))
+			{
+				persons.add(p);
+				h.add(id);
+			}
+			
+		}
+		
+		return persons;
 	}
 
 	public final List<Case> getCasesUninvolvedIn(int pid) {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "SELECT * FROM Cases c, Address a where c.idAddress = a.idAddress and open = 1"
-		 * + " AND c.idCase NOT IN ( " + " SELECT i2.idCase FROM Involved i2 " +
-		 * " WHERE i2.idperson = "+pid+")" + " ORDER BY title asc");
-		 * 
-		 * final List<Case> cases = new ArrayList<Case>(); while (rs.next()) {
-		 * cases.add(new Case(rs)); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return cases;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
-
+		final Scan scan = new Scan("Involved.txt", schemaInvolved);
+		final Scan scan1 = new Scan("Involved.txt", schemaInvolved);
+		final Scan scan2 = new Scan("Cases.txt", schemaCase);
+		
+	
+		final Select<Integer> select = new Select<Integer>(scan,"idperson", pid);
+		
+		final Minus minus = new Minus(scan1,select,"idcase");
+		
+		final Join join = new Join(scan2, minus, "idcase", new String[]{"idcase","title"});
+		
+		final List<Case> cases = new ArrayList<Case>();
+		final HashSet<Integer> h = new HashSet<Integer>();
+		
+		while(join.moveNext())
+		{
+			Tuple tuple = join.current();
+			int id = tuple.getInt(0);
+			Case c = new Case(tuple.getInt(0),tuple.getString(1),null, null,null,null,null,false);
+			if(!h.contains(id))
+			{
+				cases.add(c);
+				h.add(id);
+			}
+			
+		}
+		
+		return cases;
 	}
 
 	public final List<Person> getSuspectsById(int id) {
 		final Scan scan = new Scan("Persons.txt", schemaPerson);
-		final Scan scan2 = new Scan("Involved.txt", schemaInvovled);
+		final Scan scan2 = new Scan("Involved.txt", schemaInvolved);
 		final Select<Integer> select = new Select<Integer>(scan2, "idcase",id);
 		final Select<String> select2 = new Select<String>(select, "role","Suspect");
 		final Join join = new Join(scan, select2, "idperson", new String[]{"idperson", "firstname", "lastname", "birth","role"});
@@ -604,7 +586,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 
 	public final List<Person> getWitnessesById(int id) {
 		final Scan scan = new Scan("Persons.txt", schemaPerson);
-		final Scan scan2 = new Scan("Involved.txt", schemaInvovled);
+		final Scan scan2 = new Scan("Involved.txt", schemaInvolved);
 		final Select<Integer> select = new Select<Integer>(scan2, "idcase",id);
 		final Select<String> select2 = new Select<String>(select, "role","Witness");
 		final Join join = new Join(scan, select2, "idperson", new String[]{"idperson", "firstname", "lastname", "birth","role"});
@@ -622,7 +604,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 
 	public final List<Person> getVictimsById(int id) {
 		final Scan scan = new Scan("Persons.txt", schemaPerson);
-		final Scan scan2 = new Scan("Involved.txt", schemaInvovled);
+		final Scan scan2 = new Scan("Involved.txt", schemaInvolved);
 		final Select<Integer> select = new Select<Integer>(scan2, "idcase",id);
 		final Select<String> select2 = new Select<String>(select, "role","Victim");
 		final Join join = new Join(scan, select2, "idperson", new String[]{"idperson", "firstname", "lastname", "birth","role"});
@@ -639,24 +621,11 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final void addInvolvement(int idcase, int idperson, String role) {
-		/*
-		 * try{ final PreparedStatement stmt = ps_addInvolvement; stmt.setInt(1,
-		 * idcase); stmt.setInt(2, idperson); stmt.setString(3, role);
-		 * stmt.execute(); }catch(final SQLException ex){ ex.printStackTrace();
-		 * }
-		 */
+		Insert.insertInto("Involved.txt", new String[]{idperson+"",idcase+"",role});
 	}
 
 	public final void addNewPerson(String firstname, String lastname, String date) {
-
-		/*
-		 * try { PreparedStatement stmt = ps_addPerson; stmt.setString(1,
-		 * firstname); stmt.setString(2, lastname); stmt.setString(3, date);
-		 * 
-		 * stmt.execute();
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
+		Insert.insertIntoGenerateKey("Persons.txt", new String[]{firstname,lastname,date});
 	}
 
 	public final void updatePerson(int idperson, String firstname, String lastname, String date) {
@@ -688,16 +657,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public void insertUser(String username, String password) {
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement();
-		 * stmt.execute("Insert into user (username, password) values ('" +
-		 * username + "', '" + password + "')"); stmt.close(); } catch (final
-		 * SQLException ex) { ex.printStackTrace();
-		 * 
-		 * }
-		 */
+		Insert.insertInto("Users.txt", new String[]{username,password});
 	}
 
 	public final boolean getNameIsTaken(String username) {
