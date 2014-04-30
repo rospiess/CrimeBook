@@ -12,10 +12,10 @@ To-Do List
 -----------
 
 Operators:
-- join
-- sort
 - group by
 - insert
+- update
+- delete
  
 Interface
 - reimplement all functionalities
@@ -28,4 +28,7 @@ Operators:
 - scan
 - select
 - project
+- sort
+- join (could still be improved though)
+
 
