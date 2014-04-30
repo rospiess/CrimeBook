@@ -41,10 +41,6 @@ public final class Project extends Operator {
 
 	@Override
 	public boolean moveNext() {
-		// TODO
-		// get next tuple from child operator
-		// create new tuple by copying the appropriate columns
-		// return if we were able to advance to the next tuple
 
 		if (this.op.moveNext()) {
 			final Tuple t = this.op.current();

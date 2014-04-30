@@ -62,7 +62,7 @@ public final class CaseServlet extends HttpServlet {
 			final List<Person> plist = this.dbInterface.getSuspectsById(id);
 			final List<Person> wlist = this.dbInterface.getWitnessesById(id);
 			final List<Person> vlist = this.dbInterface.getVictimsById(id);
-			final List<Conviction> convlist = this.dbInterface.getConvictionsById(id,"case");
+			final List<Conviction> convlist = this.dbInterface.getConvictionsById(id,"idcase");
 			final User loggedUser = UserManagement
 					.getCurrentlyLoggedInUser(session);
 			session.setAttribute("CurrentCase", aCase);
@@ -128,7 +128,7 @@ public final class CaseServlet extends HttpServlet {
 				ptable.addLinkColumn("Erase Suspicion","Reprieve", "Case?action=deleteSuspect&idperson=", "idperson");
 			}
 
-//			ptable.addObjects(plist);
+			ptable.addObjects(plist);
 
 			session.setAttribute("suspectTable", ptable);
 			
@@ -145,7 +145,7 @@ public final class CaseServlet extends HttpServlet {
 				wtable.addLinkColumn("Unlink from case","Unlink", "Case?action=deleteWitness&idperson=", "idperson");
 			}
 
-//			wtable.addObjects(wlist);
+			wtable.addObjects(wlist);
 
 			session.setAttribute("witnessTable", wtable);
 			
@@ -163,12 +163,9 @@ public final class CaseServlet extends HttpServlet {
 				vtable.addLinkColumn("Unlink from case","Unlink", "Case?action=deleteWitness&idperson=", "idperson");
 			}
 
-//			vtable.addObjects(vlist);
+			vtable.addObjects(vlist);
 
 			session.setAttribute("victimTable", vtable);
-			
-			
-			//
 			
 			
 			//Conviction table
@@ -185,7 +182,7 @@ public final class CaseServlet extends HttpServlet {
 				convtable.addLinkColumn("", "Edit dates", "Case?action=convDate&idcon=", "idcon");
 			}
 
-//			convtable.addObjects(convlist);
+			convtable.addObjects(convlist);
 
 			session.setAttribute("convictionTable", convtable);
 			
@@ -232,7 +229,7 @@ public final class CaseServlet extends HttpServlet {
 			}
 			if (action != null && action.trim().equals("convDate") && idcon != null){
 				session.setAttribute("ConvDate",true);
-				Conviction aCon = dbInterface.getConvictionsById(Integer.parseInt(idcon), "conviction").get(0);
+				Conviction aCon = dbInterface.getConvictionsById(Integer.parseInt(idcon), "idcon").get(0);
 				session.setAttribute("CurrentCon", aCon);
 			}
 

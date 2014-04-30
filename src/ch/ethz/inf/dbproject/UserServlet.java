@@ -128,7 +128,7 @@ public final class UserServlet extends HttpServlet {
 					"Case?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
 					"idcase" 			/* For every case displayed, the ID will be retrieved and will be attached to the url base above */);
 
-//			table.addObjects(dbInterface.getCasesByUser(loggedUser.getUsername()));
+			table.addObjects(dbInterface.getCasesByUser(loggedUser.getUsername()));
 			session.setAttribute("UserCases",table);
 
 

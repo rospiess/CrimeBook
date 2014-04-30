@@ -56,7 +56,7 @@ public final class PersonServlet extends HttpServlet {
 			final Integer id = Integer.parseInt(idString);
 			final Person aPerson = this.dbInterface.getPersonById(id);
 			final List<Comment> comlist = this.dbInterface.getCommentsById(id,"person");
-			final List<Conviction> conlist = this.dbInterface.getConvictionsById(id,"person");
+			final List<Conviction> conlist = this.dbInterface.getConvictionsById(id,"idperson");
 			final List<Involved> invlist = this.dbInterface.getInvolvedByPersonId(id);
 			final User loggedUser = UserManagement
 					.getCurrentlyLoggedInUser(session);
@@ -100,7 +100,7 @@ public final class PersonServlet extends HttpServlet {
 				ctable.addLinkColumn("Delete", "<img src='./s_cancel.png'></img>", "Person?action=deleteNote&uname="+loggedUser.getUsername()+"&delete=", "idnote");
 			}
 				
-//			ctable.addObjects(comlist);		
+			ctable.addObjects(comlist);		
 
 			session.setAttribute("commentTable", ctable);
 			
@@ -116,7 +116,7 @@ public final class PersonServlet extends HttpServlet {
 			contable.addBeanColumn("End Date", "enddateString");
 			contable.addLinkColumn("", "View Case", "Case?id=", "idcase");
 			
-//			contable.addObjects(conlist);	
+			contable.addObjects(conlist);	
 
 			session.setAttribute("convictionTable", contable);
 			

@@ -27,6 +27,8 @@ public class Tuple {
 	}
 
 	public final String getString(final int index) {
+		if(this.values[index]==null||this.values[index].equals("null"))
+			return null;
 		return this.values[index];
 	}
 
@@ -47,6 +49,8 @@ public class Tuple {
 	}
 	
 	public final String getDate(final int index) {
+		if(this.values[index]==null||this.values[index].equals("null"))
+			return null;
 		return this.values[index];
 //		Some unsuccessful tries to fix this goddamn Date
 		/*
@@ -63,7 +67,7 @@ public class Tuple {
 	}
 	
 	public final Time getTime(final int index) {
-		if(this.values[index]==null)
+		if(this.values[index]==null||this.values[index].equals("null"))
 			return null;
 		String[] s = this.values[index].split(":");
 		return new Time(Integer.parseInt(s[0]),Integer.parseInt(s[1]),Integer.parseInt(s[2]));

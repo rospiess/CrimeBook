@@ -37,14 +37,20 @@ public final class Address {
 	}
 
 	public String getCity() {
+		if(city == null)
+			return "???";
 		return city;
 	}
 
 	public String getCountry() {
+		if(country == null)
+			return "???";
 		return country;
 	}
 
 	public String getStreet() {
+		if(street == null)
+			return "???";
 		return street;
 	}
 
@@ -59,15 +65,13 @@ public final class Address {
 	public String getStreetNoString() {
 		if (streetNo == -1)
 			return "???";
-		else
-			return Integer.toString(streetNo);
+		return Integer.toString(streetNo);
 	}
 
 	public String getZipCodeString() {
 		if (zipCode == -1)
 			return "???";
-		else
-			return Integer.toString(zipCode);
+		return Integer.toString(zipCode);
 	}
 	
 	public boolean equals(Address a)

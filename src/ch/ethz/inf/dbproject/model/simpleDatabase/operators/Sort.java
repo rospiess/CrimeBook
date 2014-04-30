@@ -18,6 +18,7 @@ public class Sort extends Operator implements Comparator<Tuple> {
 	private final String column;
 	private final boolean ascending;
 	private final ArrayList<Tuple> sortBuffer;
+	private int offset;
 	
 	public Sort(
 		final Operator op,
@@ -37,7 +38,10 @@ public class Sort extends Operator implements Comparator<Tuple> {
 	) {
 		
 		final int columnIndex = l.getSchema().getIndex(this.column);
-		
+		if(l.getString(columnIndex)==null)
+			return 1;
+		if(r.getString(columnIndex)==null)
+			return -1;
 		final int result = 
 			l.getString(columnIndex).compareToIgnoreCase(r.getString(columnIndex));
 		
@@ -51,17 +55,20 @@ public class Sort extends Operator implements Comparator<Tuple> {
 	@Override
 	public boolean moveNext() {
 
-		// TODO 
-		
-		// a) if this is the first call:
-		//   1) fetch _all_ tuples from this.op and store them in sort buffer
-		//   2) sort the buffer
-		Collections.sort(this.sortBuffer, this);
-		//   3) set the current tuple to the first one in the sort buffer and 
-		//      remember you are at offset 0
-		// b) if this is not the first call 
-		//   1) increase the offset and if it is valid fetch the next tuple
-		
+		if(sortBuffer.isEmpty()){
+			while(op.moveNext())
+				sortBuffer.add(op.current());
+			Collections.sort(this.sortBuffer, this);
+			current = sortBuffer.get(0);
+			offset = 1;
+			return true;
+		}
+		if(offset<sortBuffer.size())
+		{
+			current = sortBuffer.get(offset);
+			offset++;
+			return true;
+		}		
 		return false;
 	}
 
