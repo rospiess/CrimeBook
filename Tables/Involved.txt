@@ -1,0 +1,14 @@
+3,1,Suspect
+5,6,Suspect
+4,5,Suspect
+1,1,Suspect
+2,1,Witness
+1,2,Suspect
+3,2,Suspect
+1,4,Suspect
+3,4,Witness
+2,3,Victim
+7,5,Victim
+6,6,Witness
+6,4,Victim
+7,7,Suspect

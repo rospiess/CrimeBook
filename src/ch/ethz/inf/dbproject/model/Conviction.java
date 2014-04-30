@@ -10,16 +10,16 @@ import java.util.Date;
 public class Conviction {
 
 	private final int idcon;
-	private final Date date;
-	private final Date enddate;
+	private final String date;
+	private final String enddate;
 	private final Case caze;
 	private final Person person;
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public Date getEnddate() {
+	public String getEnddate() {
 		return enddate;
 	}
 	
@@ -65,7 +65,7 @@ public class Conviction {
 		return person.getLastname();
 	}
 
-	public Conviction(final int idcon, final Date date, final Date enddate, final String type, final Case caze, final Person person) {
+	public Conviction(final int idcon, final String date, final String enddate, final Case caze, final Person person) {
 		this.idcon = idcon;
 		this.date = date;
 		this.enddate = enddate;
@@ -75,8 +75,8 @@ public class Conviction {
 	
 	public Conviction(final ResultSet rs) throws SQLException {
 		this.idcon = rs.getInt("idconviction");
-		this.date = rs.getDate("begindate");
-		this.enddate = rs.getDate("enddate");
+		this.date = rs.getString("begindate");
+		this.enddate = rs.getString("enddate");
 		this.caze = new Case(rs);
 		this.person = new Person(rs);
 	}

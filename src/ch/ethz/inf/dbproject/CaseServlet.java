@@ -111,7 +111,7 @@ public final class CaseServlet extends HttpServlet {
 				ctable.addLinkColumn("Delete", "<img src='./s_cancel.png'></img>", "Case?action=deleteNote&uname="+loggedUser.getUsername()+"&delete=", "idnote");
 			}
 
-//			ctable.addObjects(clist);
+			ctable.addObjects(clist);
 
 			session.setAttribute("commentTable", ctable);
 

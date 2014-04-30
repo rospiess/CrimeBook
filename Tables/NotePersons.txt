@@ -1,0 +1,4 @@
+1,1,Sehr kräftig gebaut,Max Muster
+2,1,Besitzt eine Vorliebe für Fastfood,Max Muster
+3,2,Hüchstgefährlich,Max Muster
+4,3,Auch bekannt als "Der Witwenmacher",Max Muster

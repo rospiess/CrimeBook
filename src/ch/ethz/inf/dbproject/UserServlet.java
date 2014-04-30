@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import ch.ethz.inf.dbproject.model.Address;
 import ch.ethz.inf.dbproject.model.Case;
 import ch.ethz.inf.dbproject.model.DatastoreInterface;
+import ch.ethz.inf.dbproject.model.DatastoreInterfaceSimpleDatabase;
 import ch.ethz.inf.dbproject.model.User;
 import ch.ethz.inf.dbproject.util.UserManagement;
 import ch.ethz.inf.dbproject.util.html.BeanTableHelper;
@@ -20,7 +21,7 @@ import ch.ethz.inf.dbproject.util.html.BeanTableHelper;
 public final class UserServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private final DatastoreInterface dbInterface = new DatastoreInterface();
+	private final DatastoreInterfaceSimpleDatabase dbInterface = new DatastoreInterfaceSimpleDatabase();
 
 	public final static String SESSION_USER_LOGGED_IN = "userLoggedIn";
 	public final static String SESSION_USER_DETAILS = "userDetails";
@@ -64,7 +65,7 @@ public final class UserServlet extends HttpServlet {
 				// However for this project, security is not a requirement.
 				final String password = request.getParameter("password");
 				if (password.equals(dbInterface.getPassword(username))) {
-					User u = new User(1, username);
+					User u = new User(username);
 					session.setAttribute(SESSION_USER_LOGGED_IN, true);
 					session.setAttribute(SESSION_USER_DETAILS, username);
 					session.setAttribute(UserManagement.SESSION_USER, u);
@@ -127,7 +128,7 @@ public final class UserServlet extends HttpServlet {
 					"Case?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
 					"idcase" 			/* For every case displayed, the ID will be retrieved and will be attached to the url base above */);
 
-			table.addObjects(dbInterface.getCasesByUser(loggedUser.getUsername()));
+//			table.addObjects(dbInterface.getCasesByUser(loggedUser.getUsername()));
 			session.setAttribute("UserCases",table);
 
 
