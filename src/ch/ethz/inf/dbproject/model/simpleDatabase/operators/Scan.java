@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 
 import ch.ethz.inf.dbproject.model.simpleDatabase.Tuple;
@@ -36,10 +37,9 @@ public class Scan extends Operator {
 		BufferedReader reader = null;
 
 		try {
-			//IMPORTANT: Change the following path to your respective Directory
-			//Unfortunately I havent found a solution yet
-			reader = new BufferedReader(new FileReader("C:/Users/Lukas/Downloads/CrimeBook/Tables/" + fileName));
-		} catch (final FileNotFoundException e) {
+			//IMPORTANT: Add Tables to your build path as a source (Right click on Tables -> Build Path -> Use as source folder
+			reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/"+fileName)));
+		} catch (final NullPointerException e) {
 			throw new RuntimeException("could not find file " + fileName);
 		}
 		this.reader = reader;
