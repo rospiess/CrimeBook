@@ -38,7 +38,8 @@ public class Scan extends Operator {
 		try {
 			//IMPORTANT: Change the following path to your respective Directory
 			//Unfortunately I havent found a solution yet
-			reader = new BufferedReader(new FileReader("C:/Users/Lukas/Downloads/CrimeBook/Tables/" + fileName));
+			String userhome_path = System.getProperty("user.home");
+			reader = new BufferedReader(new FileReader(userhome_path+"/Downloads/CrimeBook/Tables/" + fileName));
 		} catch (final FileNotFoundException e) {
 			throw new RuntimeException("could not find file " + fileName);
 		}
