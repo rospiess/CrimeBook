@@ -1,6 +1,6 @@
-1,Entwendung einer Schreibmaschine,Auf einmal war sie weg...,2010-10-30,13:45:00,1, Theft,false,Test
+1,Entwendung einer Schreibmaschine,Auf einmal war sie weg...,2010-10-30,13:45:00,1,Theft,false,Test
 2,Mord an der ETH,Brutal mit Schreibmaschine erschlagen,2010-10-31,23:55:00,1,Murder,true,Test
 3,Älterer Mann überfahren,Ein renommierter Professor wurde von einem Auto mit französischem Kennzeichen angefahren welches anschliessend Fahrerflucht beging,2010-11-01,09:32:13,1,Assault,true,Test
 4,Einbruch ins CAB,Entwendet wurden: 9 Flaschen Bier 2 Tiefkühlpizzas und eine nicht funktionierende Kaffeemaschine,2014-3-20,00:48:19,1,Burglary,true,Test
-5,Entführung des ETH Maskottchens,Opfer wurde mit Elektroschocker ausser Gefecht gestetzt und anschliessend in schwarzen Van verfrachtet,2008-2-29,21:34:51,1, Kidnapping,false,Test
+5,Entführung des ETH Maskottchens,Opfer wurde mit Elektroschocker ausser Gefecht gestetzt und anschliessend in schwarzen Van verfrachtet,2008-2-29,21:34:51,1,Kidnapping,false,Test
 6,Bösartige Turingmaschine,Transferierte das Budget des VIS auf ausländisches Konto,2000-1-21,15:12:34,1,Fraud,false,Test

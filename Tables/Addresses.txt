@@ -1,2 +1,1 @@
 1,Switzerland,8000,Zürich,Rämistrasse,101
-2,Switzerland,8000,Zürich,null,-1

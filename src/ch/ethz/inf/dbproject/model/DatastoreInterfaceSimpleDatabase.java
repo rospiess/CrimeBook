@@ -14,31 +14,26 @@ import ch.ethz.inf.dbproject.model.simpleDatabase.*;
  */
 public final class DatastoreInterfaceSimpleDatabase {
 
+	final String[] schemaCase = new String[] { "id", "title", "descr", "date", "time", "idaddress", "cat", "open" };
+	final String[] schemaPerson = new String[] { "id", "firstname", "lastname", "birth" };
+	final String[] schemaAddress = new String[] { "idaddress", "country", "zip", "city", "street", "streetno"};
+	final String[] schemaCaseAddress = new String[] { "id", "title", "descr", "date", "time", "cat", "open", "country", "zip", "city", "street", "streetno" };
+	final String[] schemaCategory = new String[] { "cat", "supercat"};
+	
 	public DatastoreInterfaceSimpleDatabase() {
 	}
 
 	public final Case getCaseById(final int id) {
-		final Scan scan = new Scan("Cases.txt", new String[] { "id", "title", "descr", "date", "time", "loc", "cat", "open" });
-
+		final Scan scan = new Scan("Cases.txt", schemaCase);
 		final Select<Integer> select = new Select<Integer>(scan, "id", id);
 
-		if (select.moveNext()) {
-
-			final Tuple tuple = select.current();
-			final Case c = new Case(tuple.getInt(0), tuple.getString(1), tuple.getString(2), tuple.getDate(3), tuple.getTime(4),
-			// TODO: implement this
-					new Address("", "", "", 0, 0), new Category(tuple.getString(6), null), tuple.getBoolean(7));
-			return c;
-
-		}
-		return null;
+		return joinAddressToCase(select).get(0);
 
 	}
 
 	public final Person getPersonById(final int id) {
 
-		final Scan scan = new Scan("Persons.txt", new String[] { "id", "firstname", "lastname", "birth" });
-
+		final Scan scan = new Scan("Persons.txt", schemaPerson);
 		final Select<Integer> select = new Select<Integer>(scan, "id", id);
 
 		if (select.moveNext()) {
@@ -438,56 +433,25 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Case> getAllCases() {
-		final Scan scan = new Scan("Cases.txt", new String[] { "id", "title", "descr", "date", "time", "loc", "cat", "open" });
-
-		final List<Case> cases = new ArrayList<Case>();
-		while (scan.moveNext()) {
-
-			final Tuple tuple = scan.current();
-			final Case c = new Case(tuple.getInt(0), tuple.getString(1), tuple.getString(2), tuple.getDate(3), tuple.getTime(4),
-			// TODO: implement this
-					new Address("", "", "", 0, 0), new Category(tuple.getString(6), null), tuple.getBoolean(7));
-			cases.add(c);
-
-		}
-		return cases;
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		return joinAddressToCase(scan);
 
 	}
 
 	public final List<Case> getOpenCases() {
-		final Scan scan = new Scan("Cases.txt", new String[] { "id", "title", "descr", "date", "time", "loc", "cat", "open" });
-
+		final Scan scan = new Scan("Cases.txt", schemaCase);
 		final Select<Boolean> select = new Select<Boolean>(scan, "open", true);
-		final List<Case> cases = new ArrayList<Case>();
-		while (select.moveNext()) {
 
-			final Tuple tuple = select.current();
-			final Case c = new Case(tuple.getInt(0), tuple.getString(1), tuple.getString(2), tuple.getDate(3), tuple.getTime(4),
-			// TODO: implement this
-					new Address("", "", "", 0, 0), new Category(tuple.getString(6), null), tuple.getBoolean(7));
-			cases.add(c);
-
-		}
-		return cases;
+		return joinAddressToCase(select);
 
 	}
 
 	public final List<Case> getClosedCases() {
 
-		final Scan scan = new Scan("Cases.txt", new String[] { "id", "title", "descr", "date", "time", "loc", "cat", "open" });
-
+		final Scan scan = new Scan("Cases.txt", schemaCase);
 		final Select<Boolean> select = new Select<Boolean>(scan, "open", false);
-		final List<Case> cases = new ArrayList<Case>();
-		while (select.moveNext()) {
 
-			final Tuple tuple = select.current();
-			final Case c = new Case(tuple.getInt(0), tuple.getString(1), tuple.getString(2), tuple.getDate(3), tuple.getTime(4),
-			// TODO: implement this
-					new Address("", "", "", 0, 0), new Category(tuple.getString(6), null), tuple.getBoolean(7));
-			cases.add(c);
-
-		}
-		return cases;
+		return joinAddressToCase(select);
 
 	}
 
@@ -536,7 +500,21 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Case> getCasesByCategory(String category) {
-		return null;
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		
+
+		Select<String> select;
+		if(category.equals("Property Crime")||category.equals("Personal Crime"))
+		{
+			final Scan scan2 = new Scan("Category.txt", schemaCategory);
+			final Join join = new Join(scan, scan2, "cat",
+					new String[] { "id", "title", "descr", "date", "time", "loc", "cat", "open", "supercat" });
+			  select = new Select<String> (join, "supercat", category);
+		}
+		else
+			select = new Select<String> (scan, "cat", category);	
+		
+		return joinAddressToCase(select);
 		/*
 		 * try {
 		 * 
@@ -660,8 +638,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Person> getAllPersons() {
-		final Scan scan = new Scan("Persons.txt", new String[] { "id", "firstname", "lastname", "birth" });
-
+		final Scan scan = new Scan("Persons.txt", schemaPerson);
 		final List<Person> persons = new ArrayList<Person>();
 		while (scan.moveNext()) {
 
@@ -1022,6 +999,22 @@ public final class DatastoreInterfaceSimpleDatabase {
 		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
 		 * }
 		 */
+	}
+	private List<Case> joinAddressToCase(Operator cases)
+	{
+		final Scan addresses = new Scan("Addresses.txt", schemaAddress);
+		final Join join = new Join(addresses, cases, "idaddress", schemaCaseAddress);
+		
+		final List<Case> list = new ArrayList<Case>();
+		while (join.moveNext()) {
+
+			final Tuple tuple = join.current();
+			final Case c = new Case(tuple.getInt(0), tuple.getString(1), tuple.getString(2), tuple.getDate(3), tuple.getTime(4),
+					new Address(tuple.getString(7), tuple.getString(9), tuple.getString(10), tuple.getInt(8), tuple.getInt(11)), new Category(tuple.getString(5), null), tuple.getBoolean(6));
+			list.add(c);
+
+		}
+		return list;
 	}
 
 }
