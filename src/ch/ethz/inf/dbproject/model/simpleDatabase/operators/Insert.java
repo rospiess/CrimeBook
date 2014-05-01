@@ -14,8 +14,7 @@ public class Insert {
 		
 		s = s.concat(values[values.length-1]);		
 		
-		try {//Here we go again...
-			//TODO: Fix this
+		try {
 	    FileWriter fw = new FileWriter(absolutePath + fileName,true);
 	    fw.write(s);//appends the string to the file
 	    fw.close();
@@ -30,7 +29,6 @@ public class Insert {
 		BufferedReader reader = null;
 		int key=-3;
 		try {
-			//IMPORTANT: Add Tables to your build path as a source (Right click on Tables -> Build Path -> Use as source folder
 			reader = new BufferedReader(new FileReader(absolutePath + fileName));
 			
 				String input = reader.readLine();
@@ -55,8 +53,7 @@ public class Insert {
 		
 		s = s.concat(values[values.length-1]);		
 				
-		try {//Here we go again...
-			//TODO: Fix this
+		try {
 	    FileWriter fw = new FileWriter(absolutePath + fileName,true);
 	    fw.write(s);//appends the string to the file
 	    fw.close();

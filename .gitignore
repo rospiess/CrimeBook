@@ -23,3 +23,4 @@
 !.txt
 !.gitignore
 build/classes/.gitignore
+src/ch/ethz/inf/dbproject/model/simpleDatabase/operators/Operator.java

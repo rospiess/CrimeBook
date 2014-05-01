@@ -155,7 +155,7 @@ public final class PersonServlet extends HttpServlet {
 			final String uname = request.getParameter("uname");
 			
 			if  (Nr != null && uname != null && action != null && action.trim().equals("deleteNote")){
-				this.dbInterface.deleteNote(Integer.parseInt(Nr), uname, "person");
+				this.dbInterface.deleteNote(Integer.parseInt(Nr), "Persons");
 				// Refresh
 				response.sendRedirect(request.getRequestURL().toString());
 				return;

@@ -206,19 +206,19 @@ public final class CaseServlet extends HttpServlet {
 			final String idcon = request.getParameter("idcon");
 			
 			if  (Nr != null && uname != null && action != null && action.trim().equals("deleteNote")){
-				this.dbInterface.deleteNote(Integer.parseInt(Nr), uname, "case");
+				this.dbInterface.deleteNote(Integer.parseInt(Nr), "Cases");
 				// Refresh to show changes
 				response.sendRedirect(request.getRequestURL().toString());
 				return; //Return is needed to prevent the forwarding
 			}	
 			if  (action != null && action.trim().equals("deleteSuspect") && idperson != null){
-				this.dbInterface.deleteInvolved(aCase.getIdcase(),Integer.parseInt(idperson), "suspect");
+				this.dbInterface.deleteInvolved(aCase.getIdcase(),Integer.parseInt(idperson));
 				// Refresh to show changes
 				response.sendRedirect(request.getRequestURL().toString());
 				return; //Return is needed to prevent the forwarding
 			}
 			if  (action != null && action.trim().equals("deleteWitness") && idperson != null){
-				this.dbInterface.deleteInvolved(aCase.getIdcase(),Integer.parseInt(idperson), "witness");
+				this.dbInterface.deleteInvolved(aCase.getIdcase(),Integer.parseInt(idperson));
 				// Refresh to show changes
 				response.sendRedirect(request.getRequestURL().toString());
 				return; //Return is needed to prevent the forwarding

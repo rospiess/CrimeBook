@@ -67,7 +67,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 		while (select.moveNext()) {
 
 			final Tuple tuple = select.current();
-			final Comment c = new Comment(tuple.getString(2), tuple.getString(3), tuple.getInt(1));
+			final Comment c = new Comment(tuple.getString(2), tuple.getString(3), tuple.getInt(0));
 			comments.add(c);
 		}
 		return comments;
@@ -208,50 +208,22 @@ public final class DatastoreInterfaceSimpleDatabase {
 		return new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 	}
 
-	public void deleteInvolved(int idcase, int idperson, String type) {
-		// Deletes an involvement of case + person
-		// Type distinguishes between suspect and witness
-		/*
-		 * try { PreparedStatement s = ps_deleteInvolved; s.setInt(1, idcase);
-		 * s.setInt(2, idperson); if (type == "suspect"){ s.setString(3,
-		 * "Suspect"); } else { s.setString(3, "Witness"); } s.execute();
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
+	public void deleteInvolved(int idcase, int idperson) {
+		Delete.deleteFrom("Involved.txt", new int[]{idperson,idcase});
 	}
 
 	public final void deleteCase(int id) {
-		/*
-		 * try { PreparedStatement s = ps_deleteCases; s.setInt(1, id);
-		 * s.execute();
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
-
+		Delete.deleteFrom("Cases.txt", new int[]{id});
+		//TODO: Drop Convictions,involvments,notes,address
 	}
 
 	public final void deletePerson(int id) {
-		/*
-		 * try {
-		 * 
-		 * PreparedStatement s = ps_deletePersons; s.setInt(1, id); s.execute();
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
-
+		Delete.deleteFrom("Persons.txt", new int[]{id});
+		//TODO: Drop Convictions,involvments,notes
 	}
 
-	public final void deleteNote(int Nr, String uname, final String type) {
-		// Deletes a caseNote with a certain Nr as key
-		// Type distinguishes between casenote and personnote
-		/*
-		 * try { PreparedStatement s; if (type == "case"){ s =
-		 * ps_deleteCaseNote; } else { s = ps_deletePersonNote; } s.setInt(1,
-		 * Nr); s.setString(2, uname); s.execute();
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
-
+	public final void deleteNote(int Nr, final String type) {
+		Delete.deleteFrom("Note"+type+".txt", new int[]{Nr});
 	}
 
 	public final void openNewCase(String title, String descr, String date, String time, Address address, String catname, String username) {
@@ -376,7 +348,6 @@ public final class DatastoreInterfaceSimpleDatabase {
 			final Join join = new Join(scan2, scan, "cat",
 					new String[] { "idcase", "title", "descr", "date", "time", "idaddress", "cat", "open", "supercat" });
 			  select = new Select<String> (join, "supercat", category);
-//			  Project project = new Project(select, schemaCaseAddress);
 			  return joinAddressToCase(select);
 		}
 		else
@@ -458,10 +429,6 @@ public final class DatastoreInterfaceSimpleDatabase {
 	public final List<Person> searchByName(String name) {
 		final Scan scan = new Scan("Persons.txt",schemaPerson);
 		final Like like = new Like(scan, new String[]{"firstname","lastname"}, name);
-		//TODO: Prevent duplicates. 
-		//Ideas: modify like, so that it can check both at the same time (union won't be needed anymore)
-		//Or after sort do some kind of duplicate removal scan
-		
 		final Sort sort = new Sort(like, "lastname", true);
 		
 		final List<Person> persons = new ArrayList<Person>();
@@ -481,13 +448,6 @@ public final class DatastoreInterfaceSimpleDatabase {
 		}
 		
 		return persons;
-		
-		/* Original SQL:
-		 * 	 
-		 * executeQuery("Select * from personofinterest where firstname like '%"
-		 * + name + "%'" + "or lastname like '%" + name + "%'" +
-		 * " ORDER BY LastName ASC");
-		 */
 	}
 
 	public final List<Person> getAllPersons() {
