@@ -12,8 +12,7 @@ public abstract class Operator {
 	/**
 	 * The absolute path to the tables
 	 */
-	static final protected String absolutePath = "C:/Users/Lukas/Downloads/CrimeBook/Tables/";
-	
+	static final protected String absolutePath = "C:/Users/Robin/Programmieren/Projects/CrimeDataBase/CrimeBook/Tables/";	
 	/**
 	 * The current tuple.
 	 */

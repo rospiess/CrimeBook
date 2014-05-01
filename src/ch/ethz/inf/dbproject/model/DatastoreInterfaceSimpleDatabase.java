@@ -109,13 +109,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final void updateConvictionDates(int idcon, String begindate, String enddate) {
-		/*
-		 * try{ final PreparedStatement stmt = ps_updateConvictionDates;
-		 * stmt.setString(1, begindate); stmt.setString(2, enddate);
-		 * stmt.setInt(3,idcon); stmt.execute();
-		 * 
-		 * } catch (final SQLException ex){ ex.printStackTrace(); return; }
-		 */
+		Update.update("Convictions.txt", new int[]{idcon}, new String[]{null,begindate,enddate,null,null});
 	}
 
 	public final List<Involved> getInvolvedByPersonId(final int pid) {
@@ -158,6 +152,9 @@ public final class DatastoreInterfaceSimpleDatabase {
 
 
 	public final void setCaseOpen(int id, boolean open) {
+		
+		Update.update("Cases.txt", new int[]{id}, new String[]{null,null,null,null,null,null,null,open+"",null});
+		//TODO:update Convictions
 		/*
 		 * try { PreparedStatement s = ps_setCaseOpen; s.setString(1, open ? "1"
 		 * : "0"); s.setInt(2, id); s.execute();
@@ -267,16 +264,9 @@ public final class DatastoreInterfaceSimpleDatabase {
 
 	public final void updateCase(int id, String title, String descr, String date, String time, Address address, String catname) {
 
-		/*
-		 * try { updateAddress(id,address);
-		 * 
-		 * PreparedStatement s = ps_updateCase; s.setString(1, title);
-		 * s.setString(2, descr); s.setString(3, date); s.setString(4, time);
-		 * s.setString(5, catname); s.setInt(6,id); s.execute();
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
-
+		Update.update("Cases.txt", new int[]{id}, new String[]{null,title,descr,date,time,null,catname,null,null});
+		//TODO: implement
+		updateAddress(1,address);
 	}
 
 	private final int getIdAddressByCase(int idcase) {
@@ -589,16 +579,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final void updatePerson(int idperson, String firstname, String lastname, String date) {
-
-		/*
-		 * try { PreparedStatement stmt = ps_updatePerson; stmt.setString(1,
-		 * firstname); stmt.setString(2, lastname); stmt.setString(3, date);
-		 * stmt.setInt(4, idperson);
-		 * 
-		 * stmt.execute();
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
+		Update.update("Persons.txt", new int[]{idperson}, new String[]{null,firstname,lastname,date});
 	}
 
 	public final String getPassword(String username) {
