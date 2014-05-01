@@ -37,27 +37,27 @@ public class Join extends Operator {
 			}		
 		while(op2.moveNext())//Go through the Large Relation and take matching tuple
 		{
-		Tuple t2 = op2.current();
-		if(schema2 == null)
-		schema2 = t2.getSchema();
-		String key = t2.getString(schema2.getIndex(column));
-		if(map.containsKey(key))//Build new Tuple from the 2 old ones
-		{
-			Tuple t1 = map.get(key);
-			String[] values = new String[columns.length];
-			for(int i= 0; i< columns.length; i++)
+			Tuple t2 = op2.current();
+			if(schema2 == null)
+			schema2 = t2.getSchema();
+			String key = t2.getString(schema2.getIndex(column));
+			if(map.containsKey(key))//Build new Tuple from the 2 old ones
 			{
-				//Data is in tuple1
-				if(schema1.getIndex(columns[i])>= 0)
-					values[i] = t1.getString(schema1.getIndex(columns[i]));
-				
-				//Data is in tuple 2
-				else
-					values[i] = t2.getString(schema2.getIndex(columns[i]));					
+				Tuple t1 = map.get(key);
+				String[] values = new String[columns.length];
+				for(int i= 0; i< columns.length; i++)
+				{
+					//Data is in tuple1
+					if(schema1.getIndex(columns[i])>= 0)
+						values[i] = t1.getString(schema1.getIndex(columns[i]));
+					
+					//Data is in tuple 2
+					else
+						values[i] = t2.getString(schema2.getIndex(columns[i]));					
+				}
+				current = new Tuple(new TupleSchema(columns), values);
+				return true;
 			}
-			current = new Tuple(new TupleSchema(columns), values);
-			return true;
-		}
 		}
 		return false;		
 	}

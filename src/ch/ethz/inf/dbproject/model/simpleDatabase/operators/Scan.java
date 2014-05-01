@@ -18,7 +18,7 @@ import ch.ethz.inf.dbproject.model.simpleDatabase.TupleSchema;
  */
 public class Scan extends Operator {
 	
-	final String absolutePath = "C:/Users/Lukas/Downloads/CrimeBook/Tables/";
+	
 	
 
 	private final TupleSchema schema;

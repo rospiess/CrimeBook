@@ -10,6 +10,11 @@ import ch.ethz.inf.dbproject.model.simpleDatabase.Tuple;
 public abstract class Operator {
 
 	/**
+	 * The absolute path to the tables
+	 */
+	static final protected String absolutePath = "C:/Users/Robin/Programmieren/Projects/CrimeDataBase/CrimeBook/Tables/";
+	
+	/**
 	 * The current tuple.
 	 */
 	protected Tuple current;

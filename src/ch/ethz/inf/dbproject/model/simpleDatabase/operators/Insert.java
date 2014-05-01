@@ -3,7 +3,7 @@ import java.io.*;
 
 public class Insert {
 	
-	static final String absolutePath = "C:/Users/Lukas/Downloads/CrimeBook/Tables/";
+	static final String absolutePath = Operator.absolutePath; // visible because it is in the same package
 
 	public static void insertInto(String fileName, String[] values)
 	{

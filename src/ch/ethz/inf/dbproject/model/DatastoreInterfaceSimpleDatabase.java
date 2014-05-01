@@ -256,7 +256,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 
 	public final void openNewCase(String title, String descr, String date, String time, Address address, String catname, String username) {
 //		TODO: check if Address already exists
-		int idAddress = Insert.insertIntoGenerateKey("Addresses.txt", new String[]{address.getCountry(), address.getZipCodeString(), address.getCity(), address.getStreet(),address.getStreetNoString()});
+		int idAddress = Insert.insertIntoGenerateKey("Addresses.txt", new String[]{address.getCountry(), Integer.toString(address.getZipCode()), address.getCity(), address.getStreet(),Integer.toString(address.getStreetNo())});
 		Insert.insertIntoGenerateKey("Cases.txt", new String[]{title,descr,date,time,""+idAddress,catname,"true",username});
 	}
 
