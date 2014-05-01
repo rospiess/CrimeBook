@@ -13,9 +13,7 @@ To-Do List
 
 Operators:
 - group by
-- insert
-- update
-- delete
+- count maybe?
  
 Interface
 - reimplement all functionalities
@@ -30,5 +28,8 @@ Operators:
 - project
 - sort
 - join (could still be improved though)
+- insert
+- update
+- delete
 
 
