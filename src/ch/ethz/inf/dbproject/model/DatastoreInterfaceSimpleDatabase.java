@@ -335,8 +335,9 @@ public final class DatastoreInterfaceSimpleDatabase {
 	public final List<Case> getOpenCases() {
 		final Scan scan = new Scan("Cases.txt", schemaCase);
 		final Select<Boolean> select = new Select<Boolean>(scan, "open", true);
-
-		return joinAddressToCase(select);
+		final Sort sort = new Sort(select, "title", true);
+		
+		return joinAddressToCase(sort);
 
 	}
 
@@ -344,8 +345,9 @@ public final class DatastoreInterfaceSimpleDatabase {
 
 		final Scan scan = new Scan("Cases.txt", schemaCase);
 		final Select<Boolean> select = new Select<Boolean>(scan, "open", false);
-
-		return joinAddressToCase(select);
+		final Sort sort = new Sort(select, "title", true);
+		
+		return joinAddressToCase(sort);
 
 	}
 
@@ -446,47 +448,40 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Case> searchByTitle(String title) {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "Select * from Cases c, Address a where c.idAddress = a.idAddress and c.title like '%"
-		 * + title + "%'" + " ORDER BY Title ASC");
-		 * 
-		 * final List<Case> persons = new ArrayList<Case>(); while (rs.next()) {
-		 * persons.add(new Case(rs)); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return persons;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final Like<String> like = new Like<String>(scan, "title", title);
+		final Sort sort = new Sort(like, "title", true);
+
+		return joinAddressToCase(sort);
 	}
 
 	public final List<Person> searchByName(String name) {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt
-		 * .executeQuery("Select * from personofinterest where firstname like '%"
+		final Scan scan1 = new Scan("Persons.txt",schemaPerson);
+		final Scan scan2 = new Scan("Persons.txt",schemaPerson);
+		final Like<String> like1 = new Like<String>(scan1, "lastname", name);
+		final Like<String> like2 = new Like<String>(scan2, "firstname", name);
+		final Union union = new Union(like1,like2);
+		//TODO: Prevent duplicates. 
+		//Ideas: modify like, so that it can check both at the same time (union won't be needed anymore)
+		//Or after sort do some kind of duplicate removal scan
+		
+		final Sort sort = new Sort(union, "lastname", true);
+		final List<Person> persons = new ArrayList<Person>();
+		while (sort.moveNext()) {
+
+			final Tuple tuple = sort.current();
+			final Person p = new Person(tuple.getInt(0), tuple.getString(1), tuple.getString(2), tuple.getDate(3));
+			persons.add(p);
+
+		}
+		
+		return persons;
+		
+		/* Original SQL:
+		 * 	 
+		 * executeQuery("Select * from personofinterest where firstname like '%"
 		 * + name + "%'" + "or lastname like '%" + name + "%'" +
 		 * " ORDER BY LastName ASC");
-		 * 
-		 * final List<Person> persons = new ArrayList<Person>(); while
-		 * (rs.next()) { persons.add(new Person(rs)); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return persons;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
 		 */
 	}
 
