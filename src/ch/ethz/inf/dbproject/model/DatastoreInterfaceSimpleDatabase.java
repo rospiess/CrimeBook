@@ -449,29 +449,34 @@ public final class DatastoreInterfaceSimpleDatabase {
 
 	public final List<Case> searchByTitle(String title) {
 		final Scan scan = new Scan("Cases.txt", schemaCase);
-		final Like<String> like = new Like<String>(scan, "title", title);
+		final Like like = new Like(scan, "title", title);
 		final Sort sort = new Sort(like, "title", true);
 
 		return joinAddressToCase(sort);
 	}
 
 	public final List<Person> searchByName(String name) {
-		final Scan scan1 = new Scan("Persons.txt",schemaPerson);
-		final Scan scan2 = new Scan("Persons.txt",schemaPerson);
-		final Like<String> like1 = new Like<String>(scan1, "lastname", name);
-		final Like<String> like2 = new Like<String>(scan2, "firstname", name);
-		final Union union = new Union(like1,like2);
+		final Scan scan = new Scan("Persons.txt",schemaPerson);
+		final Like like = new Like(scan, new String[]{"firstname","lastname"}, name);
 		//TODO: Prevent duplicates. 
 		//Ideas: modify like, so that it can check both at the same time (union won't be needed anymore)
 		//Or after sort do some kind of duplicate removal scan
 		
-		final Sort sort = new Sort(union, "lastname", true);
+		final Sort sort = new Sort(like, "lastname", true);
+		
 		final List<Person> persons = new ArrayList<Person>();
+		final HashSet<Integer> h = new HashSet<Integer>();//saves IDs of all persons who've been added so far
+		
 		while (sort.moveNext()) {
-
+			
 			final Tuple tuple = sort.current();
-			final Person p = new Person(tuple.getInt(0), tuple.getString(1), tuple.getString(2), tuple.getDate(3));
+			int id = tuple.getInt(0);
+			if(!h.contains(id))//Only add if not already in it
+			{
+			final Person p = new Person(id, tuple.getString(1), tuple.getString(2), tuple.getDate(3));
 			persons.add(p);
+			h.add(id);
+			}
 
 		}
 		
@@ -517,10 +522,10 @@ public final class DatastoreInterfaceSimpleDatabase {
 		while(join.moveNext())
 		{
 			Tuple tuple = join.current();
-			int id = tuple.getInt(0);
-			Person p = new Person(id,tuple.getString(1),tuple.getString(2), null);
+			int id = tuple.getInt(0);			
 			if(!h.contains(id))
 			{
+				Person p = new Person(id,tuple.getString(1),tuple.getString(2), null);
 				persons.add(p);
 				h.add(id);
 			}
@@ -548,10 +553,10 @@ public final class DatastoreInterfaceSimpleDatabase {
 		while(join.moveNext())
 		{
 			Tuple tuple = join.current();
-			int id = tuple.getInt(0);
-			Case c = new Case(tuple.getInt(0),tuple.getString(1),null, null,null,null,null,false);
+			int id = tuple.getInt(0);			
 			if(!h.contains(id))
 			{
+				Case c = new Case(tuple.getInt(0),tuple.getString(1),null, null,null,null,null,false);
 				cases.add(c);
 				h.add(id);
 			}

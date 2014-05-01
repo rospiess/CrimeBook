@@ -9,11 +9,11 @@ import ch.ethz.inf.dbproject.model.simpleDatabase.Tuple;
  * Like is a special case of Select, where not equality but if compareValue is contained is checked.
  * 
  */
-public class Like<T> extends Operator {
+public class Like extends Operator {
 
 	private final Operator op;
-	private final String column;
-	private final T compareValue;
+	private final String[] columns;
+	private final String compareValue;
 
 	/**
 	 * Contructs a new selection operator.
@@ -24,23 +24,33 @@ public class Like<T> extends Operator {
 	public Like(
 		final Operator op, 
 		final String column, 
-		final T compareValue
+		final String compareValue
 	) {
 		this.op = op;
-		this.column = column;
+		this.columns = new String[]{column};
 		this.compareValue = compareValue;
 	}
+	
+	public Like(
+			final Operator op, 
+			final String[] columns, 
+			final String compareValue
+		) {
+			this.op = op;
+			this.columns = columns;
+			this.compareValue = compareValue;
+		}
 
 
 	private final boolean accept(final Tuple tuple)
 	{
-
-		final int columnIndex = tuple.getSchema().getIndex(this.column);
-
-		if ( tuple.getString(columnIndex).contains(this.compareValue.toString()))
-			return true;
-		else 
-			return false;
+		for(int i = 0; i < columns.length;i++)
+		{
+			int columnIndex = tuple.getSchema().getIndex(columns[i]);
+			if ( tuple.getString(columnIndex).contains(this.compareValue))
+				return true;
+		}
+		return false;
 		
 	}
 	
