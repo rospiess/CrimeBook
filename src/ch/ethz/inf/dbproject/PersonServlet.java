@@ -55,7 +55,7 @@ public final class PersonServlet extends HttpServlet {
 			session.setAttribute("Last Case", idString);
 			final Integer id = Integer.parseInt(idString);
 			final Person aPerson = this.dbInterface.getPersonById(id);
-			final List<Comment> comlist = this.dbInterface.getCommentsById(id,"person");
+			final List<Comment> comlist = this.dbInterface.getCommentsById(id,"Persons");
 			final List<Conviction> conlist = this.dbInterface.getConvictionsById(id,"idperson");
 			final List<Involved> invlist = this.dbInterface.getInvolvedByPersonId(id);
 			final User loggedUser = UserManagement

@@ -58,7 +58,7 @@ public final class CaseServlet extends HttpServlet {
 			final Integer id = Integer.parseInt(idString);
 			final Case aCase = this.dbInterface.getCaseById(id);
 			final List<Comment> clist = this.dbInterface.getCommentsById(id,
-					"case");
+					"Cases");
 			final List<Person> plist = this.dbInterface.getSuspectsById(id);
 			final List<Person> wlist = this.dbInterface.getWitnessesById(id);
 			final List<Person> vlist = this.dbInterface.getVictimsById(id);

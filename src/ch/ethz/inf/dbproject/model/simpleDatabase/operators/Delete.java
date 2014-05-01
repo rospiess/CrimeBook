@@ -18,7 +18,7 @@ public class Delete {
 						boolean mismatch = false;
 						String[] values = input.split(",");
 						for(int i = 0; i< keys.length; i++)
-							if(keys[i]!=Integer.parseInt(values[i]))
+							if(keys[i]!=Integer.parseInt(values[i]))//if not all keys match, its not the right line
 								mismatch = true;
 						if(mismatch)
 							s.append(input+"\n");
@@ -27,8 +27,6 @@ public class Delete {
 				reader.close();
 			}
 		catch(final IOException e) {}
-		
-		
 		
 		try {
 	    PrintWriter fw = new PrintWriter(absolutePath + fileName);

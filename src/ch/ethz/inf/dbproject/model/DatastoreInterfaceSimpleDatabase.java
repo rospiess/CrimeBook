@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -54,13 +53,8 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Comment> getCommentsById(final int id, String type) {
-		String s;
-		if (type.equals("case"))
-			s = "NoteCases";
-		else
-			s = "NotePersons";
-
-		final Scan scan = new Scan(s + ".txt", new String[] { "noteid", "id", "comment", "username" });
+		
+		final Scan scan = new Scan("Note"+type + ".txt", new String[] { "noteid", "id", "comment", "username" });
 
 		final Select<Integer> select = new Select<Integer>(scan, "id", id);
 		final List<Comment> comments = new ArrayList<Comment>();
@@ -151,72 +145,85 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 
+	@SuppressWarnings( "deprecation" )
 	public final void setCaseOpen(int id, boolean open) {
 		
 		Update.update("Cases.txt", new int[]{id}, new String[]{null,null,null,null,null,null,null,open+"",null});
-		//TODO:update Convictions
-		/*
-		 * try { PreparedStatement s = ps_setCaseOpen; s.setString(1, open ? "1"
-		 * : "0"); s.setInt(2, id); s.execute();
-		 * 
-		 * if (open){ // delete convictions associated with this case s =
-		 * ps_deleteConvictions; s.setInt(1, id); s.execute(); } else{ // Create
-		 * convictions based on suspects
-		 * 
-		 * // Get suspects with query final Statement stmt =
-		 * this.sqlConnection.createStatement(); final ResultSet rs = stmt
-		 * .executeQuery(
-		 * "Select idpersonofinterest, catname from personofinterest p, involved i, cases c "
-		 * + "where i.role = 'Suspect' and i.idCase = " + id +
-		 * " and i.idperson = p.idpersonofinterest and c.idCase = " + id);
-		 * 
-		 * while (rs.next()) { // Create conviction with the suspects in the
-		 * resultset ps_createConviction.setInt(1, id);
-		 * ps_createConviction.setInt(2, rs.getInt("idpersonofinterest"));
-		 * 
-		 * Date d =getCurrentDate(); ps_createConviction.setDate(3, d);
-		 * 
-		 * Category c = new Category(rs.getString("catname"),null);
-		 * switch(c.getName()){ case "Assault": d.setYear(d.getYear()+5); break;
-		 * case "Murder": d.setYear(d.getYear()+20); break; case "Kidnapping":
-		 * d.setYear(d.getYear()+8); break; case "OtherPers":
-		 * d.setYear(d.getYear()+4); break; case "Theft":
-		 * d.setYear(d.getYear()+1); break; case "Fraud":
-		 * d.setYear(d.getYear()+2); break; case "Burglary":
-		 * d.setYear(d.getYear()+2); break; case "OtherProp":
-		 * d.setYear(d.getYear()+3); break; default: d.setYear(d.getYear()+1);
-		 * break; }
-		 * 
-		 * ps_createConviction.setDate(4, d);
-		 * 
-		 * ps_createConviction.execute(); }
-		 * 
-		 * rs.close();
-		 * 
-		 * }
-		 * 
-		 * 
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
+		
+		if(open)// delete convictions associated with this case
+		{
+			for(Conviction c:  getConvictionsById(id, "idcase"))
+				Delete.deleteFrom("Convictions.txt", new int[]{c.getIdcon()});
+		}
+		else// Create convictions based on suspects
+		{
+			Case c = getCaseById(id);
+			Date d = getCurrentDate();
+			switch(c.getCat()){
+			case "Assault":
+				d.setYear(d.getYear()+5); break;
+			case "Murder":
+				d.setYear(d.getYear()+20); break;
+			case "Kidnapping":
+				d.setYear(d.getYear()+8); break;
+			case "OtherPers":
+				d.setYear(d.getYear()+4); break;
+			case "Theft":
+				d.setYear(d.getYear()+1); break;
+			case "Fraud":
+				d.setYear(d.getYear()+2); break;
+			case "Burglary":
+				d.setYear(d.getYear()+2); break;
+			case "OtherProp":
+				d.setYear(d.getYear()+3); break;
+			default:
+				d.setYear(d.getYear()+1); break;
+			}
+			
+			SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
+			
+			for(Person p: getSuspectsById(id))
+				Insert.insertIntoGenerateKey("Convictions.txt", new String[]{s.format(getCurrentDate()),s.format(d),""+id,""+p.getIdperson()});
+		}
 	}
 
-	private final String getCurrentDate() {
-		return new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+	private final Date getCurrentDate() {
+		return Calendar.getInstance().getTime();
 	}
 
 	public void deleteInvolved(int idcase, int idperson) {
 		Delete.deleteFrom("Involved.txt", new int[]{idperson,idcase});
 	}
 
-	public final void deleteCase(int id) {
-		Delete.deleteFrom("Cases.txt", new int[]{id});
-		//TODO: Drop Convictions,involvments,notes,address
+	public final void deleteCase(int id) {		
+		for(Comment c:  getCommentsById(id, "Cases"))//Drop all Notes
+			Delete.deleteFrom("NotePersons.txt", new int[]{c.getIdnote()});
+		
+		for(Person p:  getSuspectsById(id))//Drop all Suspects
+			Delete.deleteFrom("Involved.txt", new int[]{p.getIdperson(),id});
+		
+		for(Person p:  getWitnessesById(id))//Drop all Witnesses
+			Delete.deleteFrom("Involved.txt", new int[]{p.getIdperson(),id});
+		
+		for(Person p:  getVictimsById(id))//Drop all Victims
+			Delete.deleteFrom("Involved.txt", new int[]{p.getIdperson(),id});
+		
+		
+		Delete.deleteFrom("Cases.txt", new int[]{id});		
 	}
 
-	public final void deletePerson(int id) {
+	public final void deletePerson(int id) {		
+		for(Conviction c: getConvictionsById(id, "idperson"))//Drop all Convictions
+			Delete.deleteFrom("Convictions.txt", new int[]{c.getIdcon()});
+		
+		for(Comment c:  getCommentsById(id, "Persons"))//Drop all Notes
+			Delete.deleteFrom("NotePersons.txt", new int[]{c.getIdnote()});
+		
+		for(Involved i:  getInvolvedByPersonId(id))//Drop all Involvments
+			Delete.deleteFrom("Involved.txt", new int[]{id,i.getIdcase()});		
+
+		
 		Delete.deleteFrom("Persons.txt", new int[]{id});
-		//TODO: Drop Convictions,involvments,notes
 	}
 
 	public final void deleteNote(int Nr, final String type) {
@@ -224,13 +231,32 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final void openNewCase(String title, String descr, String date, String time, Address address, String catname, String username) {
-//		TODO: check if Address already exists
-		int idAddress = Insert.insertIntoGenerateKey("Addresses.txt", new String[]{address.getCountry(), Integer.toString(address.getZipCode()), address.getCity(), address.getStreet(),Integer.toString(address.getStreetNo())});
+
+		String country = address.getCountry(), city = address.getCity(), street = address.getStreet(),
+				zip = Integer.toString(address.getZipCode()), streetno = Integer.toString(address.getStreetNo());
+		
+		final Scan scan = new Scan("Addresses.txt",schemaAddress);
+		
+		final Select<String> select1 = new Select<String>(scan,"country",country);
+		final Select<String> select2 = new Select<String>(select1,"city",city);
+		final Select<String> select3 = new Select<String>(select2,"street",street);
+		final Select<String> select4 = new Select<String>(select3,"zip",zip);
+		final Select<String> select5 = new Select<String>(select4,"streetno",streetno);
+		
+		int idAddress;
+		if(select5.moveNext())//Address already exists
+			idAddress = select5.current().getInt(0);
+		
+		else//Insert new Address
+			idAddress = Insert.insertIntoGenerateKey("Addresses.txt", new String[]{country, zip, city, street, streetno});
+		
 		Insert.insertIntoGenerateKey("Cases.txt", new String[]{title,descr,date,time,""+idAddress,catname,"true",username});
 	}
 
 	public final void updateAddress(int id, Address address) {
-
+		int idAddress = getIdAddressByCase(id);
+		Update.update("Addresses.txt", new int[]{idAddress}, new String[]{null,address.getCountry(), Integer.toString(address.getZipCode()), address.getCity(), address.getStreet(),Integer.toString(address.getStreetNo())});
+		//TODO check if Address was shared
 		/*
 		 * try { final Statement stmt = sqlConnection.createStatement();
 		 * ResultSet rs = stmt.executeQuery("Select * FROM Address a");
@@ -263,10 +289,8 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final void updateCase(int id, String title, String descr, String date, String time, Address address, String catname) {
-
 		Update.update("Cases.txt", new int[]{id}, new String[]{null,title,descr,date,time,null,catname,null,null});
-		//TODO: implement
-		updateAddress(1,address);
+		updateAddress(id,address);
 	}
 
 	private final int getIdAddressByCase(int idcase) {
@@ -610,15 +634,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public void changePassword(String username, String newpassword) {
-		/*
-		 * try {
-		 * 
-		 * final PreparedStatement stmt = ps_changePassword; stmt.setString(1,
-		 * newpassword); stmt.setString(2, username); stmt.execute(); } catch
-		 * (final SQLException ex) { ex.printStackTrace();
-		 * 
-		 * }
-		 */
+		Update.update("Users.txt", username, new String[]{null,newpassword});
 	}
 
 	public final List<Pair<String, Integer>> getStatCategories() {
