@@ -1,6 +1,5 @@
 package ch.ethz.inf.dbproject.model.simpleDatabase.operators;
 import java.io.*;
-import java.util.HashSet;
 
 public class Update {
 	

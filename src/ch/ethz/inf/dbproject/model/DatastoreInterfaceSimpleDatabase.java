@@ -480,15 +480,12 @@ public final class DatastoreInterfaceSimpleDatabase {
 
 	public final List<Person> getUninvolvedInCase(int idcase) {
 		final Scan scan = new Scan("Involved.txt", schemaInvolved);
-		final Scan scan1 = new Scan("Involved.txt", schemaInvolved);
 		final Scan scan2 = new Scan("Persons.txt", schemaPerson);
 		
 	
-		final Select<Integer> select = new Select<Integer>(scan,"idcase",idcase);
-		
-		final Minus minus = new Minus(scan1,select,"idperson"); 
-		
-		final Join join = new Join(scan2, minus, "idperson", new String[]{"idperson","firstname","lastname"});
+		final Select<Integer> select = new Select<Integer>(scan,"idcase",idcase, true);
+				
+		final Join join = new Join(scan2, select, "idperson", new String[]{"idperson","firstname","lastname"});
 		
 		final List<Person> persons = new ArrayList<Person>();
 		final HashSet<Integer> h = new HashSet<Integer>();
@@ -511,15 +508,12 @@ public final class DatastoreInterfaceSimpleDatabase {
 
 	public final List<Case> getCasesUninvolvedIn(int pid) {
 		final Scan scan = new Scan("Involved.txt", schemaInvolved);
-		final Scan scan1 = new Scan("Involved.txt", schemaInvolved);
 		final Scan scan2 = new Scan("Cases.txt", schemaCase);
 		
 	
-		final Select<Integer> select = new Select<Integer>(scan,"idperson", pid);
+		final Select<Integer> select = new Select<Integer>(scan,"idperson", pid, true);
 		
-		final Minus minus = new Minus(scan1,select,"idcase");
-		
-		final Join join = new Join(scan2, minus, "idcase", new String[]{"idcase","title"});
+		final Join join = new Join(scan2, select, "idcase", new String[]{"idcase","title"});
 		
 		final List<Case> cases = new ArrayList<Case>();
 		final HashSet<Integer> h = new HashSet<Integer>();

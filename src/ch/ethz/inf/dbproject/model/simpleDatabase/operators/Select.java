@@ -1,7 +1,5 @@
 package ch.ethz.inf.dbproject.model.simpleDatabase.operators;
 
-import java.util.Comparator;
-
 import ch.ethz.inf.dbproject.model.simpleDatabase.Tuple;
 
 

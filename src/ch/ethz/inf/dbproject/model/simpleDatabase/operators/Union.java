@@ -1,8 +1,5 @@
 package ch.ethz.inf.dbproject.model.simpleDatabase.operators;
 
-import ch.ethz.inf.dbproject.model.simpleDatabase.Tuple;
-import ch.ethz.inf.dbproject.model.simpleDatabase.TupleSchema;
-
 public final class Union extends Operator {
 
 	private final Operator op1, op2;

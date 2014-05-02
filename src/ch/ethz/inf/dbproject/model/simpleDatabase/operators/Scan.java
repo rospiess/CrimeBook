@@ -1,11 +1,8 @@
 package ch.ethz.inf.dbproject.model.simpleDatabase.operators;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 
 import ch.ethz.inf.dbproject.model.simpleDatabase.Tuple;
@@ -73,8 +70,8 @@ public class Scan extends Operator {
 				current = new Tuple(schema, values);
 				return true;
 			}			
-//			else
-//				reader.close();
+			else
+				reader.close();
 			return false;
 			
 		} catch (final IOException e) {

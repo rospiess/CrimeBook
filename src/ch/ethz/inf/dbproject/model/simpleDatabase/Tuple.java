@@ -66,6 +66,7 @@ public class Tuple {
 
 	}
 	
+	@SuppressWarnings("deprecation")
 	public final Time getTime(final int index) {
 		if(this.values[index]==null||this.values[index].equals("null"))
 			return null;
