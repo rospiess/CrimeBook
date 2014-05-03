@@ -253,44 +253,63 @@ public final class DatastoreInterfaceSimpleDatabase {
 		Insert.insertIntoGenerateKey("Cases.txt", new String[]{title,descr,date,time,""+idAddress,catname,"true",username});
 	}
 
-	public final void updateAddress(int id, Address address) {
+	public final int updateAddress(int id, Address address) {
+		//returns the id of the address, used if old address was shared
 		int idAddress = getIdAddressByCase(id);
-		Update.update("Addresses.txt", new int[]{idAddress}, new String[]{null,address.getCountry(), Integer.toString(address.getZipCode()), address.getCity(), address.getStreet(),Integer.toString(address.getStreetNo())});
-		//TODO check if Address was shared
-		/*
-		 * try { final Statement stmt = sqlConnection.createStatement();
-		 * ResultSet rs = stmt.executeQuery("Select * FROM Address a");
-		 * while(rs.next()){ Address a = new Address(rs); if(a.equals(address))
-		 * { String s ="Update Cases set idAddress = " + rs.getInt("idAddress")
-		 * + " where idCase = " + id; stmt.execute(s); return; } }
-		 * 
-		 * rs = stmt.executeQuery("Select  idCase, idAddress FROM Cases"); int
-		 * idAddress = getIdAddressByCase(id); while(rs.next()){
-		 * 
-		 * if(rs.getInt("idAddress") == idAddress && rs.getInt("idCase") != id)
-		 * { PreparedStatement s = ps_insertAddress; s.setString(1,
-		 * address.getCountry()); s.setString(2, address.getCity());
-		 * s.setString(3, address.getStreet()); s.setInt(4,
-		 * address.getZipCode()); s.setInt(5, address.getStreetNo());
-		 * s.execute(); ResultSet rs2 = s.getGeneratedKeys(); rs2.next();
-		 * stmt.execute("Update Cases set idAddress = " + rs2.getInt(1) +
-		 * " where idCase = " + id); return; } }
-		 * 
-		 * PreparedStatement s = ps_updateAddress; s.setString(1,
-		 * address.getCountry()); s.setString(2, address.getCity());
-		 * s.setString(3, address.getStreet()); s.setInt(4,
-		 * address.getZipCode()); s.setInt(5, address.getStreetNo());
-		 * s.setInt(6, getIdAddressByCase(id)); s.execute();
-		 * 
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
+		boolean shared = false;
+		
+		//check if Address was shared
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final Select<Integer> select = new Select<Integer>(scan, "idaddress", idAddress);
+		if(select.moveNext() && select.moveNext()){
+			// There is more than one case using the old address
+			shared = true;
+		}
+		
+		// Check if new address already exists
+		final Scan scan2 = new Scan("Addresses.txt",schemaAddress);
+		
+		//Get data from address
+		String country = address.getCountry(), city = address.getCity(), street = address.getStreet(),
+				zip = Integer.toString(address.getZipCode()), streetno = Integer.toString(address.getStreetNo());
+
+		final Select<String> select1 = new Select<String>(scan2,"country",country);
+		final Select<String> select2 = new Select<String>(select1,"city",city);
+		final Select<String> select3 = new Select<String>(select2,"street",street);
+		final Select<String> select4 = new Select<String>(select3,"zip",zip);
+		final Select<String> select5 = new Select<String>(select4,"streetno",streetno);
+		
+		if(select5.moveNext()){
+			// If not shared delete Address with old ID
+			if (!shared){
+				Delete.deleteFrom("Addresses.txt", new int []{idAddress});
+			}
+			
+			// Since the address already exists, save the new id
+			idAddress = select5.current().getInt(0);
+		}
+		else{
+			// New Address doesn't exist, insert or update
+			if (shared){
+				// Insert new Address
+				idAddress = Insert.insertIntoGenerateKey("Addresses.txt", new String[]{country, zip, city, street, streetno});
+			}
+			else
+			{
+				// Address is not shared, just update the old one
+				Update.update("Addresses.txt", new int[]{idAddress}, new String[]{null,address.getCountry(), Integer.toString(address.getZipCode()), address.getCity(), address.getStreet(),Integer.toString(address.getStreetNo())});
+			}
+		}
+		
+		// return the ID of the new Address
+		return idAddress;
 
 	}
 
 	public final void updateCase(int id, String title, String descr, String date, String time, Address address, String catname) {
-		Update.update("Cases.txt", new int[]{id}, new String[]{null,title,descr,date,time,null,catname,null,null});
-		updateAddress(id,address);
+		
+		int idAddress = updateAddress(id,address);
+		Update.update("Cases.txt", new int[]{id}, new String[]{null,title,descr,date,time,Integer.toString(idAddress),catname,null,null});
 	}
 
 	private final int getIdAddressByCase(int idcase) {

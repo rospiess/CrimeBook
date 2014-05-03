@@ -36,7 +36,7 @@ public final class Minus extends Operator {
 		{
 			Tuple t = op1.current();
 			if(schema2 == null)
-			schema2 = t.getSchema();
+				schema2 = t.getSchema();
 			if(!map.contains(t.getString(schema2.getIndex(column))))
 			{
 				current = t;
