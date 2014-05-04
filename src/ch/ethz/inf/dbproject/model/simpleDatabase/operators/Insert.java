@@ -9,6 +9,9 @@ public class Insert {
 	{
 		String s = "\n";
 		
+		
+		prepare_values(values);
+		
 		for(int i = 0; i< values.length-1;i++)
 			s = s.concat(values[i]+",");
 		
@@ -48,6 +51,8 @@ public class Insert {
 		
 		String s = "\n"+key+",";
 		
+		prepare_values(values);
+	
 		for(int i = 0; i< values.length-1;i++)
 			s = s.concat(values[i]+",");
 		
@@ -62,5 +67,13 @@ public class Insert {
 		catch (IOException e) {
 		}
 		return key;
+	}
+	
+	
+	protected static void prepare_values(String[] values){
+		for(int i = 0; i < values.length; i++){
+			if (values[i] != null)
+				values[i] = values[i].replace(",","$COMMA$");
+		}
 	}
 }

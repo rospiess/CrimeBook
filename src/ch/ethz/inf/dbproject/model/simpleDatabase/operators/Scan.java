@@ -67,6 +67,7 @@ public class Scan extends Operator {
 			if(input != null)
 			{
 				String[] values = input.split(",");
+				process_values(values);
 				current = new Tuple(schema, values);
 				return true;
 			}			
@@ -81,6 +82,14 @@ public class Scan extends Operator {
 			
 		}
 		
+	}
+	
+	private void process_values(String[] values){
+		//Converts comma tokens back to commas
+		for(int i = 0; i < values.length; i++){
+			if (values[i] != null)
+				values[i] = values[i].replace("$COMMA$",",");
+		}
 	}
 
 }

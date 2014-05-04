@@ -9,6 +9,10 @@ public class Update {
 	{
 		BufferedReader reader = null;
 		StringBuilder s= new StringBuilder();
+		
+		//Replace commas
+		Insert.prepare_values(newvalues);
+		
 		try {
 			reader = new BufferedReader(new FileReader(absolutePath + fileName));
 			
@@ -94,4 +98,5 @@ public class Update {
 		catch (IOException e) {
 		}
 	}
+	
 }
