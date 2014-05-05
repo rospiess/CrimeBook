@@ -17,6 +17,9 @@ Operators:
  
 Interface
 - reimplement all functionalities
+- handle Umlaute in search
+
+- Date: 2000-2-3 vs 2000-02-03, should only one be accepted/different input converted?
 
 
 DONE
