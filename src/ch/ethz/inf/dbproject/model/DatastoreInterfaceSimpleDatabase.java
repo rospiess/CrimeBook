@@ -500,53 +500,52 @@ public final class DatastoreInterfaceSimpleDatabase {
 	public final List<Person> getUninvolvedInCase(int idcase) {
 		final Scan scan = new Scan("Involved.txt", schemaInvolved);
 		final Scan scan2 = new Scan("Persons.txt", schemaPerson);
+		final Scan scan3 = new Scan("Persons.txt", schemaPerson);
 		
 	
-		final Select<Integer> select = new Select<Integer>(scan,"idcase",idcase, true);
+		final Select<Integer> select = new Select<Integer>(scan,"idcase",idcase, false);
 				
 		final Join join = new Join(scan2, select, "idperson", new String[]{"idperson","firstname","lastname"});
 		
-		final List<Person> persons = new ArrayList<Person>();
-		final HashSet<Integer> h = new HashSet<Integer>();
+		final Minus minus = new Minus(scan3, join, "idperson");
 		
-		while(join.moveNext())
+		final List<Person> persons = new ArrayList<Person>();
+		
+		while(minus.moveNext())
 		{
-			Tuple tuple = join.current();
-			int id = tuple.getInt(0);			
-			if(!h.contains(id))
-			{
-				Person p = new Person(id,tuple.getString(1),tuple.getString(2), null);
-				persons.add(p);
-				h.add(id);
-			}
+			Tuple tuple = minus.current();
+
+			Person p = new Person(tuple.getInt(0),tuple.getString(1),tuple.getString(2), null);
+			persons.add(p);
 			
 		}
 		
 		return persons;
 	}
+	
 
 	public final List<Case> getCasesUninvolvedIn(int pid) {
 		final Scan scan = new Scan("Involved.txt", schemaInvolved);
 		final Scan scan2 = new Scan("Cases.txt", schemaCase);
+		final Scan scan3 = new Scan("Cases.txt", schemaCase);
 		
-	
-		final Select<Integer> select = new Select<Integer>(scan,"idperson", pid, true);
-		
+		//Get cases in which the person is involved
+		final Select<Integer> select = new Select<Integer>(scan,"idperson", pid, false);
 		final Join join = new Join(scan2, select, "idcase", new String[]{"idcase","title"});
 		
-		final List<Case> cases = new ArrayList<Case>();
-		final HashSet<Integer> h = new HashSet<Integer>();
+		//subtract them from open cases
+		final Select<Boolean> select2 =  new Select<Boolean>(scan3, "open", true);
+		final Minus minus = new Minus(select2, join, "idcase");
 		
-		while(join.moveNext())
+		final List<Case> cases = new ArrayList<Case>();
+		
+		
+		while(minus.moveNext())
 		{
-			Tuple tuple = join.current();
-			int id = tuple.getInt(0);			
-			if(!h.contains(id))
-			{
-				Case c = new Case(tuple.getInt(0),tuple.getString(1),null, null,null,null,null,false);
-				cases.add(c);
-				h.add(id);
-			}
+			Tuple tuple = minus.current();
+			
+			Case c = new Case(tuple.getInt(0),tuple.getString(1),null, null,null,null,null,false);
+			cases.add(c);
 			
 		}
 		

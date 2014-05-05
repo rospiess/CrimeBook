@@ -20,6 +20,7 @@ public class Scan extends Operator {
 
 	private final TupleSchema schema;
 	private final BufferedReader reader;
+	private boolean closed = false;
 
 	/**
 	 * Contructs a new scan operator.
@@ -63,20 +64,23 @@ public class Scan extends Operator {
 	public boolean moveNext() {
 		
 		try {
-			String input = reader.readLine();
-			if(input != null)
-			{
-				String[] values = input.split(",");
-				process_values(values);
-				current = new Tuple(schema, values);
-				return true;
-			}			
-			else
-				reader.close();
+			if (!closed){
+				String input = reader.readLine();
+				if(input != null)
+				{
+					String[] values = input.split(",");
+					process_values(values);
+					current = new Tuple(schema, values);
+					return true;
+				}			
+				else{
+					closed = true;
+					reader.close();
+				}
+			}
 			return false;
 			
 		} catch (final IOException e) {
-			
 			throw new RuntimeException("could not read: " + this.reader + 
 				". Error is " + e);
 			
