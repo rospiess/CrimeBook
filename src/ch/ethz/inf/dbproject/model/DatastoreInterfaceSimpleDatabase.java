@@ -650,7 +650,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Pair<String, Integer>> getStatCategories() {
-		return null;
+		return new ArrayList<Pair<String, Integer>>();
 		/*
 		 * try {
 		 * 
@@ -676,7 +676,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Pair<String, Integer>> getStatInvolvements() {
-		return null;
+		return new ArrayList<Pair<String, Integer>>();
 		/*
 		 * try {
 		 * 
@@ -702,7 +702,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Pair<Integer, Integer>> getStatCrimesPerYear() {
-		return null;
+		return new ArrayList<Pair<Integer, Integer>>();
 		/*
 		 * try {
 		 * 
@@ -727,7 +727,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Pair<Integer, Integer>> getStatConvictionsPerYear() {
-		return null;
+		return new ArrayList<Pair<Integer, Integer>>();
 		/*
 		 * try {
 		 * 
@@ -752,7 +752,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Pair<String, Integer>> getStatSuperCategories() {
-		return null;
+		return new ArrayList<Pair<String, Integer>>();
 		/*
 		 * try {
 		 * 
@@ -777,7 +777,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Pair<String, Integer>> getAverageAges() {
-		return null;
+		return new ArrayList<Pair<String, Integer>>();
 		/*
 		 * try {
 		 * 
