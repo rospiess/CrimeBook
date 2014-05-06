@@ -1,85 +1,70 @@
 package ch.ethz.inf.dbproject.model.simpleDatabase.operators;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 
 import ch.ethz.inf.dbproject.model.simpleDatabase.Tuple;
+import ch.ethz.inf.dbproject.model.simpleDatabase.TupleSchema;
 
-/**
- * An empty sort operator
- * For the purposes of the project, you can consider only string comparisons of
- * the values.
- */
-public class GroupBy extends Operator implements Comparator<Tuple> {
+public class GroupBy extends Operator {
 
 	private final Operator op;
-	private final String column;
-	private String prev_value;
-	private final ArrayList<Tuple> sortBuffer;
-	private int offset;
-	private int columnid;
-	
-	public GroupBy(
-		final Operator op,
-		final String column
-	) {
+	private final String column, column2;
+	private HashMap<String,List<Tuple>> map = new HashMap<String,List<Tuple>>();
+	private final Function.Type type;
+	private TupleSchema schema1;
+	private List<String> keys = new ArrayList<String>();
+	int offset;
+
+	public GroupBy(	final Operator op, final String column, final Function.Type type)
+	 {
 		this.op = op;
 		this.column = column;
-		this.sortBuffer = new ArrayList<Tuple>();
+		this.type = type;
+		column2 = "";
 	}
 	
-	@Override
-	public final int compare(
-		final Tuple l, 
-		final Tuple r
-	) {
-		
-		final int columnIndex = l.getSchema().getIndex(this.column);
-		if(l.getString(columnIndex)==null)
-			return 1;
-		if(r.getString(columnIndex)==null)
-			return -1;
-		final int result = 
-			l.getString(columnIndex).compareToIgnoreCase(r.getString(columnIndex));
-		
-		return result;
+	public GroupBy(	final Operator op, final String column, final Function.Type type, final String column2)
+	 {
+		this.op = op;
+		this.column = column;
+		this.type = type;
+		this.column2 = column2;
 	}
 
+	
 	@Override
 	public boolean moveNext() {
-		
-		if(sortBuffer.isEmpty()){
+		if(map.isEmpty()){
 			while(op.moveNext())
-				sortBuffer.add(op.current());
-			Collections.sort(this.sortBuffer, this);
-			
-			if (sortBuffer.size()>0){
-				current = sortBuffer.get(0);
-				offset = 1;
-				columnid = current.getSchema().getIndex(column);
-				prev_value = current.getString(columnid);
-				return true;
-			}
-			else
-				return false;
-		}
-		if(offset<sortBuffer.size())
-		{
-			current = sortBuffer.get(offset);
-			String cur_value = current.getString(columnid);
-			if (cur_value.equals(prev_value)){
-				offset++;
-				return true;
-			}
-			else
 			{
-				prev_value = cur_value;
-				return false;
+				Tuple t = op.current();
+				if(schema1 == null)
+					schema1 = t.getSchema();
+				String key = t.getString(schema1.getIndex(column));
+				if(!map.containsKey(key)){
+				 ArrayList<Tuple> l = new ArrayList<Tuple>();
+				 l.add(t);
+				map.put(key,l);}
+				else
+					map.get(key).add(t);
 			}
-		}		
+		for(String s: map.keySet())
+			keys.add(s);
+		
+		offset = 0;
+		}
+		while(offset < keys.size())
+		{
+			String s = type.getName(), key = keys.get(offset);
+			String value = Function.evaluate(map.get(key), type, column2);
+
+			current = new Tuple(new TupleSchema(new String[]{column,s}),
+					new String[]{key, value});
+			offset++;
+			return true;
+		}
 		return false;
 	}
-
-	
 }

@@ -54,6 +54,12 @@ public class Update {
 		}
 	}
 	
+	public static void update(String fileName, int key, String[] newvalues)
+	{
+		update(fileName,key+"", newvalues);
+	}
+	
+	
 	//update for String as key
 	public static void update(String fileName, String key, String[] newvalues)//newvalues contains the new Values or null if we want to keep the old one
 	{

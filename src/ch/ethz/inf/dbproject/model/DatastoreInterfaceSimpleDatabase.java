@@ -103,7 +103,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final void updateConvictionDates(int idcon, String begindate, String enddate) {
-		Update.update("Convictions.txt", new int[]{idcon}, new String[]{null,begindate,enddate,null,null});
+		Update.update("Convictions.txt", idcon, new String[]{null,begindate,enddate,null,null});
 	}
 
 	public final List<Involved> getInvolvedByPersonId(final int pid) {
@@ -148,12 +148,12 @@ public final class DatastoreInterfaceSimpleDatabase {
 	@SuppressWarnings( "deprecation" )
 	public final void setCaseOpen(int id, boolean open) {
 		
-		Update.update("Cases.txt", new int[]{id}, new String[]{null,null,null,null,null,null,null,open+"",null});
+		Update.update("Cases.txt", id, new String[]{null,null,null,null,null,null,null,open+"",null});
 		
 		if(open)// delete convictions associated with this case
 		{
 			for(Conviction c:  getConvictionsById(id, "idcase"))
-				Delete.deleteFrom("Convictions.txt", new int[]{c.getIdcon()});
+				Delete.deleteFrom("Convictions.txt", c.getIdcon());
 		}
 		else// Create convictions based on suspects
 		{
@@ -197,7 +197,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 
 	public final void deleteCase(int id) {		
 		for(Comment c:  getCommentsById(id, "Cases"))//Drop all Notes
-			Delete.deleteFrom("NotePersons.txt", new int[]{c.getIdnote()});
+			Delete.deleteFrom("NotePersons.txt", c.getIdnote());
 		
 		for(Person p:  getSuspectsById(id))//Drop all Suspects
 			Delete.deleteFrom("Involved.txt", new int[]{p.getIdperson(),id});
@@ -209,25 +209,25 @@ public final class DatastoreInterfaceSimpleDatabase {
 			Delete.deleteFrom("Involved.txt", new int[]{p.getIdperson(),id});
 		
 		
-		Delete.deleteFrom("Cases.txt", new int[]{id});		
+		Delete.deleteFrom("Cases.txt", id);		
 	}
 
 	public final void deletePerson(int id) {		
 		for(Conviction c: getConvictionsById(id, "idperson"))//Drop all Convictions
-			Delete.deleteFrom("Convictions.txt", new int[]{c.getIdcon()});
+			Delete.deleteFrom("Convictions.txt", c.getIdcon());
 		
 		for(Comment c:  getCommentsById(id, "Persons"))//Drop all Notes
-			Delete.deleteFrom("NotePersons.txt", new int[]{c.getIdnote()});
+			Delete.deleteFrom("NotePersons.txt", c.getIdnote());
 		
 		for(Involved i:  getInvolvedByPersonId(id))//Drop all Involvments
 			Delete.deleteFrom("Involved.txt", new int[]{id,i.getIdcase()});		
 
 		
-		Delete.deleteFrom("Persons.txt", new int[]{id});
+		Delete.deleteFrom("Persons.txt", id);
 	}
 
 	public final void deleteNote(int Nr, final String type) {
-		Delete.deleteFrom("Note"+type+".txt", new int[]{Nr});
+		Delete.deleteFrom("Note"+type+".txt", Nr);
 	}
 
 	public final void openNewCase(String title, String descr, String date, String time, Address address, String catname, String username) {
@@ -297,7 +297,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 			else
 			{
 				// Address is not shared, just update the old one
-				Update.update("Addresses.txt", new int[]{idAddress}, new String[]{null,address.getCountry(), Integer.toString(address.getZipCode()), address.getCity(), address.getStreet(),Integer.toString(address.getStreetNo())});
+				Update.update("Addresses.txt", idAddress, new String[]{null,address.getCountry(), Integer.toString(address.getZipCode()), address.getCity(), address.getStreet(),Integer.toString(address.getStreetNo())});
 			}
 		}
 		
@@ -309,7 +309,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	public final void updateCase(int id, String title, String descr, String date, String time, Address address, String catname) {
 		
 		int idAddress = updateAddress(id,address);
-		Update.update("Cases.txt", new int[]{id}, new String[]{null,title,descr,date,time,Integer.toString(idAddress),catname,null,null});
+		Update.update("Cases.txt", id, new String[]{null,title,descr,date,time,Integer.toString(idAddress),catname,null,null});
 	}
 
 	private final int getIdAddressByCase(int idcase) {
@@ -615,7 +615,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final void updatePerson(int idperson, String firstname, String lastname, String date) {
-		Update.update("Persons.txt", new int[]{idperson}, new String[]{null,firstname,lastname,date});
+		Update.update("Persons.txt", idperson, new String[]{null,firstname,lastname,date});
 	}
 
 	public final String getPassword(String username) {
@@ -650,105 +650,70 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Pair<String, Integer>> getStatCategories() {
-		return new ArrayList<Pair<String, Integer>>();
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "SELECT Title, CatName, COUNT(*) as amount FROM cases GROUP BY CatName"
-		 * );
-		 * 
-		 * final List<Pair<String,Integer>> stats = new
-		 * ArrayList<Pair<String,Integer>>(); while (rs.next()) {
-		 * Pair<String,Integer> a_cat_val = new Pair<String,
-		 * Integer>(rs.getString("CatName"), rs.getInt("amount"));
-		 * stats.add(a_cat_val); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return stats;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
 
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final GroupBy groupby = new GroupBy(scan,"cat",Function.Type.COUNT);
+
+		List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(); 
+		
+		while (groupby.moveNext()){
+			Pair<String, Integer> p = new Pair<String, Integer>(groupby.current().getString(0),groupby.current().getInt(1));
+			pairs.add(p);
+		}
+		return pairs;
+		
 	}
 
 	public final List<Pair<String, Integer>> getStatInvolvements() {
-		return new ArrayList<Pair<String, Integer>>();
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "(SELECT FirstName, LastName, COUNT(*) AS amount FROM PersonOfInterest AS POI, involved AS inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest LIMIT 5) UNION (SELECT 'Other', '', sum(t2.amount2) from (SELECT COUNT(*) AS amount2 FROM PersonOfInterest as POI2, involved AS inv2 WHERE POI2.idPersonOfInterest = inv2.idPerson GROUP BY POI2.idPersonOfInterest LIMIT 5,1000) AS t2);"
-		 * );
-		 * 
-		 * final List<Pair<String,Integer>> stats = new
-		 * ArrayList<Pair<String,Integer>>(); while (rs.next()) {
-		 * Pair<String,Integer> a_cat_val = new Pair<String,
-		 * Integer>((rs.getString("FirstName") + " " +
-		 * rs.getString("LastName")), rs.getInt("amount"));
-		 * stats.add(a_cat_val); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return stats;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Involved.txt", schemaInvolved);
+		final Scan scan1 = new Scan("Persons.txt", schemaPerson);
+		final GroupBy groupby = new GroupBy(scan,"idperson",Function.Type.COUNT);
+		final Join join = new Join(groupby,scan1,"idperson", new String[]{
+				"firstname","lastname","count"});
+		
+		
+		List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(); 
+		
+		while (join.moveNext()){
+			Pair<String, Integer> p = new Pair<String, Integer>
+			(join.current().getString(0) + " "+ join.current().getString(1),
+					join.current().getInt(2));
+			pairs.add(p);
+		}
+		return pairs;
+		
 	}
 
 	public final List<Pair<Integer, Integer>> getStatCrimesPerYear() {
-		return new ArrayList<Pair<Integer, Integer>>();
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "SELECT YEAR(date) AS year, COUNT(*) AS numberOfCrimes FROM cases GROUP BY year ORDER BY year DESC LIMIT 5;"
-		 * );
-		 * 
-		 * final List<Pair<Integer,Integer>> stats = new
-		 * ArrayList<Pair<Integer,Integer>>(); while (rs.next()) {
-		 * Pair<Integer,Integer> a_year_val = new Pair<Integer,
-		 * Integer>(rs.getInt("year"), rs.getInt("numberOfCrimes"));
-		 * stats.add(a_year_val); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return stats;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final GroupBy groupby = new GroupBy(scan,"date",Function.Type.COUNT);
+		final Sort sort = new Sort(groupby,"date",false);
+
+		List<Pair<Integer, Integer>> pairs = new ArrayList<Pair<Integer, Integer>>(); 
+		
+		while (sort.moveNext()){
+			Pair<Integer, Integer> p = new Pair<Integer, Integer>
+			(sort.current().getInt(0), sort.current().getInt(1));
+			pairs.add(p);
+		}
+		return pairs;
+		
 	}
 
 	public final List<Pair<Integer, Integer>> getStatConvictionsPerYear() {
-		return new ArrayList<Pair<Integer, Integer>>();
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "SELECT YEAR(beginDate) AS year, COUNT(*) AS numberOfConvictions FROM conviction GROUP BY year ORDER BY year DESC LIMIT 5;"
-		 * );
-		 * 
-		 * final List<Pair<Integer,Integer>> stats = new
-		 * ArrayList<Pair<Integer,Integer>>(); while (rs.next()) {
-		 * Pair<Integer,Integer> a_year_val = new Pair<Integer,
-		 * Integer>(rs.getInt("year"), rs.getInt("numberOfConvictions"));
-		 * stats.add(a_year_val); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return stats;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Convictions.txt", schemaConviction);
+		final GroupBy groupby = new GroupBy(scan,"startdate",Function.Type.COUNT);
+		final Sort sort = new Sort(groupby, "startdate", false);
+
+		List<Pair<Integer, Integer>> pairs = new ArrayList<Pair<Integer, Integer>>(); 
+		
+		while (sort.moveNext()){
+			Pair<Integer, Integer> p = new Pair<Integer, Integer>
+			(sort.current().getInt(0), sort.current().getInt(1));
+			pairs.add(p);
+		}
+		return pairs;
+		
 	}
 
 	public final List<Pair<String, Integer>> getStatSuperCategories() {
@@ -756,64 +721,62 @@ public final class DatastoreInterfaceSimpleDatabase {
 		final Scan scan1 = new Scan("Category.txt",schemaCategory);
 		final Scan scan2 = new Scan("Cases.txt", schemaCase);
 		final Join join1 = new Join(scan1,scan2, "cat", new String[] {"cat","supercat"});
-		final GroupBy groupby = new GroupBy(join1, "supercat");
-		final Count count = new Count(groupby,"supercat");
-		
+		final GroupBy groupby = new GroupBy(join1,"supercat",Function.Type.COUNT);
+
 		List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(); 
 		
-		while (count.moveNext()){
-			Pair<String, Integer> p = new Pair<String, Integer>(count.current().getString(1),count.current().getInt(0));
+		while (groupby.moveNext()){
+			Pair<String, Integer> p = new Pair<String, Integer>(groupby.current().getString(0),groupby.current().getInt(1));
 			pairs.add(p);
 		}
-		
-		
 		return pairs;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "SELECT category.SuperCat AS SuperCatName, COUNT(*) AS amount FROM cases, category WHERE cases.CatName = category.CatName GROUP BY category.SuperCat;"
-		 * );
-		 * 
-		 * final List<Pair<String,Integer>> stats = new
-		 * ArrayList<Pair<String,Integer>>(); while (rs.next()) {
-		 * Pair<String,Integer> a_SuperCat_val = new Pair<String,
-		 * Integer>(rs.getString("SuperCatName"), rs.getInt("amount"));
-		 * stats.add(a_SuperCat_val); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return stats;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		
 	}
 
 	public final List<Pair<String, Integer>> getAverageAges() {
-		return new ArrayList<Pair<String, Integer>>();
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "SELECT * FROM ((SELECT 'Convicted'  as 'Registered as', AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) as 'age' FROM personOfInterest AS p, conviction AS c WHERE p.idPersonOfINterest = c.idpersonofinterest) UNION (SELECT CatName as 'Registered as', AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) as 'age' FROM personOfInterest AS p, conviction AS conv, cases WHERE p.idPersonOfINterest = conv.idpersonofinterest and cases.idCase = conv.idCase GROUP BY CatName) UNION (SELECT 'Person of interest' as 'Registered as', AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) as 'age' FROM personOfInterest)) AS allAges;"
-		 * );
-		 * 
-		 * final List<Pair<String,Integer>> stats = new
-		 * ArrayList<Pair<String,Integer>>(); while (rs.next()) {
-		 * Pair<String,Integer> a_persons_ages = new Pair<String,
-		 * Integer>(rs.getString("Registered as"), rs.getInt("age"));
-		 * stats.add(a_persons_ages); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return stats;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		
+		//Categories
+		final Scan scan = new Scan("Persons.txt", schemaPerson);
+		final Scan scan1 = new Scan("Convictions.txt", schemaConviction);
+		final Scan scan2 = new Scan("Cases.txt", schemaCase);
+		final Join join = new Join(scan,scan1,"idperson",new String[]{"idcase","idperson","birth"});
+
+		final Join join2 = new Join(scan2,join,"idcase",new String[]{"cat","birth"});
+		final GroupBy groupby = new GroupBy(join2,"cat",Function.Type.AVERAGE,"birth");
+
+		List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(); 
+		
+		while (groupby.moveNext()){
+			Pair<String, Integer> p = new Pair<String, Integer>
+			(groupby.current().getString(0), 2014 - groupby.current().getInt(1));
+			pairs.add(p);
+		}
+		
+		//Persons
+		final Scan scan3 = new Scan("Persons.txt", schemaPerson);
+		List <Tuple> ages = new ArrayList<Tuple>();
+		while(scan3.moveNext())
+			ages.add(scan3.current());
+		
+		
+		pairs.add(new Pair<String, Integer>	("All Persons",
+				2014 - Function.average(ages, "birth")));
+		
+		
+		//Convictions
+		final Scan scan4 = new Scan("Persons.txt", schemaPerson);
+		final Scan scan5 = new Scan("Convictions.txt", schemaConviction);
+		final Join join3 = new Join(scan4,scan5,"idperson",new String[]{"birth"});
+		
+		ages.clear();
+		while(join3.moveNext())
+			ages.add(join3.current());
+		
+		
+		pairs.add(new Pair<String, Integer>	("All Convicts",
+				2014 - Function.average(ages, "birth")));
+		
+		return pairs;
 	}
 	private List<Case> joinAddressToCase(Operator cases)//Own function since it's used so often
 	{

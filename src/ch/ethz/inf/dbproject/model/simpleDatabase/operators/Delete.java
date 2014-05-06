@@ -37,4 +37,9 @@ public class Delete {
 		catch (IOException e) {
 		}
 	}
+	
+	public static void deleteFrom(String fileName, int key)
+	{
+		deleteFrom(fileName, new int[]{key});
+	}
 }
