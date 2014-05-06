@@ -752,7 +752,22 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Pair<String, Integer>> getStatSuperCategories() {
-		return new ArrayList<Pair<String, Integer>>();
+		
+		final Scan scan1 = new Scan("Category.txt",schemaCategory);
+		final Scan scan2 = new Scan("Cases.txt", schemaCase);
+		final Join join1 = new Join(scan1,scan2, "cat", new String[] {"cat","supercat"});
+		final GroupBy groupby = new GroupBy(join1, "supercat");
+		final Count count = new Count(groupby,"supercat");
+		
+		List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(); 
+		
+		while (count.moveNext()){
+			Pair<String, Integer> p = new Pair<String, Integer>(count.current().getString(1),count.current().getInt(0));
+			pairs.add(p);
+		}
+		
+		
+		return pairs;
 		/*
 		 * try {
 		 * 

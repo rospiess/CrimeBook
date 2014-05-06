@@ -18,6 +18,7 @@ public class GroupBy extends Operator implements Comparator<Tuple> {
 	private String prev_value;
 	private final ArrayList<Tuple> sortBuffer;
 	private int offset;
+	private int columnid;
 	
 	public GroupBy(
 		final Operator op,
@@ -47,8 +48,6 @@ public class GroupBy extends Operator implements Comparator<Tuple> {
 
 	@Override
 	public boolean moveNext() {
-
-		int columnid=0;
 		
 		if(sortBuffer.isEmpty()){
 			while(op.moveNext())

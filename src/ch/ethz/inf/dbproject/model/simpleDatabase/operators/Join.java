@@ -39,7 +39,7 @@ public class Join extends Operator {
 		{
 			Tuple t2 = op2.current();
 			if(schema2 == null)
-			schema2 = t2.getSchema();
+				schema2 = t2.getSchema();
 			String key = t2.getString(schema2.getIndex(column));
 			if(map.containsKey(key))//Build new Tuple from the 2 old ones
 			{
