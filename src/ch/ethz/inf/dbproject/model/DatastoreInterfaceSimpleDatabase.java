@@ -208,6 +208,13 @@ public final class DatastoreInterfaceSimpleDatabase {
 		for(Person p:  getVictimsById(id))//Drop all Victims
 			Delete.deleteFrom("Involved.txt", new int[]{p.getIdperson(),id});
 		
+		//If Address is no longer used, drop it
+		int idAddress = getIdAddressByCase(id);
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final Select<Integer> select = new Select<Integer>(scan, "idaddress", idAddress);
+		if(!(select.moveNext() && select.moveNext()))
+			Delete.deleteFrom("Addresses.txt", idAddress);
+		
 		
 		Delete.deleteFrom("Cases.txt", id);		
 	}
@@ -219,7 +226,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 		for(Comment c:  getCommentsById(id, "Persons"))//Drop all Notes
 			Delete.deleteFrom("NotePersons.txt", c.getIdnote());
 		
-		for(Involved i:  getInvolvedByPersonId(id))//Drop all Involvments
+		for(Involved i:  getInvolvedByPersonId(id))//Drop all Involvements
 			Delete.deleteFrom("Involved.txt", new int[]{id,i.getIdcase()});		
 
 		
@@ -282,7 +289,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 		if(select5.moveNext()){
 			// If not shared delete Address with old ID
 			if (!shared){
-				Delete.deleteFrom("Addresses.txt", new int []{idAddress});
+				Delete.deleteFrom("Addresses.txt", idAddress);
 			}
 			
 			// Since the address already exists, save the new id
@@ -365,7 +372,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 
 	public final List<Case> getOldestUnsolvedCases() {
 		final Scan scan = new Scan("Cases.txt", schemaCase);
-		final Select<Boolean> select = new Select<Boolean>(scan, "open", false);
+		final Select<Boolean> select = new Select<Boolean>(scan, "open", true);
 		final Sort sort = new Sort(select, "date", true);
 		
 		return joinAddressToCase(sort);
@@ -421,7 +428,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 
 	public final List<Conviction> searchByDate(String date) {
 		final Scan scan = new Scan("Convictions.txt", schemaConviction);
-		final Scan scan1 = new Scan("Convictions.txt", schemaConviction);//Stupid, but necessary
+		final Scan scan1 = new Scan("Convictions.txt", schemaConviction);
 		final Scan scan2 = new Scan("Persons.txt", schemaPerson);
 		final Scan scan3 = new Scan("Cases.txt", schemaCase);
 		
@@ -637,7 +644,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 		Insert.insertInto("Users.txt", new String[]{username,password});
 	}
 
-	public final boolean getNameIsTaken(String username) {
+	public final boolean isNameTaken(String username) {
 
 		final Scan scan = new Scan("Users.txt", new String[] { "username", "password" });
 
@@ -734,6 +741,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Pair<String, Integer>> getAverageAges() {
+		@SuppressWarnings("deprecation")
 		final int year = getCurrentDate().getYear() + 1900; //Year 0 is 1900 for some reason..
 		
 		//Categories

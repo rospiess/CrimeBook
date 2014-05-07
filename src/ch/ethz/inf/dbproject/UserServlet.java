@@ -89,7 +89,7 @@ public final class UserServlet extends HttpServlet {
 			else if (password.equals(""))
 				session.setAttribute("RegistrationStatus",
 					"Please enter a password");
-			else if (dbInterface.getNameIsTaken(username))
+			else if (dbInterface.isNameTaken(username))
 				session.setAttribute("RegistrationStatus", "Username \""
 					+ username + "\" already in use");
 			else if (!password.equals(confirmpassword))
