@@ -1,8 +1,8 @@
-1,Entwendung einer Schreibmaschine,Auf einmal war sie weg...,2010,13:45:00,1,Theft,false,test
-2,Mord an der ETH,Brutal mit Schreibmaschine erschlagen,2010,23:55:00,1,Murder,true,test
-3,Älterer Mann überfahren,Ein renommierter Professor wurde von einem Auto mit französischem Kennzeichen angefahren welches anschliessend Fahrerflucht beging,2010,09:32:13,1,Assault,true,test
-4,Einbruch ins CAB,Entwendet wurden: 9 Flaschen Bier 2 Tiefkühlpizzas und eine nicht funktionierende Kaffeemaschine,2013,00:48:19,1,Burglary,true,test
-5,Entführung des ETH Maskottchens,Opfer wurde mit Elektroschocker ausser Gefecht gestetzt und anschliessend in schwarzen Van verfrachtet,2011,21:34:51,1,Kidnapping,false,test
-6,Bösartige Turingmaschine,Transferierte das Budget des VIS auf ausländisches Konto,2012,15:12:34,1,Fraud,false,test
-7,Daten Verkauf,ETH Daten an ausländischen Geheimdienst verkauft,2013,null,2,OtherProp,true,Max Muster
-8,Mensa-Essen vergiftet,Alle Studenten bekamen Bauchweh,2014,12:15:00,1,OtherPers,true,Max Muster
+1,Entwendung einer Schreibmaschine,Auf einmal war sie weg...,2010-10-30,13:45:00,1,Theft,false,test
+2,Mord an der ETH,Brutal mit Schreibmaschine erschlagen,2010-10-31,23:55:00,1,Murder,true,test
+3,Älterer Mann überfahren,Ein renommierter Professor wurde von einem Auto mit französischem Kennzeichen angefahren welches anschliessend Fahrerflucht beging,2013-11-01,09:32:13,1,Assault,true,test
+4,Einbruch ins CAB,Entwendet wurden: 9 Flaschen Bier 2 Tiefkühlpizzas und eine nicht funktionierende Kaffeemaschine,2014-3-20,00:48:19,1,Burglary,true,test
+5,Entführung des ETH Maskottchens,Opfer wurde mit Elektroschocker ausser Gefecht gestetzt und anschliessend in schwarzen Van verfrachtet,2011-2-29,21:34:51,1,Kidnapping,false,test
+6,Bösartige Turingmaschine,Transferierte das Budget des VIS auf ausländisches Konto,2012-1-21,15:12:34,1,Fraud,false,test
+7,Daten Verkauf,ETH Daten an ausländischen Geheimdienst verkauft,null,null,2,OtherProp,true,Max Muster
+8,Mensa-Essen vergiftet,Alle Studenten bekamen Bauchweh,2014-4-20,12:15:00,1,OtherPers,true,Max Muster

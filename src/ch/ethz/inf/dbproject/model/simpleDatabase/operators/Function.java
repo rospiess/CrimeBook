@@ -7,7 +7,7 @@ import ch.ethz.inf.dbproject.model.simpleDatabase.Tuple;
 public class Function {
 
 	public enum Type {
-		COUNT(1, "count"), AVERAGE(2, "average"), SUM(3, "sum");
+		COUNT(1, "count"), AVERAGE(2, "average"), SUM(3, "sum"), AVERAGEYEAR(4, "average");
 		private int type;
 		private String name;
 
@@ -36,6 +36,9 @@ public class Function {
 
 		else if (type.getType() == 3) // sum
 			return sum(list,column)+"";
+		
+		else if (type.getType() == 4) // average year
+			return average(list,column, 4)+"";
 					
 		else
 			return null;
@@ -55,9 +58,23 @@ public class Function {
 		return sum;
 	}
 	
+	public static int sum(List<Tuple> list, String column, int length)
+	{
+		int sum = 0, col = list.get(0).getSchema().getIndex(column);
+		for (Tuple t : list)
+			sum += Integer.parseInt(t.getString(col).substring(0, length));
+
+		return sum;
+	}
+	
 	public static int average(List<Tuple> list, String column)
 	{
 		return sum(list,column) / list.size();
+	}
+	
+	public static int average(List<Tuple> list, String column, int length)
+	{
+		return sum(list,column, length) / list.size();
 	}
 
 }

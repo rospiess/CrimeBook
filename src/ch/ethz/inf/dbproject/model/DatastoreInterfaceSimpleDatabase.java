@@ -686,7 +686,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 
 	public final List<Pair<Integer, Integer>> getStatCrimesPerYear() {
 		final Scan scan = new Scan("Cases.txt", schemaCase);
-		final GroupBy groupby = new GroupBy(scan,"date",Function.Type.COUNT);
+		final GroupBy groupby = new GroupBy(scan,"date",Function.Type.COUNT,4);
 		final Sort sort = new Sort(groupby,"date",false);
 
 		List<Pair<Integer, Integer>> pairs = new ArrayList<Pair<Integer, Integer>>(); 
@@ -702,7 +702,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 
 	public final List<Pair<Integer, Integer>> getStatConvictionsPerYear() {
 		final Scan scan = new Scan("Convictions.txt", schemaConviction);
-		final GroupBy groupby = new GroupBy(scan,"startdate",Function.Type.COUNT);
+		final GroupBy groupby = new GroupBy(scan,"startdate",Function.Type.COUNT,4);
 		final Sort sort = new Sort(groupby, "startdate", false);
 
 		List<Pair<Integer, Integer>> pairs = new ArrayList<Pair<Integer, Integer>>(); 
@@ -734,6 +734,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Pair<String, Integer>> getAverageAges() {
+		final int year = getCurrentDate().getYear() + 1900; //Year 0 is 1900 for some reason..
 		
 		//Categories
 		final Scan scan = new Scan("Persons.txt", schemaPerson);
@@ -742,39 +743,38 @@ public final class DatastoreInterfaceSimpleDatabase {
 		final Join join = new Join(scan,scan1,"idperson",new String[]{"idcase","idperson","birth"});
 
 		final Join join2 = new Join(scan2,join,"idcase",new String[]{"cat","birth"});
-		final GroupBy groupby = new GroupBy(join2,"cat",Function.Type.AVERAGE,"birth");
+		final GroupBy groupby = new GroupBy(join2,"cat",Function.Type.AVERAGEYEAR,"birth");
 
 		List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(); 
 		
 		while (groupby.moveNext()){
 			Pair<String, Integer> p = new Pair<String, Integer>
-			(groupby.current().getString(0), 2014 - groupby.current().getInt(1));
+			(groupby.current().getString(0), year - groupby.current().getInt(1));
 			pairs.add(p);
 		}
 		
 		//Persons
 		final Scan scan3 = new Scan("Persons.txt", schemaPerson);
-		List <Tuple> ages = new ArrayList<Tuple>();
-		while(scan3.moveNext())
-			ages.add(scan3.current());
-		
-		
-		pairs.add(new Pair<String, Integer>	("All Persons",
-				2014 - Function.average(ages, "birth")));
-		
+		final GroupBy groupby2 = new GroupBy(scan3,"lastname",Function.Type.AVERAGEYEAR,"birth",0);
+
+		if(groupby2.moveNext()){
+			Pair<String, Integer> p = new Pair<String, Integer>
+			("All Persons", year - groupby2.current().getInt(1));
+			pairs.add(p);
+		}		
 		
 		//Convictions
 		final Scan scan4 = new Scan("Persons.txt", schemaPerson);
 		final Scan scan5 = new Scan("Convictions.txt", schemaConviction);
-		final Join join3 = new Join(scan4,scan5,"idperson",new String[]{"birth"});
+		final Join join3 = new Join(scan4,scan5,"idperson",new String[]{"lastname","birth"});
 		
-		ages.clear();
-		while(join3.moveNext())
-			ages.add(join3.current());
-		
-		
-		pairs.add(new Pair<String, Integer>	("All Convicts",
-				2014 - Function.average(ages, "birth")));
+		final GroupBy groupby3 = new GroupBy(join3,"lastname",Function.Type.AVERAGEYEAR,"birth",0);
+
+		if(groupby3.moveNext()){
+			Pair<String, Integer> p = new Pair<String, Integer>
+			("All Convicts", year - groupby3.current().getInt(1));
+			pairs.add(p);
+		}
 		
 		return pairs;
 	}
