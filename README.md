@@ -12,13 +12,11 @@ To-Do List
 -----------
 
 Operators:
-- group by
-- count maybe?
+- optional: optimizations
+- optional: implement additional, different algorithms
  
-Interface
-- reimplement all functionalities
-- handle Umlaute in search
 
+Miscellaneous
 - Date: 2000-2-3 vs 2000-02-03, should only one be accepted/different input converted?
 
 
@@ -34,5 +32,10 @@ Operators:
 - insert
 - update
 - delete
+- group by
+- aggregation functions
 
+Interface:
+- reimplement all functionalities
+- handle Umlaute in search
 
