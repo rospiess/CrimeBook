@@ -296,13 +296,39 @@ public final class CaseServlet extends HttpServlet {
 				session.setAttribute("ConvDate", false);
 				String begindate = request.getParameter("begindate");
 				try{
-					java.sql.Date.valueOf(begindate);
+					String[] strs = begindate.split("-");
+					if (strs.length == 3){
+						//Fill up with 0s
+						while(strs[0].length() < 4)
+							strs[0] = "0"+strs[0];
+						if (strs[1].length() == 1)
+							strs[1] = "0"+strs[1];
+						if (strs[2].length() == 1)
+							strs[2] = "0"+strs[2];
+						begindate = strs[0]+"-"+strs[1]+"-"+strs[2];
+						java.sql.Date.valueOf(begindate);
+					}
+					else
+						throw new IllegalArgumentException();
 				}catch(IllegalArgumentException e){
 					begindate = null; // default = unknown value
 				}
 				String enddate = request.getParameter("enddate");
 				try{
-					java.sql.Date.valueOf(enddate);
+					String[] strs = enddate.split("-");
+					if (strs.length == 3){
+						//Fill up with 0s
+						while(strs[0].length() < 4)
+							strs[0] = "0"+strs[0];
+						if (strs[1].length() == 1)
+							strs[1] = "0"+strs[1];
+						if (strs[2].length() == 1)
+							strs[2] = "0"+strs[2];
+						enddate = strs[0]+"-"+strs[1]+"-"+strs[2];
+						java.sql.Date.valueOf(enddate);
+					}
+					else
+						throw new IllegalArgumentException();
 				}catch(IllegalArgumentException e){
 					enddate = null; // default = unknown value
 				}
@@ -330,7 +356,20 @@ public final class CaseServlet extends HttpServlet {
 				
 				String date = request.getParameter("date");
 				try{
-					java.sql.Date.valueOf(date);
+					String[] strs = date.split("-");
+					if (strs.length == 3){
+						//Fill up with 0s
+						while(strs[0].length() < 4)
+							strs[0] = "0"+strs[0];
+						if (strs[1].length() == 1)
+							strs[1] = "0"+strs[1];
+						if (strs[2].length() == 1)
+							strs[2] = "0"+strs[2];
+						date = strs[0]+"-"+strs[1]+"-"+strs[2];
+						java.sql.Date.valueOf(date);
+					}
+					else
+						throw new IllegalArgumentException();
 				}catch(IllegalArgumentException e){
 					date = null; // default = unknown value
 				}

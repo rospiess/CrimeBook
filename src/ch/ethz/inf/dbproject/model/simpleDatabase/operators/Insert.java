@@ -42,7 +42,8 @@ public class Insert {
 						input = reader.readLine();
 					 }
 				reader.close();
-				key = Integer.parseInt(""+previousLine.charAt(0));
+				String[] last_values = previousLine.split(",");
+				key = Integer.parseInt(last_values[0]);
 				key++;
 			}
 		catch(final IOException e) {}

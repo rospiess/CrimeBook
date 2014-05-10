@@ -77,10 +77,10 @@ public class GroupBy extends Operator {
 						map.get(key).add(t);
 				}
 			}
-		for(String s: map.keySet())
-			keys.add(s);
-		
-		offset = 0;
+			for(String s: map.keySet())
+				keys.add(s);
+			
+			offset = 0;
 		}
 		while(offset < keys.size())
 		{

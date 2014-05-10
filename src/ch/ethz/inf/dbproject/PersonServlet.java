@@ -243,7 +243,20 @@ public final class PersonServlet extends HttpServlet {
 				}
 				
 				try{
-					java.sql.Date.valueOf(date);
+					String[] strs = date.split("-");
+					if (strs.length == 3){
+						//Fill up with 0s
+						while(strs[0].length() < 4)
+							strs[0] = "0"+strs[0];
+						if (strs[1].length() == 1)
+							strs[1] = "0"+strs[1];
+						if (strs[2].length() == 1)
+							strs[2] = "0"+strs[2];
+						date = strs[0]+"-"+strs[1]+"-"+strs[2];
+						java.sql.Date.valueOf(date);
+					}
+					else
+						throw new IllegalArgumentException();
 				}catch(IllegalArgumentException e){
 					date = "0001-01-01"; // default = unknown value
 					
