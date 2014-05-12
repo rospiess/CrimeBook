@@ -16,8 +16,6 @@ Operators:
 - optional: implement additional, different algorithms
  
 
-Miscellaneous
-- Date: 2000-2-3 vs 2000-02-03, should only one be accepted/different input converted?
 
 
 DONE
@@ -38,4 +36,5 @@ Operators:
 Interface:
 - reimplement all functionalities
 - handle Umlaute in search
+- Date processing (filling up with 0s)
 
