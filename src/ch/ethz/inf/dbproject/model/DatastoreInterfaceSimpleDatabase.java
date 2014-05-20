@@ -61,14 +61,14 @@ public final class DatastoreInterfaceSimpleDatabase {
 		while (select.moveNext()) {
 
 			final Tuple tuple = select.current();
-			final Comment c = new Comment(tuple.getString(2), tuple.getString(3), tuple.getInt(0));
+			final Comment c = new Comment(tuple.getString(3), tuple.getString(2), tuple.getInt(0));
 			comments.add(c);
 		}
 		return comments;
 	}
 
 	public void insertComment(final int id, final String text, final String username, String type) {
-			Insert.insertIntoGenerateKey("Note"+type+".txt", new String[]{"idnote",id+"",text,username});
+			Insert.insertIntoGenerateKey("Note"+type+".txt", new String[]{id+"",text,username});
 
 	}
 

@@ -73,8 +73,13 @@ public class Insert {
 	
 	protected static void prepare_values(String[] values){
 		for(int i = 0; i < values.length; i++){
-			if (values[i] != null)
+			if (values[i] != null){
+				values[i] = values[i].replace("$","/$");
 				values[i] = values[i].replace(",","$COMMA$");
+				values[i] = values[i].replace("\r\n","$LINEFEED$");
+				values[i] = values[i].replace("\r","$RETURN$");
+				values[i] = values[i].replace("\n","$NEWL$");
+			}
 		}
 	}
 }
