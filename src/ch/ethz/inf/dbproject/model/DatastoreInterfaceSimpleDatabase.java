@@ -516,11 +516,13 @@ public final class DatastoreInterfaceSimpleDatabase {
 		
 		final Minus minus = new Minus(scan3, join, "idperson");
 		
+		final Sort sort = new Sort(minus,"firstname",true);
+		
 		final List<Person> persons = new ArrayList<Person>();
 		
-		while(minus.moveNext())
+		while(sort.moveNext())
 		{
-			Tuple tuple = minus.current();
+			Tuple tuple = sort.current();
 
 			Person p = new Person(tuple.getInt(0),tuple.getString(1),tuple.getString(2), null);
 			persons.add(p);
