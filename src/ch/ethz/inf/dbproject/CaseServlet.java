@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import ch.ethz.inf.dbproject.model.Address;
 import ch.ethz.inf.dbproject.model.Comment;
 import ch.ethz.inf.dbproject.model.Conviction;
-import ch.ethz.inf.dbproject.model.DatastoreInterface;
 import ch.ethz.inf.dbproject.model.Case;
 import ch.ethz.inf.dbproject.model.DatastoreInterfaceSimpleDatabase;
 import ch.ethz.inf.dbproject.model.Person;
@@ -58,11 +57,11 @@ public final class CaseServlet extends HttpServlet {
 			final Integer id = Integer.parseInt(idString);
 			final Case aCase = this.dbInterface.getCaseById(id);
 			final List<Comment> clist = this.dbInterface.getCommentsById(id,
-					"case");
+					"Cases");
 			final List<Person> plist = this.dbInterface.getSuspectsById(id);
 			final List<Person> wlist = this.dbInterface.getWitnessesById(id);
 			final List<Person> vlist = this.dbInterface.getVictimsById(id);
-			final List<Conviction> convlist = this.dbInterface.getConvictionsById(id,"case");
+			final List<Conviction> convlist = this.dbInterface.getConvictionsById(id,"idcase");
 			final User loggedUser = UserManagement
 					.getCurrentlyLoggedInUser(session);
 			session.setAttribute("CurrentCase", aCase);
@@ -128,7 +127,7 @@ public final class CaseServlet extends HttpServlet {
 				ptable.addLinkColumn("Erase Suspicion","Reprieve", "Case?action=deleteSuspect&idperson=", "idperson");
 			}
 
-//			ptable.addObjects(plist);
+			ptable.addObjects(plist);
 
 			session.setAttribute("suspectTable", ptable);
 			
@@ -145,7 +144,7 @@ public final class CaseServlet extends HttpServlet {
 				wtable.addLinkColumn("Unlink from case","Unlink", "Case?action=deleteWitness&idperson=", "idperson");
 			}
 
-//			wtable.addObjects(wlist);
+			wtable.addObjects(wlist);
 
 			session.setAttribute("witnessTable", wtable);
 			
@@ -163,12 +162,9 @@ public final class CaseServlet extends HttpServlet {
 				vtable.addLinkColumn("Unlink from case","Unlink", "Case?action=deleteWitness&idperson=", "idperson");
 			}
 
-//			vtable.addObjects(vlist);
+			vtable.addObjects(vlist);
 
 			session.setAttribute("victimTable", vtable);
-			
-			
-			//
 			
 			
 			//Conviction table
@@ -185,7 +181,7 @@ public final class CaseServlet extends HttpServlet {
 				convtable.addLinkColumn("", "Edit dates", "Case?action=convDate&idcon=", "idcon");
 			}
 
-//			convtable.addObjects(convlist);
+			convtable.addObjects(convlist);
 
 			session.setAttribute("convictionTable", convtable);
 			
@@ -197,7 +193,7 @@ public final class CaseServlet extends HttpServlet {
 					"idperson",
 					Person.class
 					);
-//			personselect.addObjects(this.dbInterface.getUninvolvedInCase(aCase.getIdcase()));
+			personselect.addObjects(this.dbInterface.getUninvolvedInCase(aCase.getIdcase()));
 			
 			session.setAttribute("personSelect",personselect);
 			
@@ -209,19 +205,19 @@ public final class CaseServlet extends HttpServlet {
 			final String idcon = request.getParameter("idcon");
 			
 			if  (Nr != null && uname != null && action != null && action.trim().equals("deleteNote")){
-				this.dbInterface.deleteNote(Integer.parseInt(Nr), uname, "case");
+				this.dbInterface.deleteNote(Integer.parseInt(Nr), "Cases");
 				// Refresh to show changes
 				response.sendRedirect(request.getRequestURL().toString());
 				return; //Return is needed to prevent the forwarding
 			}	
 			if  (action != null && action.trim().equals("deleteSuspect") && idperson != null){
-				this.dbInterface.deleteInvolved(aCase.getIdcase(),Integer.parseInt(idperson), "suspect");
+				this.dbInterface.deleteInvolved(aCase.getIdcase(),Integer.parseInt(idperson));
 				// Refresh to show changes
 				response.sendRedirect(request.getRequestURL().toString());
 				return; //Return is needed to prevent the forwarding
 			}
 			if  (action != null && action.trim().equals("deleteWitness") && idperson != null){
-				this.dbInterface.deleteInvolved(aCase.getIdcase(),Integer.parseInt(idperson), "witness");
+				this.dbInterface.deleteInvolved(aCase.getIdcase(),Integer.parseInt(idperson));
 				// Refresh to show changes
 				response.sendRedirect(request.getRequestURL().toString());
 				return; //Return is needed to prevent the forwarding
@@ -232,7 +228,7 @@ public final class CaseServlet extends HttpServlet {
 			}
 			if (action != null && action.trim().equals("convDate") && idcon != null){
 				session.setAttribute("ConvDate",true);
-				Conviction aCon = dbInterface.getConvictionsById(Integer.parseInt(idcon), "conviction").get(0);
+				Conviction aCon = dbInterface.getConvictionsById(Integer.parseInt(idcon), "idcon").get(0);
 				session.setAttribute("CurrentCon", aCon);
 			}
 
@@ -279,7 +275,7 @@ public final class CaseServlet extends HttpServlet {
 					&& comment != null && !comment.isEmpty())
 			{
 				this.dbInterface.insertComment(id, comment,
-						loggedUser.getUsername(), "case");
+						loggedUser.getUsername(), "Cases");
 				response.setHeader("Refresh",  "0");
 			}
 			if (action != null && action.trim().equals("delete"))
@@ -300,13 +296,39 @@ public final class CaseServlet extends HttpServlet {
 				session.setAttribute("ConvDate", false);
 				String begindate = request.getParameter("begindate");
 				try{
-					java.sql.Date.valueOf(begindate);
+					String[] strs = begindate.split("-");
+					if (strs.length == 3){
+						//Fill up with 0s
+						while(strs[0].length() < 4)
+							strs[0] = "0"+strs[0];
+						if (strs[1].length() == 1)
+							strs[1] = "0"+strs[1];
+						if (strs[2].length() == 1)
+							strs[2] = "0"+strs[2];
+						begindate = strs[0]+"-"+strs[1]+"-"+strs[2];
+						java.sql.Date.valueOf(begindate);
+					}
+					else
+						throw new IllegalArgumentException();
 				}catch(IllegalArgumentException e){
 					begindate = null; // default = unknown value
 				}
 				String enddate = request.getParameter("enddate");
 				try{
-					java.sql.Date.valueOf(enddate);
+					String[] strs = enddate.split("-");
+					if (strs.length == 3){
+						//Fill up with 0s
+						while(strs[0].length() < 4)
+							strs[0] = "0"+strs[0];
+						if (strs[1].length() == 1)
+							strs[1] = "0"+strs[1];
+						if (strs[2].length() == 1)
+							strs[2] = "0"+strs[2];
+						enddate = strs[0]+"-"+strs[1]+"-"+strs[2];
+						java.sql.Date.valueOf(enddate);
+					}
+					else
+						throw new IllegalArgumentException();
 				}catch(IllegalArgumentException e){
 					enddate = null; // default = unknown value
 				}
@@ -334,7 +356,20 @@ public final class CaseServlet extends HttpServlet {
 				
 				String date = request.getParameter("date");
 				try{
-					java.sql.Date.valueOf(date);
+					String[] strs = date.split("-");
+					if (strs.length == 3){
+						//Fill up with 0s
+						while(strs[0].length() < 4)
+							strs[0] = "0"+strs[0];
+						if (strs[1].length() == 1)
+							strs[1] = "0"+strs[1];
+						if (strs[2].length() == 1)
+							strs[2] = "0"+strs[2];
+						date = strs[0]+"-"+strs[1]+"-"+strs[2];
+						java.sql.Date.valueOf(date);
+					}
+					else
+						throw new IllegalArgumentException();
 				}catch(IllegalArgumentException e){
 					date = null; // default = unknown value
 				}

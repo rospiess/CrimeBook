@@ -81,7 +81,6 @@
 	%>
 		<form action="Person" method="post">
 			<input type="hidden" name="action" value="add_comment" />
-			<input type="hidden" name="user_id" value="<%= user.getUserid() %>" />
 			<h2>Add Comment</h2>
 			<% String defaultComment = "Enter your comment to this person here ..."; // delete the default text on clicking into the textarea, and only the default text. Restore default text when left empty.%>
 				<textarea rows="4" cols="50" name="comment" 

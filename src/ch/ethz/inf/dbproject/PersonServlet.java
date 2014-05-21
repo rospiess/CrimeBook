@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import ch.ethz.inf.dbproject.model.Case;
 import ch.ethz.inf.dbproject.model.Conviction;
 import ch.ethz.inf.dbproject.model.Comment;
-import ch.ethz.inf.dbproject.model.DatastoreInterface;
 import ch.ethz.inf.dbproject.model.DatastoreInterfaceSimpleDatabase;
 import ch.ethz.inf.dbproject.model.Involved;
 import ch.ethz.inf.dbproject.model.Person;
@@ -55,8 +54,8 @@ public final class PersonServlet extends HttpServlet {
 			session.setAttribute("Last Case", idString);
 			final Integer id = Integer.parseInt(idString);
 			final Person aPerson = this.dbInterface.getPersonById(id);
-			final List<Comment> comlist = this.dbInterface.getCommentsById(id,"person");
-			final List<Conviction> conlist = this.dbInterface.getConvictionsById(id,"person");
+			final List<Comment> comlist = this.dbInterface.getCommentsById(id,"Persons");
+			final List<Conviction> conlist = this.dbInterface.getConvictionsById(id,"idperson");
 			final List<Involved> invlist = this.dbInterface.getInvolvedByPersonId(id);
 			final User loggedUser = UserManagement
 					.getCurrentlyLoggedInUser(session);
@@ -100,7 +99,7 @@ public final class PersonServlet extends HttpServlet {
 				ctable.addLinkColumn("Delete", "<img src='./s_cancel.png'></img>", "Person?action=deleteNote&uname="+loggedUser.getUsername()+"&delete=", "idnote");
 			}
 				
-//			ctable.addObjects(comlist);		
+			ctable.addObjects(comlist);		
 
 			session.setAttribute("commentTable", ctable);
 			
@@ -116,7 +115,7 @@ public final class PersonServlet extends HttpServlet {
 			contable.addBeanColumn("End Date", "enddateString");
 			contable.addLinkColumn("", "View Case", "Case?id=", "idcase");
 			
-//			contable.addObjects(conlist);	
+			contable.addObjects(conlist);	
 
 			session.setAttribute("convictionTable", contable);
 			
@@ -131,7 +130,7 @@ public final class PersonServlet extends HttpServlet {
 			invtable.addBeanColumn("Role", "role");
 			invtable.addLinkColumn("", "View Case", "Case?id=", "idcase");
 
-//			invtable.addObjects(invlist);	
+			invtable.addObjects(invlist);	
 
 			session.setAttribute("involvedTable", invtable);
 			
@@ -143,7 +142,7 @@ public final class PersonServlet extends HttpServlet {
 					"idcase",
 					Case.class
 					);
-//			caseselect.addObjects(this.dbInterface.getCasesUninvolvedIn(aPerson.getIdperson()));
+			caseselect.addObjects(this.dbInterface.getCasesUninvolvedIn(aPerson.getIdperson()));
 			
 			session.setAttribute("caseSelect",caseselect);
 			
@@ -155,7 +154,7 @@ public final class PersonServlet extends HttpServlet {
 			final String uname = request.getParameter("uname");
 			
 			if  (Nr != null && uname != null && action != null && action.trim().equals("deleteNote")){
-				this.dbInterface.deleteNote(Integer.parseInt(Nr), uname, "person");
+				this.dbInterface.deleteNote(Integer.parseInt(Nr), "Persons");
 				// Refresh
 				response.sendRedirect(request.getRequestURL().toString());
 				return;
@@ -203,7 +202,7 @@ public final class PersonServlet extends HttpServlet {
 			
 
 			if(action != null && action.equals("add_comment")&& comment  != null && !comment.isEmpty()){
-				this.dbInterface.insertComment(id, comment, loggedUser.getUsername(), "person");
+				this.dbInterface.insertComment(id, comment, loggedUser.getUsername(), "Persons");
 				response.setHeader("Refresh", "0");
 			}
 			
@@ -244,7 +243,20 @@ public final class PersonServlet extends HttpServlet {
 				}
 				
 				try{
-					java.sql.Date.valueOf(date);
+					String[] strs = date.split("-");
+					if (strs.length == 3){
+						//Fill up with 0s
+						while(strs[0].length() < 4)
+							strs[0] = "0"+strs[0];
+						if (strs[1].length() == 1)
+							strs[1] = "0"+strs[1];
+						if (strs[2].length() == 1)
+							strs[2] = "0"+strs[2];
+						date = strs[0]+"-"+strs[1]+"-"+strs[2];
+						java.sql.Date.valueOf(date);
+					}
+					else
+						throw new IllegalArgumentException();
 				}catch(IllegalArgumentException e){
 					date = "0001-01-01"; // default = unknown value
 					

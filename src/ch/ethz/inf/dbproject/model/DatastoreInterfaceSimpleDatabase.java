@@ -1,7 +1,10 @@
 package ch.ethz.inf.dbproject.model;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import ch.ethz.inf.dbproject.model.simpleDatabase.operators.*;
@@ -13,33 +16,30 @@ import ch.ethz.inf.dbproject.model.simpleDatabase.*;
  * part 2 of the project.
  */
 public final class DatastoreInterfaceSimpleDatabase {
-
+		
+	final String[] schemaAddress = new String[] { "idaddress", "country", "zip", "city", "street", "streetno"};
+	final String[] schemaCase = new String[] { "idcase", "title", "descr", "date", "time", "idaddress", "cat", "open", "username" };
+	final String[] schemaCaseAddress = new String[] { "idcase", "title", "descr", "date", "time", "cat", "open", "country", "zip", "city", "street", "streetno" };
+	final String[] schemaCategory = new String[] { "cat", "supercat"};
+	final String[] schemaConviction = new String[] {"idcon", "startdate", "enddate", "idcase", "idperson" };
+	final String[] schemaInvolved = new String[] { "idperson", "idcase", "role"};
+	final String[] schemaPerson = new String[] { "idperson", "firstname", "lastname", "birth" };
+	
 	public DatastoreInterfaceSimpleDatabase() {
 	}
 
 	public final Case getCaseById(final int id) {
-		final Scan scan = new Scan("Cases.txt", new String[] { "id", "title", "descr", "date", "time", "loc", "cat", "open" });
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final Select<Integer> select = new Select<Integer>(scan, "idcase", id);
 
-		final Select<Integer> select = new Select<Integer>(scan, "id", id);
-
-		if (select.moveNext()) {
-
-			final Tuple tuple = select.current();
-			final Case c = new Case(tuple.getInt(0), tuple.getString(1), tuple.getString(2), tuple.getDate(3), tuple.getTime(4),
-			// TODO: implement this
-					new Address("", "", "", 0, 0), new Category(tuple.getString(6), null), tuple.getBoolean(7));
-			return c;
-
-		}
-		return null;
+		return joinAddressToCase(select).get(0);
 
 	}
 
 	public final Person getPersonById(final int id) {
 
-		final Scan scan = new Scan("Persons.txt", new String[] { "id", "firstname", "lastname", "birth" });
-
-		final Select<Integer> select = new Select<Integer>(scan, "id", id);
+		final Scan scan = new Scan("Persons.txt", schemaPerson);
+		final Select<Integer> select = new Select<Integer>(scan, "idperson", id);
 
 		if (select.moveNext()) {
 
@@ -53,619 +53,450 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Comment> getCommentsById(final int id, String type) {
-		String s;
-		if (type.equals("case"))
-			s = "NoteCases";
-		else
-			s = "NotePersons";
-
-		final Scan scan = new Scan(s + ".txt", new String[] { "noteid", "id", "comment", "username" });
+		
+		final Scan scan = new Scan("Note"+type + ".txt", new String[] { "noteid", "id", "comment", "username" });
 
 		final Select<Integer> select = new Select<Integer>(scan, "id", id);
 		final List<Comment> comments = new ArrayList<Comment>();
 		while (select.moveNext()) {
 
 			final Tuple tuple = select.current();
-			final Comment c = new Comment(tuple.getString(2), tuple.getString(3), tuple.getInt(1));
+			final Comment c = new Comment(tuple.getString(3), tuple.getString(2), tuple.getInt(0));
 			comments.add(c);
 		}
-		return comments;/*
-						 * try {
-						 * 
-						 * final Statement stmt =
-						 * this.sqlConnection.createStatement(); final ResultSet
-						 * rs; if (type.equals("case")) rs = stmt.executeQuery(
-						 * "Select * from notecase where idcase = " + id); else
-						 * rs = stmt .executeQuery(
-						 * "Select * from noteperson where idpersonofinterest = "
-						 * + id); final List<Comment> clist = new
-						 * ArrayList<Comment>(); while (rs.next()) {
-						 * clist.add(new Comment(rs)); }
-						 * 
-						 * rs.close(); stmt.close();
-						 * 
-						 * return clist;
-						 * 
-						 * } catch (final SQLException ex) {
-						 * ex.printStackTrace(); return null; }
-						 */
-
+		return comments;
 	}
 
 	public void insertComment(final int id, final String text, final String username, String type) {
-		/*
-		 * try {
-		 * 
-		 * final PreparedStatement stmt; if (type.equals("case")){ stmt =
-		 * ps_insertCaseComment; }
-		 * 
-		 * else{ stmt = ps_insertPersonComment; }
-		 * 
-		 * stmt.setInt(1, id); stmt.setString(2, text); stmt.setString(3,
-		 * username); stmt.execute();
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
+			Insert.insertIntoGenerateKey("Note"+type+".txt", new String[]{id+"",text,username});
 
 	}
 
 	public final List<Conviction> getConvictionsById(final int id, String type) {
 		// Get Conviction by ID
 		// type determines whether the ID belongs to the case, the person or the conviction itself
-		final Scan scan = new Scan("Convictions.txt", 
-				new String[] {
-					"idcon",
-					"date",
-					"enddate",
-					"case",
-					"person"
-				}
-			);
+		
+		final Scan scan = new Scan("Convictions.txt", schemaConviction);
+		final Scan scan2 = new Scan("Persons.txt", schemaPerson);
+		final Scan scan3 = new Scan("Cases.txt", schemaCase);
 		
 		final Select<Integer> select = new Select<Integer>(scan, type, id);
 		
+		final Join join = new Join(scan2, select, "idperson", new String[]{"idcon","startdate", "enddate","idcase","idperson","firstname", "lastname"});
+		final Join join2 = new Join(scan3, join,"idcase",new String[]{"idcon","startdate", "enddate","idperson","firstname", "lastname","idcase","title","cat"});
+		
 		final List<Conviction> convictions = new ArrayList<Conviction>();
-		while (select.moveNext()) {
+		
+		while (join2.moveNext()) {
 			
-			final Tuple tuple = select.current();
+			final Tuple tuple = join2.current();
 			final Conviction c = new Conviction(
 				tuple.getInt(0),
-				tuple.getString(1),
-				tuple.getString(2),
-//				TODO: Get right Case & person
-				null,
-				null
-//				tuple.getInt(3),				
-//				tuple.getInt(4)
+				tuple.getDate(1),
+				tuple.getDate(2),
+				new Case(tuple.getInt(6),tuple.getString(7),null,null,null,null,new Category(tuple.getString(8), null), false), 
+				new Person(tuple.getInt(3),tuple.getString(4),tuple.getString(5),null)
 			);
 			convictions.add(c);
 		}
 		return convictions;
-		/*
-		try {
-
-			final Statement stmt = this.sqlConnection.createStatement();
-			final ResultSet rs;
-			if (type.equals("case"))
-				rs = stmt
-						.executeQuery("Select * from conviction co, personofinterest p, cases ca where co.idcase = "
-								+ id
-								+ " and p.idpersonofinterest = co.idpersonofinterest"
-								+ " and ca.idcase = co.idcase ORDER BY lastname ASC");
-			else if (type.equals("person")){
-				rs = stmt
-						.executeQuery("Select * from conviction co, personofinterest p, cases ca where co.idpersonofinterest = "
-								+ id
-								+ " and co.idpersonofinterest = p.idpersonofinterest "
-								+ " and co.idcase = ca.idcase ORDER BY title ASC");
-			}
-			else{
-				// Search by conviction id
-				rs = stmt.executeQuery("Select * from conviction co, cases ca, personofinterest p where "
-						+ " co.idconviction = " + id
-						+ " and co.idpersonofinterest = p.idpersonofinterest "
-						+ " and co.idcase = ca.idcase");
-			}
-			final List<Conviction> clist = new ArrayList<Conviction>();
-			while (rs.next()) {
-				clist.add(new Conviction(rs));
-			}
-
-			rs.close();
-			stmt.close();
-
-			return clist;
-
-		} catch (final SQLException ex) {
-			ex.printStackTrace();
-			return null;
-		}*/
-
 	}
 
 	public final void updateConvictionDates(int idcon, String begindate, String enddate) {
-		/*
-		 * try{ final PreparedStatement stmt = ps_updateConvictionDates;
-		 * stmt.setString(1, begindate); stmt.setString(2, enddate);
-		 * stmt.setInt(3,idcon); stmt.execute();
-		 * 
-		 * } catch (final SQLException ex){ ex.printStackTrace(); return; }
-		 */
+		Update.update("Convictions.txt", idcon, new String[]{null,begindate,enddate,null,null});
 	}
 
 	public final List<Involved> getInvolvedByPersonId(final int pid) {
 		// Returns list of involvement of a person by their id.
 		// The Involved class contains information about the case and the
 		// person.
-		return null;/*
-					 * try {
-					 * 
-					 * final Statement stmt =
-					 * this.sqlConnection.createStatement(); final ResultSet rs
-					 * = stmt .executeQuery(
-					 * "Select * from involved, cases, personofinterest" +
-					 * " where involved.idperson = " + pid +
-					 * " and personofinterest.idpersonofinterest = " + pid +
-					 * " and cases.idCase = involved.idcase ORDER BY title ASC"
-					 * ); final List<Involved> invlist = new
-					 * ArrayList<Involved>(); while (rs.next()) {
-					 * invlist.add(new Involved(rs)); }
-					 * 
-					 * rs.close(); stmt.close();
-					 * 
-					 * return invlist;
-					 * 
-					 * } catch (final SQLException ex) { ex.printStackTrace();
-					 * return null; }
-					 */
+		
+		final Scan scan = new Scan("Involved.txt", schemaInvolved);
+		final Scan scan2 = new Scan("Cases.txt", schemaCase);
+		
+	
+		final Select<Integer> select = new Select<Integer>(scan,"idperson",pid);
+		
+		final Join join = new Join(scan2, select, "idcase", new String[]{"role","idcase","title"});
+		
+		List<Involved> invlist = new ArrayList<Involved>();
+		
+		while(join.moveNext())
+		{
+			Tuple tuple = join.current();
+			Involved i = new Involved(tuple.getString(0),null, 
+					new Case(tuple.getInt(1),tuple.getString(2),null,null,null,null, null, false));
+			invlist.add(i);
+		}
+		
+		return invlist;
 
 	}
 
 	public final boolean isInvolvedIn(final int pid, final int cid) {
-		return false;/*
-					 * try{ final Statement stmt =
-					 * sqlConnection.createStatement(); ResultSet rs =
-					 * stmt.executeQuery
-					 * ("SELECT count(*)>0 FROM involved WHERE idperson ="
-					 * +pid+" AND idcase="+cid); if (rs.next()) return
-					 * rs.getBoolean(1); return false; }catch(final SQLException
-					 * ex){ ex.printStackTrace(); return true; }
-					 */
+
+		final Scan scan = new Scan("Involved.txt", schemaInvolved);
+		
+		final Select<Integer> select = new Select<Integer>(scan,"idcase",cid);
+		
+		final Select<Integer> select2 = new Select<Integer>(select,"idperson",pid);
+		
+		return select2.moveNext();
 	}
 
-	@SuppressWarnings("deprecation")
+
+	@SuppressWarnings( "deprecation" )
 	public final void setCaseOpen(int id, boolean open) {
-		/*
-		 * try { PreparedStatement s = ps_setCaseOpen; s.setString(1, open ? "1"
-		 * : "0"); s.setInt(2, id); s.execute();
-		 * 
-		 * if (open){ // delete convictions associated with this case s =
-		 * ps_deleteConvictions; s.setInt(1, id); s.execute(); } else{ // Create
-		 * convictions based on suspects
-		 * 
-		 * // Get suspects with query final Statement stmt =
-		 * this.sqlConnection.createStatement(); final ResultSet rs = stmt
-		 * .executeQuery(
-		 * "Select idpersonofinterest, catname from personofinterest p, involved i, cases c "
-		 * + "where i.role = 'Suspect' and i.idCase = " + id +
-		 * " and i.idperson = p.idpersonofinterest and c.idCase = " + id);
-		 * 
-		 * while (rs.next()) { // Create conviction with the suspects in the
-		 * resultset ps_createConviction.setInt(1, id);
-		 * ps_createConviction.setInt(2, rs.getInt("idpersonofinterest"));
-		 * 
-		 * Date d =getCurrentDate(); ps_createConviction.setDate(3, d);
-		 * 
-		 * Category c = new Category(rs.getString("catname"),null);
-		 * switch(c.getName()){ case "Assault": d.setYear(d.getYear()+5); break;
-		 * case "Murder": d.setYear(d.getYear()+20); break; case "Kidnapping":
-		 * d.setYear(d.getYear()+8); break; case "OtherPers":
-		 * d.setYear(d.getYear()+4); break; case "Theft":
-		 * d.setYear(d.getYear()+1); break; case "Fraud":
-		 * d.setYear(d.getYear()+2); break; case "Burglary":
-		 * d.setYear(d.getYear()+2); break; case "OtherProp":
-		 * d.setYear(d.getYear()+3); break; default: d.setYear(d.getYear()+1);
-		 * break; }
-		 * 
-		 * ps_createConviction.setDate(4, d);
-		 * 
-		 * ps_createConviction.execute(); }
-		 * 
-		 * rs.close();
-		 * 
-		 * }
-		 * 
-		 * 
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
+		
+		Update.update("Cases.txt", id, new String[]{null,null,null,null,null,null,null,open+"",null});
+		
+		if(open)// delete convictions associated with this case
+		{
+			for(Conviction c:  getConvictionsById(id, "idcase"))
+				Delete.deleteFrom("Convictions.txt", c.getIdcon());
+		}
+		else// Create convictions based on suspects
+		{
+			Case c = getCaseById(id);
+			Date d = getCurrentDate();
+			switch(c.getCat()){
+			case "Assault":
+				d.setYear(d.getYear()+5); break;
+			case "Murder":
+				d.setYear(d.getYear()+20); break;
+			case "Kidnapping":
+				d.setYear(d.getYear()+8); break;
+			case "OtherPers":
+				d.setYear(d.getYear()+4); break;
+			case "Theft":
+				d.setYear(d.getYear()+1); break;
+			case "Fraud":
+				d.setYear(d.getYear()+2); break;
+			case "Burglary":
+				d.setYear(d.getYear()+2); break;
+			case "OtherProp":
+				d.setYear(d.getYear()+3); break;
+			default:
+				d.setYear(d.getYear()+1); break;
+			}
+			
+			SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
+			
+			for(Person p: getSuspectsById(id))
+				Insert.insertIntoGenerateKey("Convictions.txt", new String[]{s.format(getCurrentDate()),s.format(d),""+id,""+p.getIdperson()});
+		}
 	}
 
 	private final Date getCurrentDate() {
-		return null;/*
-					 * try{ final Statement stmt =
-					 * this.sqlConnection.createStatement(); final ResultSet rs
-					 * = stmt.executeQuery("SELECT CURDATE()"); if(rs.next())
-					 * return rs.getDate(1); }catch(final SQLException ex){
-					 * ex.printStackTrace(); } return null;
-					 */
+		return Calendar.getInstance().getTime();
 	}
 
-	public void deleteInvolved(int idcase, int idperson, String type) {
-		// Deletes an involvement of case + person
-		// Type distinguishes between suspect and witness
-		/*
-		 * try { PreparedStatement s = ps_deleteInvolved; s.setInt(1, idcase);
-		 * s.setInt(2, idperson); if (type == "suspect"){ s.setString(3,
-		 * "Suspect"); } else { s.setString(3, "Witness"); } s.execute();
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
+	public void deleteInvolved(int idcase, int idperson) {
+		Delete.deleteFrom("Involved.txt", new int[]{idperson,idcase});
 	}
 
-	public final void deleteCase(int id) {
-		/*
-		 * try { PreparedStatement s = ps_deleteCases; s.setInt(1, id);
-		 * s.execute();
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
-
+	public final void deleteCase(int id) {		
+		for(Comment c:  getCommentsById(id, "Cases"))//Drop all Notes
+			Delete.deleteFrom("NotePersons.txt", c.getIdnote());
+		
+		for(Person p:  getSuspectsById(id))//Drop all Suspects
+			Delete.deleteFrom("Involved.txt", new int[]{p.getIdperson(),id});
+		
+		for(Person p:  getWitnessesById(id))//Drop all Witnesses
+			Delete.deleteFrom("Involved.txt", new int[]{p.getIdperson(),id});
+		
+		for(Person p:  getVictimsById(id))//Drop all Victims
+			Delete.deleteFrom("Involved.txt", new int[]{p.getIdperson(),id});
+		
+		//If Address is no longer used, drop it
+		int idAddress = getIdAddressByCase(id);
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final Select<Integer> select = new Select<Integer>(scan, "idaddress", idAddress);
+		if(!(select.moveNext() && select.moveNext()))
+			Delete.deleteFrom("Addresses.txt", idAddress);
+		
+		
+		Delete.deleteFrom("Cases.txt", id);		
 	}
 
-	public final void deletePerson(int id) {
-		/*
-		 * try {
-		 * 
-		 * PreparedStatement s = ps_deletePersons; s.setInt(1, id); s.execute();
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
+	public final void deletePerson(int id) {		
+		for(Conviction c: getConvictionsById(id, "idperson"))//Drop all Convictions
+			Delete.deleteFrom("Convictions.txt", c.getIdcon());
+		
+		for(Comment c:  getCommentsById(id, "Persons"))//Drop all Notes
+			Delete.deleteFrom("NotePersons.txt", c.getIdnote());
+		
+		for(Involved i:  getInvolvedByPersonId(id))//Drop all Involvements
+			Delete.deleteFrom("Involved.txt", new int[]{id,i.getIdcase()});		
 
+		
+		Delete.deleteFrom("Persons.txt", id);
 	}
 
-	public final void deleteNote(int Nr, String uname, final String type) {
-		// Deletes a caseNote with a certain Nr as key
-		// Type distinguishes between casenote and personnote
-		/*
-		 * try { PreparedStatement s; if (type == "case"){ s =
-		 * ps_deleteCaseNote; } else { s = ps_deletePersonNote; } s.setInt(1,
-		 * Nr); s.setString(2, uname); s.execute();
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
-
+	public final void deleteNote(int Nr, final String type) {
+		Delete.deleteFrom("Note"+type+".txt", Nr);
 	}
 
 	public final void openNewCase(String title, String descr, String date, String time, Address address, String catname, String username) {
 
-		/*
-		 * try { PreparedStatement s = ps_insertAddress; s.setString(1,
-		 * address.getCountry()); s.setString(2, address.getCity());
-		 * s.setString(3, address.getStreet()); s.setInt(4,
-		 * address.getZipCode()); s.setInt(5, address.getStreetNo());
-		 * s.execute(); ResultSet rs = s.getGeneratedKeys(); rs.next(); s =
-		 * ps_insertCase; s.setString(1, title); s.setString(2, descr);
-		 * s.setString(3, date); s.setString(4, time); s.setInt(5,
-		 * rs.getInt(1)); s.setString(6, catname); s.setString(7, username);
-		 * s.execute();
-		 * 
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
-
+		String country = address.getCountry(), city = address.getCity(), street = address.getStreet(),
+				zip = Integer.toString(address.getZipCode()), streetno = Integer.toString(address.getStreetNo());
+		
+		final Scan scan = new Scan("Addresses.txt",schemaAddress);
+		
+		final Select<String> select1 = new Select<String>(scan,"country",country);
+		final Select<String> select2 = new Select<String>(select1,"city",city);
+		final Select<String> select3 = new Select<String>(select2,"street",street);
+		final Select<String> select4 = new Select<String>(select3,"zip",zip);
+		final Select<String> select5 = new Select<String>(select4,"streetno",streetno);
+		
+		int idAddress;
+		if(select5.moveNext())//Address already exists
+			idAddress = select5.current().getInt(0);
+		
+		else//Insert new Address
+			idAddress = Insert.insertIntoGenerateKey("Addresses.txt", new String[]{country, zip, city, street, streetno});
+		
+		Insert.insertIntoGenerateKey("Cases.txt", new String[]{title,descr,date,time,""+idAddress,catname,"true",username});
 	}
 
-	public final void updateAddress(int id, Address address) {
+	public final int updateAddress(int id, Address address) {
+		//returns the id of the address, used if old address was shared
+		int idAddress = getIdAddressByCase(id);
+		boolean shared = false;
+		
+		//check if Address was shared
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final Select<Integer> select = new Select<Integer>(scan, "idaddress", idAddress);
+		if(select.moveNext() && select.moveNext()){
+			// There is more than one case using the old address
+			shared = true;
+		}
+		
+		// Check if new address already exists
+		final Scan scan2 = new Scan("Addresses.txt",schemaAddress);
+		
+		//Get data from address
+		String country = address.getCountry(), city = address.getCity(), street = address.getStreet(),
+				zip = Integer.toString(address.getZipCode()), streetno = Integer.toString(address.getStreetNo());
 
-		/*
-		 * try { final Statement stmt = sqlConnection.createStatement();
-		 * ResultSet rs = stmt.executeQuery("Select * FROM Address a");
-		 * while(rs.next()){ Address a = new Address(rs); if(a.equals(address))
-		 * { String s ="Update Cases set idAddress = " + rs.getInt("idAddress")
-		 * + " where idCase = " + id; stmt.execute(s); return; } }
-		 * 
-		 * rs = stmt.executeQuery("Select  idCase, idAddress FROM Cases"); int
-		 * idAddress = getIdAddressByCase(id); while(rs.next()){
-		 * 
-		 * if(rs.getInt("idAddress") == idAddress && rs.getInt("idCase") != id)
-		 * { PreparedStatement s = ps_insertAddress; s.setString(1,
-		 * address.getCountry()); s.setString(2, address.getCity());
-		 * s.setString(3, address.getStreet()); s.setInt(4,
-		 * address.getZipCode()); s.setInt(5, address.getStreetNo());
-		 * s.execute(); ResultSet rs2 = s.getGeneratedKeys(); rs2.next();
-		 * stmt.execute("Update Cases set idAddress = " + rs2.getInt(1) +
-		 * " where idCase = " + id); return; } }
-		 * 
-		 * PreparedStatement s = ps_updateAddress; s.setString(1,
-		 * address.getCountry()); s.setString(2, address.getCity());
-		 * s.setString(3, address.getStreet()); s.setInt(4,
-		 * address.getZipCode()); s.setInt(5, address.getStreetNo());
-		 * s.setInt(6, getIdAddressByCase(id)); s.execute();
-		 * 
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
+		final Select<String> select1 = new Select<String>(scan2,"country",country);
+		final Select<String> select2 = new Select<String>(select1,"city",city);
+		final Select<String> select3 = new Select<String>(select2,"street",street);
+		final Select<String> select4 = new Select<String>(select3,"zip",zip);
+		final Select<String> select5 = new Select<String>(select4,"streetno",streetno);
+		
+		if(select5.moveNext()){
+			// If not shared delete Address with old ID
+			if (!shared){
+				Delete.deleteFrom("Addresses.txt", idAddress);
+			}
+			
+			// Since the address already exists, save the new id
+			idAddress = select5.current().getInt(0);
+		}
+		else{
+			// New Address doesn't exist, insert or update
+			if (shared){
+				// Insert new Address
+				idAddress = Insert.insertIntoGenerateKey("Addresses.txt", new String[]{country, zip, city, street, streetno});
+			}
+			else
+			{
+				// Address is not shared, just update the old one
+				Update.update("Addresses.txt", idAddress, new String[]{null,address.getCountry(), Integer.toString(address.getZipCode()), address.getCity(), address.getStreet(),Integer.toString(address.getStreetNo())});
+			}
+		}
+		
+		// return the ID of the new Address
+		return idAddress;
 
 	}
 
 	public final void updateCase(int id, String title, String descr, String date, String time, Address address, String catname) {
-
-		/*
-		 * try { updateAddress(id,address);
-		 * 
-		 * PreparedStatement s = ps_updateCase; s.setString(1, title);
-		 * s.setString(2, descr); s.setString(3, date); s.setString(4, time);
-		 * s.setString(5, catname); s.setInt(6,id); s.execute();
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
-
+		
+		int idAddress = updateAddress(id,address);
+		Update.update("Cases.txt", id, new String[]{null,title,descr,date,time,Integer.toString(idAddress),catname,null,null});
 	}
 
 	private final int getIdAddressByCase(int idcase) {
-		return 0;
-		/*
-		 * try{ final Statement s = sqlConnection.createStatement(); final
-		 * ResultSet rs = s.executeQuery("Select idAddress FROM Cases c" +
-		 * " WHERE c.idcase = "+idcase); if(rs.next()){ return
-		 * rs.getInt("idAddress"); } } catch(final SQLException ex){
-		 * ex.printStackTrace(); } return -1;
-		 */
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final Select<Integer> select = new Select<Integer>(scan, "idcase", idcase);
+		if(select.moveNext())
+			return select.current().getInt(5);
+		return -1;
 	}
 
 	public final List<Case> getCasesByUser(String username) {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "Select * from Cases c, Address a where c.idAddress = a.idAddress and c.username = '"
-		 * + username +"' ORDER BY title ASC");
-		 * 
-		 * final List<Case> cases = new ArrayList<Case>(); while (rs.next()) {
-		 * cases.add(new Case(rs)); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return cases;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final Select<String> select = new Select<String>(scan,"username", username);
+		
+		return joinAddressToCase(select);
+
 
 	}
 
 	public final List<Case> getAllCases() {
-		final Scan scan = new Scan("Cases.txt", new String[] { "id", "title", "descr", "date", "time", "loc", "cat", "open" });
-
-		final List<Case> cases = new ArrayList<Case>();
-		while (scan.moveNext()) {
-
-			final Tuple tuple = scan.current();
-			final Case c = new Case(tuple.getInt(0), tuple.getString(1), tuple.getString(2), tuple.getDate(3), tuple.getTime(4),
-			// TODO: implement this
-					new Address("", "", "", 0, 0), new Category(tuple.getString(6), null), tuple.getBoolean(7));
-			cases.add(c);
-
-		}
-		return cases;
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final Sort sort = new Sort(scan, "title", true);
+		return joinAddressToCase(sort);
 
 	}
 
 	public final List<Case> getOpenCases() {
-		final Scan scan = new Scan("Cases.txt", new String[] { "id", "title", "descr", "date", "time", "loc", "cat", "open" });
-
+		final Scan scan = new Scan("Cases.txt", schemaCase);
 		final Select<Boolean> select = new Select<Boolean>(scan, "open", true);
-		final List<Case> cases = new ArrayList<Case>();
-		while (select.moveNext()) {
-
-			final Tuple tuple = select.current();
-			final Case c = new Case(tuple.getInt(0), tuple.getString(1), tuple.getString(2), tuple.getDate(3), tuple.getTime(4),
-			// TODO: implement this
-					new Address("", "", "", 0, 0), new Category(tuple.getString(6), null), tuple.getBoolean(7));
-			cases.add(c);
-
-		}
-		return cases;
+		final Sort sort = new Sort(select, "title", true);
+		
+		return joinAddressToCase(sort);
 
 	}
 
 	public final List<Case> getClosedCases() {
 
-		final Scan scan = new Scan("Cases.txt", new String[] { "id", "title", "descr", "date", "time", "loc", "cat", "open" });
-
+		final Scan scan = new Scan("Cases.txt", schemaCase);
 		final Select<Boolean> select = new Select<Boolean>(scan, "open", false);
-		final List<Case> cases = new ArrayList<Case>();
-		while (select.moveNext()) {
-
-			final Tuple tuple = select.current();
-			final Case c = new Case(tuple.getInt(0), tuple.getString(1), tuple.getString(2), tuple.getDate(3), tuple.getTime(4),
-			// TODO: implement this
-					new Address("", "", "", 0, 0), new Category(tuple.getString(6), null), tuple.getBoolean(7));
-			cases.add(c);
-
-		}
-		return cases;
+		final Sort sort = new Sort(select, "title", true);
+		
+		return joinAddressToCase(sort);
 
 	}
 
 	public final List<Case> getMostRecentCases() {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "Select * from Cases c, Address a where c.idAddress = a.idAddress order by date desc"
-		 * );
-		 * 
-		 * final List<Case> cases = new ArrayList<Case>(); while (rs.next()) {
-		 * cases.add(new Case(rs)); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return cases;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final Sort sort = new Sort(scan, "date", false);
+		
+		return joinAddressToCase(sort);
 	}
 
 	public final List<Case> getOldestUnsolvedCases() {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "Select * from Cases c, Address a where c.idAddress = a.idAddress and "
-		 * + "open = 1 order by date asc");
-		 * 
-		 * final List<Case> cases = new ArrayList<Case>(); while (rs.next()) {
-		 * cases.add(new Case(rs)); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return cases;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final Select<Boolean> select = new Select<Boolean>(scan, "open", true);
+		final Sort sort = new Sort(select, "date", true);
+		
+		return joinAddressToCase(sort);
 	}
 
 	public final List<Case> getCasesByCategory(String category) {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs; if (category.equals("personal")) rs = stmt
-		 * .executeQuery("Select * from Cases c, Category, Address a where " +
-		 * "c.idAddress = a.idAddress and c.catname" +
-		 * " = category.catname and supercat = 'personal crime' ORDER BY title ASC"
-		 * ); else if (category.equals("property")) rs = stmt
-		 * .executeQuery("Select * from Cases c, Category , Address a where " +
-		 * " c.idAddress = a.idAddress and c.catname" +
-		 * " = category.catname and  supercat = 'property crime' ORDER BY title ASC"
-		 * ); else rs = stmt
-		 * .executeQuery("Select * from Cases c, Address a where " +
-		 * "c.idAddress = a.idAddress and catname = '" + category +
-		 * "' ORDER BY title ASC");
-		 * 
-		 * final List<Case> cases = new ArrayList<Case>(); while (rs.next()) {
-		 * cases.add(new Case(rs)); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return cases;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		Select<String> select;
+		
+		if(category.equals("Property Crime")||category.equals("Personal Crime"))
+		{
+			final Scan scan2 = new Scan("Category.txt", schemaCategory);
+			final Join join = new Join(scan2, scan, "cat",
+					new String[] { "idcase", "title", "descr", "date", "time", "idaddress", "cat", "open", "supercat" });
+			  select = new Select<String> (join, "supercat", category);
+			  return joinAddressToCase(select);
+		}
+		else
+			select = new Select<String> (scan, "cat", category);	
+		
+		return joinAddressToCase(select);
 	}
 
 	public final List<Conviction> searchByCategory(String category) {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "Select * from Cases cas, Conviction c,personofinterest where cas.catname "
-		 * + "like '%" + category +
-		 * "%' and personofinterest.idpersonofinterest = c.idpersonofinterest" +
-		 * " and cas.idcase = c.idcase" + " ORDER BY LastName ASC");
-		 * 
-		 * final List<Conviction> conv = new ArrayList<Conviction>(); while
-		 * (rs.next()) { conv.add(new Conviction(rs)); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return conv;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		
+		final Scan scan = new Scan("Convictions.txt", schemaConviction);
+		final Scan scan2 = new Scan("Cases.txt", schemaCase);
+		final Scan scan3 = new Scan("Persons.txt", schemaPerson);
+
+
+		final Join join = new Join(scan2, scan,"idcase",new String[]{"idcon","startdate", "enddate","idcase","idperson","title", "cat"});
+		
+		final Select<String> select = new Select<String>(join, "cat", category);
+		
+		final Join join2 = new Join(scan3, select, "idperson", new String[]{"idcon","startdate", "enddate","idperson","firstname", "lastname","idcase","title","cat"});
+		final List<Conviction> convictions = new ArrayList<Conviction>();
+		
+		while (join2.moveNext()) {
+			
+			final Tuple tuple = join2.current();
+			final Conviction c = new Conviction(
+				tuple.getInt(0),
+				tuple.getString(1),
+				tuple.getString(2),
+				new Case(tuple.getInt(6),tuple.getString(7),null,null,null,null,new Category(tuple.getString(8), null), false), 
+				new Person(tuple.getInt(3),tuple.getString(4),tuple.getString(5),null)
+			);
+			convictions.add(c);
+		}
+		return convictions;
+		
 	}
 
 	public final List<Conviction> searchByDate(String date) {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "Select * from Cases cas, Conviction c,personofinterest p where (beginDate = '"
-		 * + date + "' or endDate = '" + date +
-		 * "') and p.idpersonofinterest = c.idpersonofinterest" +
-		 * " and cas.idcase = c.idcase" + " ORDER BY LastName ASC");
-		 * 
-		 * final List<Conviction> conv = new ArrayList<Conviction>(); while
-		 * (rs.next()) { conv.add(new Conviction(rs)); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return conv;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Convictions.txt", schemaConviction);
+		final Scan scan1 = new Scan("Convictions.txt", schemaConviction);
+		final Scan scan2 = new Scan("Persons.txt", schemaPerson);
+		final Scan scan3 = new Scan("Cases.txt", schemaCase);
+		
+		final Select<String> select = new Select<String>(scan, "startdate", date);
+		final Select<String> select2 = new Select<String>(scan1, "enddate", date);
+
+		final Union union = new Union(select,select2);
+		
+		final Join join = new Join(scan2, union, "idperson", new String[]{"idcon","startdate", "enddate","idcase","idperson","firstname", "lastname"});
+		final Join join2 = new Join(join, scan3,"idcase",new String[]{"idcon","startdate", "enddate","idperson","firstname", "lastname","idcase","title","cat"});
+		
+		
+		final List<Conviction> convictions = new ArrayList<Conviction>();
+		
+		while (join2.moveNext()) {
+			
+			final Tuple tuple = join2.current();
+			final Conviction c = new Conviction(
+				tuple.getInt(0),
+				tuple.getString(1),
+				tuple.getString(2),
+				new Case(tuple.getInt(6),tuple.getString(7),null,null,null,null,new Category(tuple.getString(8), null), false), 
+				new Person(tuple.getInt(3),tuple.getString(4),tuple.getString(5),null)
+			);
+			convictions.add(c);
+		}
+		return convictions;
 	}
 
 	public final List<Case> searchByTitle(String title) {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "Select * from Cases c, Address a where c.idAddress = a.idAddress and c.title like '%"
-		 * + title + "%'" + " ORDER BY Title ASC");
-		 * 
-		 * final List<Case> persons = new ArrayList<Case>(); while (rs.next()) {
-		 * persons.add(new Case(rs)); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return persons;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final Like like = new Like(scan, "title", title);
+		final Sort sort = new Sort(like, "title", true);
+
+		return joinAddressToCase(sort);
 	}
 
 	public final List<Person> searchByName(String name) {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt
-		 * .executeQuery("Select * from personofinterest where firstname like '%"
-		 * + name + "%'" + "or lastname like '%" + name + "%'" +
-		 * " ORDER BY LastName ASC");
-		 * 
-		 * final List<Person> persons = new ArrayList<Person>(); while
-		 * (rs.next()) { persons.add(new Person(rs)); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return persons;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Persons.txt",schemaPerson);
+		final Like like = new Like(scan, new String[]{"firstname","lastname"}, name);
+		final Sort sort = new Sort(like, "lastname", true);
+		
+		final List<Person> persons = new ArrayList<Person>();
+		final HashSet<Integer> h = new HashSet<Integer>();//saves IDs of all persons who've been added so far
+		
+		while (sort.moveNext()) {
+			
+			final Tuple tuple = sort.current();
+			int id = tuple.getInt(0);
+			if(!h.contains(id))//Only add if not already in it
+			{
+			final Person p = new Person(id, tuple.getString(1), tuple.getString(2), tuple.getDate(3));
+			persons.add(p);
+			h.add(id);
+			}
+
+		}
+		
+		return persons;
 	}
 
 	public final List<Person> getAllPersons() {
-		final Scan scan = new Scan("Persons.txt", new String[] { "id", "firstname", "lastname", "birth" });
-
+		final Scan scan = new Scan("Persons.txt", schemaPerson);
+		final Sort sort = new Sort(scan, "lastname", true);
 		final List<Person> persons = new ArrayList<Person>();
-		while (scan.moveNext()) {
+		while (sort.moveNext()) {
 
-			final Tuple tuple = scan.current();
+			final Tuple tuple = sort.current();
 			final Person p = new Person(tuple.getInt(0), tuple.getString(1), tuple.getString(2), tuple.getDate(3));
 			persons.add(p);
 
@@ -674,154 +505,124 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Person> getUninvolvedInCase(int idcase) {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery("SELECT * from personofinterest p "
-		 * + "WHERE p.idpersonofinterest NOT IN (SELECT p2.idpersonofinterest "
-		 * + "FROM personofinterest p2, involved i2 " +
-		 * "WHERE p2.idpersonofinterest = i2.idperson AND i2.idcase = " + idcase
-		 * +")"+ " ORDER BY p.LastName ASC");
-		 * 
-		 * final List<Person> persons = new ArrayList<Person>(); while
-		 * (rs.next()) { persons.add(new Person(rs)); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return persons;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Involved.txt", schemaInvolved);
+		final Scan scan2 = new Scan("Persons.txt", schemaPerson);
+		final Scan scan3 = new Scan("Persons.txt", schemaPerson);
+		
+	
+		final Select<Integer> select = new Select<Integer>(scan,"idcase",idcase, false);
+				
+		final Join join = new Join(scan2, select, "idperson", new String[]{"idperson","firstname","lastname"});
+		
+		final Minus minus = new Minus(scan3, join, "idperson");
+		
+		final List<Person> persons = new ArrayList<Person>();
+		
+		while(minus.moveNext())
+		{
+			Tuple tuple = minus.current();
+
+			Person p = new Person(tuple.getInt(0),tuple.getString(1),tuple.getString(2), null);
+			persons.add(p);
+			
+		}
+		
+		return persons;
 	}
+	
 
 	public final List<Case> getCasesUninvolvedIn(int pid) {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "SELECT * FROM Cases c, Address a where c.idAddress = a.idAddress and open = 1"
-		 * + " AND c.idCase NOT IN ( " + " SELECT i2.idCase FROM Involved i2 " +
-		 * " WHERE i2.idperson = "+pid+")" + " ORDER BY title asc");
-		 * 
-		 * final List<Case> cases = new ArrayList<Case>(); while (rs.next()) {
-		 * cases.add(new Case(rs)); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return cases;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
-
+		final Scan scan = new Scan("Involved.txt", schemaInvolved);
+		final Scan scan2 = new Scan("Cases.txt", schemaCase);
+		final Scan scan3 = new Scan("Cases.txt", schemaCase);
+		
+		//Get cases in which the person is involved
+		final Select<Integer> select = new Select<Integer>(scan,"idperson", pid, false);
+		final Join join = new Join(scan2, select, "idcase", new String[]{"idcase","title"});
+		
+		//subtract them from open cases
+		final Select<Boolean> select2 =  new Select<Boolean>(scan3, "open", true);
+		final Minus minus = new Minus(select2, join, "idcase");
+		
+		final List<Case> cases = new ArrayList<Case>();
+		
+		
+		while(minus.moveNext())
+		{
+			Tuple tuple = minus.current();
+			
+			Case c = new Case(tuple.getInt(0),tuple.getString(1),null, null,null,null,null,false);
+			cases.add(c);
+			
+		}
+		
+		return cases;
 	}
 
 	public final List<Person> getSuspectsById(int id) {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "Select idpersonofinterest,firstname,lastname, dateofbirth from personofinterest p, involved i "
-		 * + "where i.role = 'Suspect' and i.idCase = '" + id +
-		 * "' and i.idperson = p.idpersonofinterest ORDER BY lastname ASC");
-		 * 
-		 * final List<Person> persons = new ArrayList<Person>(); while
-		 * (rs.next()) { persons.add(new Person(rs)); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return persons;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Persons.txt", schemaPerson);
+		final Scan scan2 = new Scan("Involved.txt", schemaInvolved);
+		final Select<Integer> select = new Select<Integer>(scan2, "idcase",id);
+		final Select<String> select2 = new Select<String>(select, "role","Suspect");
+		final Join join = new Join(scan, select2, "idperson", new String[]{"idperson", "firstname", "lastname", "birth","role"});
+		
+		final List<Person> persons = new ArrayList<Person>();
+		while (join.moveNext()) {
+
+			final Tuple tuple = join.current();
+			final Person p = new Person(tuple.getInt(0), tuple.getString(1), tuple.getString(2), tuple.getDate(3));
+			persons.add(p);
+
+		}
+		return persons;
 	}
 
 	public final List<Person> getWitnessesById(int id) {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "Select idpersonofinterest,firstname,lastname, dateofbirth from personofinterest p, involved i "
-		 * + "where i.role = 'Witness' and i.idCase = '" + id +
-		 * "' and i.idperson = p.idpersonofinterest ORDER BY lastname ASC");
-		 * 
-		 * final List<Person> persons = new ArrayList<Person>(); while
-		 * (rs.next()) { persons.add(new Person(rs)); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return persons;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Persons.txt", schemaPerson);
+		final Scan scan2 = new Scan("Involved.txt", schemaInvolved);
+		final Select<Integer> select = new Select<Integer>(scan2, "idcase",id);
+		final Select<String> select2 = new Select<String>(select, "role","Witness");
+		final Join join = new Join(scan, select2, "idperson", new String[]{"idperson", "firstname", "lastname", "birth","role"});
+		
+		final List<Person> persons = new ArrayList<Person>();
+		while (join.moveNext()) {
+
+			final Tuple tuple = join.current();
+			final Person p = new Person(tuple.getInt(0), tuple.getString(1), tuple.getString(2), tuple.getDate(3));
+			persons.add(p);
+
+		}
+		return persons;
 	}
 
 	public final List<Person> getVictimsById(int id) {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "Select idpersonofinterest,firstname,lastname, dateofbirth from personofinterest p, involved i "
-		 * + "where i.role = 'Victim' and i.idCase = '" + id +
-		 * "' and i.idperson = p.idpersonofinterest ORDER BY lastname ASC");
-		 * 
-		 * final List<Person> persons = new ArrayList<Person>(); while
-		 * (rs.next()) { persons.add(new Person(rs)); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return persons;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Persons.txt", schemaPerson);
+		final Scan scan2 = new Scan("Involved.txt", schemaInvolved);
+		final Select<Integer> select = new Select<Integer>(scan2, "idcase",id);
+		final Select<String> select2 = new Select<String>(select, "role","Victim");
+		final Join join = new Join(scan, select2, "idperson", new String[]{"idperson", "firstname", "lastname", "birth","role"});
+		
+		final List<Person> persons = new ArrayList<Person>();
+		while (join.moveNext()) {
+
+			final Tuple tuple = join.current();
+			final Person p = new Person(tuple.getInt(0), tuple.getString(1), tuple.getString(2), tuple.getDate(3));
+			persons.add(p);
+
+		}
+		return persons;
 	}
 
 	public final void addInvolvement(int idcase, int idperson, String role) {
-		/*
-		 * try{ final PreparedStatement stmt = ps_addInvolvement; stmt.setInt(1,
-		 * idcase); stmt.setInt(2, idperson); stmt.setString(3, role);
-		 * stmt.execute(); }catch(final SQLException ex){ ex.printStackTrace();
-		 * }
-		 */
+		Insert.insertInto("Involved.txt", new String[]{idperson+"",idcase+"",role});
 	}
 
 	public final void addNewPerson(String firstname, String lastname, String date) {
-
-		/*
-		 * try { PreparedStatement stmt = ps_addPerson; stmt.setString(1,
-		 * firstname); stmt.setString(2, lastname); stmt.setString(3, date);
-		 * 
-		 * stmt.execute();
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
+		Insert.insertIntoGenerateKey("Persons.txt", new String[]{firstname,lastname,date});
 	}
 
 	public final void updatePerson(int idperson, String firstname, String lastname, String date) {
-
-		/*
-		 * try { PreparedStatement stmt = ps_updatePerson; stmt.setString(1,
-		 * firstname); stmt.setString(2, lastname); stmt.setString(3, date);
-		 * stmt.setInt(4, idperson);
-		 * 
-		 * stmt.execute();
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); }
-		 */
+		Update.update("Persons.txt", idperson, new String[]{null,firstname,lastname,date});
 	}
 
 	public final String getPassword(String username) {
@@ -840,19 +641,10 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public void insertUser(String username, String password) {
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement();
-		 * stmt.execute("Insert into user (username, password) values ('" +
-		 * username + "', '" + password + "')"); stmt.close(); } catch (final
-		 * SQLException ex) { ex.printStackTrace();
-		 * 
-		 * }
-		 */
+		Insert.insertInto("Users.txt", new String[]{username,password});
 	}
 
-	public final boolean getNameIsTaken(String username) {
+	public final boolean isNameTaken(String username) {
 
 		final Scan scan = new Scan("Users.txt", new String[] { "username", "password" });
 
@@ -861,167 +653,154 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public void changePassword(String username, String newpassword) {
-		/*
-		 * try {
-		 * 
-		 * final PreparedStatement stmt = ps_changePassword; stmt.setString(1,
-		 * newpassword); stmt.setString(2, username); stmt.execute(); } catch
-		 * (final SQLException ex) { ex.printStackTrace();
-		 * 
-		 * }
-		 */
+		Update.update("Users.txt", username, new String[]{null,newpassword});
 	}
 
 	public final List<Pair<String, Integer>> getStatCategories() {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "SELECT Title, CatName, COUNT(*) as amount FROM cases GROUP BY CatName"
-		 * );
-		 * 
-		 * final List<Pair<String,Integer>> stats = new
-		 * ArrayList<Pair<String,Integer>>(); while (rs.next()) {
-		 * Pair<String,Integer> a_cat_val = new Pair<String,
-		 * Integer>(rs.getString("CatName"), rs.getInt("amount"));
-		 * stats.add(a_cat_val); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return stats;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
 
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final GroupBy groupby = new GroupBy(scan,"cat",Function.Type.COUNT);
+
+		List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(); 
+		
+		while (groupby.moveNext()){
+			Pair<String, Integer> p = new Pair<String, Integer>(groupby.current().getString(0),groupby.current().getInt(1));
+			pairs.add(p);
+		}
+		return pairs;
+		
 	}
 
 	public final List<Pair<String, Integer>> getStatInvolvements() {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "(SELECT FirstName, LastName, COUNT(*) AS amount FROM PersonOfInterest AS POI, involved AS inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest LIMIT 5) UNION (SELECT 'Other', '', sum(t2.amount2) from (SELECT COUNT(*) AS amount2 FROM PersonOfInterest as POI2, involved AS inv2 WHERE POI2.idPersonOfInterest = inv2.idPerson GROUP BY POI2.idPersonOfInterest LIMIT 5,1000) AS t2);"
-		 * );
-		 * 
-		 * final List<Pair<String,Integer>> stats = new
-		 * ArrayList<Pair<String,Integer>>(); while (rs.next()) {
-		 * Pair<String,Integer> a_cat_val = new Pair<String,
-		 * Integer>((rs.getString("FirstName") + " " +
-		 * rs.getString("LastName")), rs.getInt("amount"));
-		 * stats.add(a_cat_val); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return stats;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Involved.txt", schemaInvolved);
+		final Scan scan1 = new Scan("Persons.txt", schemaPerson);
+		final GroupBy groupby = new GroupBy(scan,"idperson",Function.Type.COUNT);
+		final Join join = new Join(groupby,scan1,"idperson", new String[]{
+				"firstname","lastname","count"});
+		
+		
+		List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(); 
+		
+		while (join.moveNext()){
+			Pair<String, Integer> p = new Pair<String, Integer>
+			(join.current().getString(0) + " "+ join.current().getString(1),
+					join.current().getInt(2));
+			pairs.add(p);
+		}
+		return pairs;
+		
 	}
 
 	public final List<Pair<Integer, Integer>> getStatCrimesPerYear() {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "SELECT YEAR(date) AS year, COUNT(*) AS numberOfCrimes FROM cases GROUP BY year ORDER BY year DESC LIMIT 5;"
-		 * );
-		 * 
-		 * final List<Pair<Integer,Integer>> stats = new
-		 * ArrayList<Pair<Integer,Integer>>(); while (rs.next()) {
-		 * Pair<Integer,Integer> a_year_val = new Pair<Integer,
-		 * Integer>(rs.getInt("year"), rs.getInt("numberOfCrimes"));
-		 * stats.add(a_year_val); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return stats;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final GroupBy groupby = new GroupBy(scan,"date",Function.Type.COUNT,4);
+		final Sort sort = new Sort(groupby,"date",false);
+
+		List<Pair<Integer, Integer>> pairs = new ArrayList<Pair<Integer, Integer>>(); 
+		
+		while (sort.moveNext()){
+			Pair<Integer, Integer> p = new Pair<Integer, Integer>
+			(sort.current().getInt(0), sort.current().getInt(1));
+			pairs.add(p);
+		}
+		return pairs;
+		
 	}
 
 	public final List<Pair<Integer, Integer>> getStatConvictionsPerYear() {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "SELECT YEAR(beginDate) AS year, COUNT(*) AS numberOfConvictions FROM conviction GROUP BY year ORDER BY year DESC LIMIT 5;"
-		 * );
-		 * 
-		 * final List<Pair<Integer,Integer>> stats = new
-		 * ArrayList<Pair<Integer,Integer>>(); while (rs.next()) {
-		 * Pair<Integer,Integer> a_year_val = new Pair<Integer,
-		 * Integer>(rs.getInt("year"), rs.getInt("numberOfConvictions"));
-		 * stats.add(a_year_val); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return stats;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		final Scan scan = new Scan("Convictions.txt", schemaConviction);
+		final GroupBy groupby = new GroupBy(scan,"startdate",Function.Type.COUNT,4);
+		final Sort sort = new Sort(groupby, "startdate", false);
+
+		List<Pair<Integer, Integer>> pairs = new ArrayList<Pair<Integer, Integer>>(); 
+		
+		while (sort.moveNext()){
+			Pair<Integer, Integer> p = new Pair<Integer, Integer>
+			(sort.current().getInt(0), sort.current().getInt(1));
+			pairs.add(p);
+		}
+		return pairs;
+		
 	}
 
 	public final List<Pair<String, Integer>> getStatSuperCategories() {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "SELECT category.SuperCat AS SuperCatName, COUNT(*) AS amount FROM cases, category WHERE cases.CatName = category.CatName GROUP BY category.SuperCat;"
-		 * );
-		 * 
-		 * final List<Pair<String,Integer>> stats = new
-		 * ArrayList<Pair<String,Integer>>(); while (rs.next()) {
-		 * Pair<String,Integer> a_SuperCat_val = new Pair<String,
-		 * Integer>(rs.getString("SuperCatName"), rs.getInt("amount"));
-		 * stats.add(a_SuperCat_val); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return stats;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		
+		final Scan scan1 = new Scan("Category.txt",schemaCategory);
+		final Scan scan2 = new Scan("Cases.txt", schemaCase);
+		final Join join1 = new Join(scan1,scan2, "cat", new String[] {"cat","supercat"});
+		final GroupBy groupby = new GroupBy(join1,"supercat",Function.Type.COUNT);
+
+		List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(); 
+		
+		while (groupby.moveNext()){
+			Pair<String, Integer> p = new Pair<String, Integer>(groupby.current().getString(0),groupby.current().getInt(1));
+			pairs.add(p);
+		}
+		return pairs;
+		
 	}
 
 	public final List<Pair<String, Integer>> getAverageAges() {
-		return null;
-		/*
-		 * try {
-		 * 
-		 * final Statement stmt = this.sqlConnection.createStatement(); final
-		 * ResultSet rs = stmt .executeQuery(
-		 * "SELECT * FROM ((SELECT 'Convicted'  as 'Registered as', AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) as 'age' FROM personOfInterest AS p, conviction AS c WHERE p.idPersonOfINterest = c.idpersonofinterest) UNION (SELECT CatName as 'Registered as', AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) as 'age' FROM personOfInterest AS p, conviction AS conv, cases WHERE p.idPersonOfINterest = conv.idpersonofinterest and cases.idCase = conv.idCase GROUP BY CatName) UNION (SELECT 'Person of interest' as 'Registered as', AVG(TIMESTAMPDIFF(YEAR,DateOfBirth,CURDATE())) as 'age' FROM personOfInterest)) AS allAges;"
-		 * );
-		 * 
-		 * final List<Pair<String,Integer>> stats = new
-		 * ArrayList<Pair<String,Integer>>(); while (rs.next()) {
-		 * Pair<String,Integer> a_persons_ages = new Pair<String,
-		 * Integer>(rs.getString("Registered as"), rs.getInt("age"));
-		 * stats.add(a_persons_ages); }
-		 * 
-		 * rs.close(); stmt.close();
-		 * 
-		 * return stats;
-		 * 
-		 * } catch (final SQLException ex) { ex.printStackTrace(); return null;
-		 * }
-		 */
+		@SuppressWarnings("deprecation")
+		final int year = getCurrentDate().getYear() + 1900; //Year 0 is 1900 for some reason..
+		
+		//Categories
+		final Scan scan = new Scan("Persons.txt", schemaPerson);
+		final Scan scan1 = new Scan("Convictions.txt", schemaConviction);
+		final Scan scan2 = new Scan("Cases.txt", schemaCase);
+		final Join join = new Join(scan,scan1,"idperson",new String[]{"idcase","idperson","birth"});
+
+		final Join join2 = new Join(scan2,join,"idcase",new String[]{"cat","birth"});
+		final GroupBy groupby = new GroupBy(join2,"cat",Function.Type.AVERAGEYEAR,"birth");
+
+		List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(); 
+		
+		while (groupby.moveNext()){
+			Pair<String, Integer> p = new Pair<String, Integer>
+			(groupby.current().getString(0), year - groupby.current().getInt(1));
+			pairs.add(p);
+		}
+		
+		//Persons
+		final Scan scan3 = new Scan("Persons.txt", schemaPerson);
+		final GroupBy groupby2 = new GroupBy(scan3,"lastname",Function.Type.AVERAGEYEAR,"birth",0);
+
+		if(groupby2.moveNext()){
+			Pair<String, Integer> p = new Pair<String, Integer>
+			("All Persons", year - groupby2.current().getInt(1));
+			pairs.add(p);
+		}		
+		
+		//Convictions
+		final Scan scan4 = new Scan("Persons.txt", schemaPerson);
+		final Scan scan5 = new Scan("Convictions.txt", schemaConviction);
+		final Join join3 = new Join(scan4,scan5,"idperson",new String[]{"lastname","birth"});
+		
+		final GroupBy groupby3 = new GroupBy(join3,"lastname",Function.Type.AVERAGEYEAR,"birth",0);
+
+		if(groupby3.moveNext()){
+			Pair<String, Integer> p = new Pair<String, Integer>
+			("All Convicts", year - groupby3.current().getInt(1));
+			pairs.add(p);
+		}
+		
+		return pairs;
+	}
+	private List<Case> joinAddressToCase(Operator cases)//Own function since it's used so often
+	{
+		final Scan addresses = new Scan("Addresses.txt", schemaAddress);
+		final Join join = new Join(addresses, cases, "idaddress", schemaCaseAddress);
+		
+		final List<Case> list = new ArrayList<Case>();
+		while (join.moveNext()) {
+
+			final Tuple tuple = join.current();
+			final Case c = new Case(tuple.getInt(0), tuple.getString(1), tuple.getString(2), tuple.getDate(3), tuple.getTime(4),
+					new Address(tuple.getString(7), tuple.getString(9), tuple.getString(10), tuple.getInt(8), tuple.getInt(11)), new Category(tuple.getString(5), null), tuple.getBoolean(6));
+			list.add(c);
+
+		}
+		return list;
 	}
 
 }

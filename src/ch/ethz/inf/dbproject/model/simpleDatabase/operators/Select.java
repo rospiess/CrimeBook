@@ -1,7 +1,5 @@
 package ch.ethz.inf.dbproject.model.simpleDatabase.operators;
 
-import java.util.Comparator;
-
 import ch.ethz.inf.dbproject.model.simpleDatabase.Tuple;
 
 
@@ -33,6 +31,7 @@ public class Select<T> extends Operator {
 	private final Operator op;
 	private final String column;
 	private final T compareValue;
+	private boolean not = false;//true if we want all tuples who DONT match the compareValue
 
 	/**
 	 * Contructs a new selection operator.
@@ -49,18 +48,40 @@ public class Select<T> extends Operator {
 		this.column = column;
 		this.compareValue = compareValue;
 	}
+	public Select(
+			final Operator op, 
+			final String column, 
+			final T compareValue,
+			boolean not
+		) {
+			this.op = op;
+			this.column = column;
+			this.compareValue = compareValue;
+			this.not = not;
+		}
 
 	private final boolean accept(final Tuple tuple)
 	{
 
 		final int columnIndex = tuple.getSchema().getIndex(this.column);
 		
-		if (tuple.getString(columnIndex).equals(this.compareValue.toString())) {
-			return true;
-		} else {
+		//Check if null, this prevents null pointer exception when trying to compare strings
+		//TODO: Change this, if comparison to null is needed
+		if (tuple.getString(columnIndex) == null)
 			return false;
-		}
 		
+		if(!not)
+		{
+			if ( tuple.getString(columnIndex).equals(this.compareValue.toString()))
+				return true;
+			else 
+				return false;
+		}
+				
+		if (!tuple.getString(columnIndex).equals(this.compareValue.toString())) 
+			return true;
+		 else 
+			return false;
 	}
 	
 	@Override

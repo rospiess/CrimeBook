@@ -1,11 +1,8 @@
 package ch.ethz.inf.dbproject.model.simpleDatabase.operators;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 
 import ch.ethz.inf.dbproject.model.simpleDatabase.Tuple;
@@ -17,9 +14,13 @@ import ch.ethz.inf.dbproject.model.simpleDatabase.TupleSchema;
  * values of a tuple. The line a comma separated.
  */
 public class Scan extends Operator {
+	
+	
+	
 
 	private final TupleSchema schema;
 	private final BufferedReader reader;
+	private boolean closed = false;
 
 	/**
 	 * Contructs a new scan operator.
@@ -38,8 +39,9 @@ public class Scan extends Operator {
 
 		try {
 			//IMPORTANT: Add Tables to your build path as a source (Right click on Tables -> Build Path -> Use as source folder
-			reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/"+fileName)));
-		} catch (final NullPointerException e) {
+//			reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/"+fileName)));
+			reader = new BufferedReader(new FileReader(absolutePath + fileName));
+		} catch (final Exception e) {
 			throw new RuntimeException("could not find file " + fileName);
 		}
 		this.reader = reader;
@@ -62,24 +64,40 @@ public class Scan extends Operator {
 	public boolean moveNext() {
 		
 		try {
-			String input = reader.readLine();
-			if(input == null)
-				reader.close();
-			else
-			{
-				String[] values = input.split(",");
-				current = new Tuple(schema, values);
-				return true;
+			if (!closed){
+				String input = reader.readLine();
+				if(input != null)
+				{
+					String[] values = input.split(",");
+					process_values(values);
+					current = new Tuple(schema, values);
+					return true;
+				}			
+				else{
+					closed = true;
+					reader.close();
+				}
 			}
 			return false;
 			
 		} catch (final IOException e) {
-			
 			throw new RuntimeException("could not read: " + this.reader + 
 				". Error is " + e);
 			
 		}
 		
+	}
+	
+	private void process_values(String[] values){
+		//Converts comma tokens back to commas
+		for(int i = 0; i < values.length; i++){
+			if (values[i] != null)
+				values[i] = values[i].replace("$COMMA$",",");
+				values[i] = values[i].replace("$LINEFEED$","</br>");
+				values[i] = values[i].replace("$RETURN$","</br>");
+				values[i] = values[i].replace("$NEWL$","</br>");
+				values[i] = values[i].replace("/$","$");
+		}
 	}
 
 }

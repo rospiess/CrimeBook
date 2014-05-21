@@ -12,3 +12,4 @@
 6,6,Witness
 6,4,Victim
 7,7,Suspect
+8,8,Witness

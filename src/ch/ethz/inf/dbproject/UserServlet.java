@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 
 import ch.ethz.inf.dbproject.model.Address;
 import ch.ethz.inf.dbproject.model.Case;
-import ch.ethz.inf.dbproject.model.DatastoreInterface;
 import ch.ethz.inf.dbproject.model.DatastoreInterfaceSimpleDatabase;
 import ch.ethz.inf.dbproject.model.User;
 import ch.ethz.inf.dbproject.util.UserManagement;
@@ -90,7 +89,7 @@ public final class UserServlet extends HttpServlet {
 			else if (password.equals(""))
 				session.setAttribute("RegistrationStatus",
 					"Please enter a password");
-			else if (dbInterface.getNameIsTaken(username))
+			else if (dbInterface.isNameTaken(username))
 				session.setAttribute("RegistrationStatus", "Username \""
 					+ username + "\" already in use");
 			else if (!password.equals(confirmpassword))
@@ -128,7 +127,7 @@ public final class UserServlet extends HttpServlet {
 					"Case?id=" 	/* This is the base url. The final url will be composed from the concatenation of this and the parameter below */, 
 					"idcase" 			/* For every case displayed, the ID will be retrieved and will be attached to the url base above */);
 
-//			table.addObjects(dbInterface.getCasesByUser(loggedUser.getUsername()));
+			table.addObjects(dbInterface.getCasesByUser(loggedUser.getUsername()));
 			session.setAttribute("UserCases",table);
 
 
@@ -203,7 +202,20 @@ public final class UserServlet extends HttpServlet {
 			if (!lastname.isEmpty()){
 			
 			try{
-				java.sql.Date.valueOf(date);
+				String[] strs = date.split("-");
+				if (strs.length == 3){
+					//Fill up with 0s
+					while(strs[0].length() < 4)
+						strs[0] = "0"+strs[0];
+					if (strs[1].length() == 1)
+						strs[1] = "0"+strs[1];
+					if (strs[2].length() == 1)
+						strs[2] = "0"+strs[2];
+					date = strs[0]+"-"+strs[1]+"-"+strs[2];
+					java.sql.Date.valueOf(date);
+				}
+				else
+					throw new IllegalArgumentException();
 			}catch(IllegalArgumentException e){
 				date = "0001-01-01"; // default = unknown value
 				errorlog = errorlog.concat(", date of birth unknown");
@@ -239,7 +251,20 @@ public final class UserServlet extends HttpServlet {
 				
 				String date = request.getParameter("date");
 				try{
-					java.sql.Date.valueOf(date);
+					String[] strs = date.split("-");
+					if (strs.length == 3){
+						//Fill up with 0s
+						while(strs[0].length() < 4)
+							strs[0] = "0"+strs[0];
+						if (strs[1].length() == 1)
+							strs[1] = "0"+strs[1];
+						if (strs[2].length() == 1)
+							strs[2] = "0"+strs[2];
+						date = strs[0]+"-"+strs[1]+"-"+strs[2];
+						java.sql.Date.valueOf(date);
+					}
+					else
+						throw new IllegalArgumentException();
 				}catch(IllegalArgumentException e){
 					date = null; // default = unknown value
 					errorlog = errorlog.concat(", date unkown");

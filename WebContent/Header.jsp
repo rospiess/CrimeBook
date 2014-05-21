@@ -48,21 +48,21 @@ if (u != null) {
 					<div class="menuDiv2"><a href="Cases?filter=oldest">Oldest Unsolved</a></div>
 					<div class="menuDiv1">Categories</div>
 					<div onmouseover="document.getElementsByClassName('personal subcategories')[0].style.display = 'block'; document.getElementsByClassName('property subcategories')[0].style.display = 'none';">
-					<div class="menuDiv2 personal"><a href="Cases?category=personal">Personal Crimes</a></div>
+					<div class="menuDiv2 personal"><a href="Cases?category=Personal Crime">Personal Crimes</a></div>
 					<div class="personal subcategories">
-					<div class="menuDiv3 personal"><a href="Cases?category=assault">Assault</a></div>
-					<div class="menuDiv3 personal"><a href="Cases?category=murder">Murder</a></div>
-					<div class="menuDiv3 personal"><a href="Cases?category=kidnapping">Kidnapping</a></div>
-					<div class="menuDiv3 personal"><a href="Cases?category=otherpers">Other</a></div>
+					<div class="menuDiv3 personal"><a href="Cases?category=Assault">Assault</a></div>
+					<div class="menuDiv3 personal"><a href="Cases?category=Murder">Murder</a></div>
+					<div class="menuDiv3 personal"><a href="Cases?category=Kidnapping">Kidnapping</a></div>
+					<div class="menuDiv3 personal"><a href="Cases?category=Otherpers">Other</a></div>
 					</div>
 					</div>
 					<div onmouseover="document.getElementsByClassName('property subcategories')[0].style.display = 'block'; document.getElementsByClassName('personal subcategories')[0].style.display = 'none';">
-					<div class="menuDiv2 property"><a href="Cases?category=property">Property Crimes</a></div>
+					<div class="menuDiv2 property"><a href="Cases?category=Property Crime">Property Crimes</a></div>
 					<div class="property subcategories">
-					<div class="menuDiv3 property"><a href="Cases?category=theft">Theft</a></div>
-					<div class="menuDiv3 property"><a href="Cases?category=fraud">Fraud</a></div>
-					<div class="menuDiv3 property"><a href="Cases?category=burglary">Burglary</a></div>
-					<div class="menuDiv3 property"><a href="Cases?category=otherprop">Other</a></div>
+					<div class="menuDiv3 property"><a href="Cases?category=Theft">Theft</a></div>
+					<div class="menuDiv3 property"><a href="Cases?category=Fraud">Fraud</a></div>
+					<div class="menuDiv3 property"><a href="Cases?category=Burglary">Burglary</a></div>
+					<div class="menuDiv3 property"><a href="Cases?category=Otherprop">Other</a></div>
 					</div>
 					</div>
 					<div class="menuDiv1"><a href="PersonsOfInterest">Persons of Interest</a></div>
