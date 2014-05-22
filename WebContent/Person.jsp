@@ -105,8 +105,8 @@
 			<select name="role">
 			<optgroup label="Role">
 				<option value = "Suspect">Suspect</option>
-				<option value = "Witness">Witness</option>
 				<option value = "Victim">Victim</option>
+				<option value = "Witness">Witness</option>
 			</optgroup>
 			</select>
 		

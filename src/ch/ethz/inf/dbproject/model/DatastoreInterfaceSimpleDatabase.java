@@ -516,7 +516,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 		
 		final Minus minus = new Minus(scan3, join, "idperson");
 		
-		final Sort sort = new Sort(minus,"firstname",true);
+		final Sort sort = new Sort(minus,"lastname",true);
 		
 		final List<Person> persons = new ArrayList<Person>();
 		
@@ -545,13 +545,14 @@ public final class DatastoreInterfaceSimpleDatabase {
 		//subtract them from open cases
 		final Select<Boolean> select2 =  new Select<Boolean>(scan3, "open", true);
 		final Minus minus = new Minus(select2, join, "idcase");
+		final Sort sort = new Sort(minus,"title",true);
 		
 		final List<Case> cases = new ArrayList<Case>();
 		
 		
-		while(minus.moveNext())
+		while(sort.moveNext())
 		{
-			Tuple tuple = minus.current();
+			Tuple tuple = sort.current();
 			
 			Case c = new Case(tuple.getInt(0),tuple.getString(1),null, null,null,null,null,false);
 			cases.add(c);

@@ -62,7 +62,7 @@ public class Person {
 	
 	public String getFullname()
 	{
-		return getFirstname() + " " + getLastname();
+		return getLastname() + ", " + getFirstname();
 	}
 
 }
