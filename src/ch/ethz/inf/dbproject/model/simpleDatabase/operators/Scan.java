@@ -93,9 +93,9 @@ public class Scan extends Operator {
 		for(int i = 0; i < values.length; i++){
 			if (values[i] != null)
 				values[i] = values[i].replace("$COMMA$",",");
-				values[i] = values[i].replace("$LINEFEED$","</br>");
-				values[i] = values[i].replace("$RETURN$","</br>");
-				values[i] = values[i].replace("$NEWL$","</br>");
+				values[i] = values[i].replace("$LINEFEED$","\r\n");
+				values[i] = values[i].replace("$RETURN$","\r");
+				values[i] = values[i].replace("$NEWL$","\n");
 				values[i] = values[i].replace("/$","$");
 		}
 	}
