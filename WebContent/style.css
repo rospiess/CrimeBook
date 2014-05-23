@@ -26,7 +26,7 @@ table#masterTable > tbody > tr > th#masterHeader {
 table#masterTable > tbody > tr > td#masterFooter {
 	border-top: 1px solid #100f35;
 	background: #66CCFF;
-	text-align: right;
+	text-align: left;
 }
 
 td#masterContentMenu {
