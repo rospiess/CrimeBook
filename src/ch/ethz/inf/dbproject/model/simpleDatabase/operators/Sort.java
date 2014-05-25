@@ -66,14 +66,6 @@ public class Sort extends Operator implements Comparator<Tuple> {
 			while(op.moveNext())
 				sortBuffer.add(op.current());
 			Collections.sort(this.sortBuffer, this);
-			
-			if (sortBuffer.size()>0){
-				current = sortBuffer.get(0);
-				offset = 1;
-				return true;
-			}
-			else
-				return false;
 		}
 		if(offset<sortBuffer.size())
 		{
