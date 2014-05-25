@@ -42,7 +42,9 @@ public final class SearchServlet extends HttpServlet {
 		final HttpSession session = request.getSession(true);
 
 		final BeanTableHelper<Person> ptable = new BeanTableHelper<Person>("persons", "casesTable", Person.class);
-
+		
+		final BeanTableHelper<Case> dtable = new BeanTableHelper<Case>("cases", "casesTable", Case.class);
+		
 		final BeanTableHelper<Case> table = new BeanTableHelper<Case>("cases", "casesTable", Case.class);
 
 		final BeanTableHelper<Conviction> ctable = new BeanTableHelper<Conviction>("conviction", "casesTable", Conviction.class);
@@ -66,9 +68,22 @@ public final class SearchServlet extends HttpServlet {
 
 				table.addObjects(this.dbInterface.searchByTitle(title));
 
-			}
+			} else if (filter.equals("description")) {
 
-			if (filter.equals("name")) {
+				session.setAttribute("results", dtable);
+				final String CaseDescription = request.getParameter("description");
+				dtable.addBeanColumn("Title", "title");
+				dtable.addBeanColumn("Case Description", "descr");
+				dtable.addBeanColumn("Date", "dateString");
+				dtable.addBeanColumn("Time", "timeString");
+				dtable.addBeanColumn("Location", "loc");
+				dtable.addBeanColumn("Category", "cat");
+				dtable.addBeanColumn("Open", "open");
+				dtable.addLinkColumn("", "View Case", "Case?id=", "idcase");
+
+				dtable.addObjects(this.dbInterface.searchByDescription(CaseDescription));
+
+			} else if (filter.equals("name")) {
 
 				session.setAttribute("results", ptable);
 				final String name = request.getParameter("name");

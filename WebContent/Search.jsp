@@ -18,10 +18,21 @@
 
 <form method="post" action="Search">
 <div>
+	<input type="hidden" name="filter" value="description" />
+	Search by keyword in Case description:
+	<input type="text" name="description" />
+	<input type="submit" value="Search" title="Search by Description" />
+</div>
+</form>
+
+<hr/>
+
+<form method="post" action="Search">
+<div>
 	<input type="hidden" name="filter" value="name" />
 	Search Person By Name:
 	<input type="text" name="name" />
-	<input type="submit" value="Search" title="Search by Description" />
+	<input type="submit" value="Search" title="Search by Name" />
 </div>
 </form>
 
