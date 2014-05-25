@@ -37,6 +37,14 @@ public class Sort extends Operator implements Comparator<Tuple> {
 	) {
 		
 		final int columnIndex = l.getSchema().getIndex(this.column);
+		if(columnIndex<0){
+			if (this.ascending) {
+				return 1;
+			} else {
+				return -1;
+			}
+		}
+			
 		if(l.getString(columnIndex)==null)
 			return 1;
 		if(r.getString(columnIndex)==null)
