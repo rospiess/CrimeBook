@@ -480,19 +480,11 @@ public final class DatastoreInterfaceSimpleDatabase {
 		final Sort sort = new Sort(like, "lastname", true);
 		
 		final List<Person> persons = new ArrayList<Person>();
-		final HashSet<Integer> h = new HashSet<Integer>();//saves IDs of all persons who've been added so far
 		
 		while (sort.moveNext()) {
-			
 			final Tuple tuple = sort.current();
-			int id = tuple.getInt(0);
-			if(!h.contains(id))//Only add if not already in it
-			{
-			final Person p = new Person(id, tuple.getString(1), tuple.getString(2), tuple.getDate(3));
+			final Person p = new Person(tuple.getInt(0), tuple.getString(1), tuple.getString(2), tuple.getDate(3));
 			persons.add(p);
-			h.add(id);
-			}
-
 		}
 		
 		return persons;
