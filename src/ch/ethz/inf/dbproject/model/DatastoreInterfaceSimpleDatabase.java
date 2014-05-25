@@ -288,7 +288,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 		
 		if(select5.moveNext()){
 			// If not shared delete Address with old ID
-			if (!shared){
+			if (!shared && idAddress != select5.current().getInt(0)){
 				Delete.deleteFrom("Addresses.txt", idAddress);
 			}
 			
@@ -462,6 +462,14 @@ public final class DatastoreInterfaceSimpleDatabase {
 		final Scan scan = new Scan("Cases.txt", schemaCase);
 		final Like like = new Like(scan, "title", title);
 		final Sort sort = new Sort(like, "title", true);
+
+		return joinAddressToCase(sort);
+	}
+	
+	public final List<Case> searchByDescription(String description) {
+		final Scan scan = new Scan("Cases.txt", schemaCase);
+		final Like like = new Like(scan, "descr", description);
+		final Sort sort = new Sort(like, "descr", true);
 
 		return joinAddressToCase(sort);
 	}
