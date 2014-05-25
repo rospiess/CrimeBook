@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import ch.ethz.inf.dbproject.model.simpleDatabase.operators.*;
@@ -680,16 +679,29 @@ public final class DatastoreInterfaceSimpleDatabase {
 		final GroupBy groupby = new GroupBy(scan,"idperson",Function.Type.COUNT);
 		final Join join = new Join(groupby,scan1,"idperson", new String[]{
 				"firstname","lastname","count"});
+		final Limit limit = new Limit(join,5);
 		
+		final Scan scan2 = new Scan("Involved.txt", schemaInvolved);
+		final Scan scan3 = new Scan("Persons.txt", schemaPerson);
+		final GroupBy groupby2 = new GroupBy(scan2,"idperson",Function.Type.COUNT);
+		final Join join2 = new Join(groupby2,scan3,"idperson", new String[]{
+				"firstname","lastname","count"});
+		final Limit limit2 = new Limit(join2,5,1000);
 		
 		List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(); 
-		
-		while (join.moveNext()){
+		while (limit.moveNext()){
 			Pair<String, Integer> p = new Pair<String, Integer>
-			(join.current().getString(0) + " "+ join.current().getString(1),
-					join.current().getInt(2));
+			(limit.current().getString(0) + " "+ limit.current().getString(1),
+					limit.current().getInt(2));
 			pairs.add(p);
 		}
+		int otherInvCounter = 0;
+		while (limit2.moveNext()){
+			otherInvCounter = otherInvCounter + limit2.current().getInt(2);
+		}
+		Pair<String, Integer> p2 = new Pair<String, Integer>
+			("Other", otherInvCounter);
+		pairs.add(p2);
 		return pairs;
 		
 	}
