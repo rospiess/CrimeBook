@@ -288,7 +288,7 @@ public final class DatastoreInterfaceSimpleDatabase {
 		
 		if(select5.moveNext()){
 			// If not shared delete Address with old ID
-			if (!shared){
+			if (!shared && idAddress != select5.current().getInt(0)){
 				Delete.deleteFrom("Addresses.txt", idAddress);
 			}
 			
