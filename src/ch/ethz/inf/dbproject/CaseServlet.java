@@ -268,7 +268,10 @@ public final class CaseServlet extends HttpServlet {
 
 
 			
-			final String comment = "<pre><xmp>" + request.getParameter("comment").replaceAll("(?i)</xmp>", "</ xmp>") + "</xmp></pre>";
+			String comment = request.getParameter("comment");
+			if (comment!=null){
+				comment = "<pre><xmp>" + comment.replaceAll("(?i)</xmp>", "</ xmp>") + "</xmp></pre>";
+			}
 			final String action = request.getParameter("action");
 			
 			if (action != null && action.equals("add_comment")

@@ -196,7 +196,10 @@ public final class PersonServlet extends HttpServlet {
 
 			
 			
-			final String comment = request.getParameter("comment");
+			String comment = request.getParameter("comment");
+			if (comment!=null){
+				comment = "<pre><xmp>" + comment.replaceAll("(?i)</xmp>", "</ xmp>") + "</xmp></pre>";
+			}
 			final String action = request.getParameter("action");
 			
 			
