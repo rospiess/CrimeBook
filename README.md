@@ -11,11 +11,6 @@ Part 2
 To-Do List
 -----------
 
-Operators:
-- optional: optimizations
-- optional: implement additional, different algorithms
- 
-
 
 
 DONE
@@ -32,6 +27,10 @@ Operators:
 - delete
 - group by
 - aggregation functions
+
+Operators:
+- optional: optimizations: removed separate base case
+- optional: implement additional, different algorithms: nested loop join, min, max, limit
 
 Interface:
 - reimplement all functionalities
