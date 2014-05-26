@@ -1,6 +1,6 @@
 1,Andre,Rubbia,1950-12-31
 2,Jürg,Gutknecht,1921-04-13
-3,Bertrand,Meyer,1921-04-14
+3,Bertrand,Meyer,1928-04-14
 4,Frank,Gürkaynak,1967-09-02
 5,Emo,Welzl,1971-03-25
 6,Timothy,Roscoe,1961-06-01
