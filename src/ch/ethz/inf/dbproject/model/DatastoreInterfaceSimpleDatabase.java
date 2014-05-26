@@ -674,19 +674,22 @@ public final class DatastoreInterfaceSimpleDatabase {
 	}
 
 	public final List<Pair<String, Integer>> getStatInvolvements() {
-		final Scan scan = new Scan("Involved.txt", schemaInvolved);
-		final Scan scan1 = new Scan("Persons.txt", schemaPerson);
-		final GroupBy groupby = new GroupBy(scan,"idperson",Function.Type.COUNT);
-		final Join join = new Join(groupby,scan1,"idperson", new String[]{
-				"firstname","lastname","count"});
-		final Limit limit = new Limit(join,5);
+		//(SELECT FirstName, LastName, COUNT(*) AS amount FROM PersonOfInterest AS POI, involved AS inv WHERE POI.idPersonOfInterest = inv.idPerson GROUP BY POI.idPersonOfInterest LIMIT 5) " +
+		//"UNION (SELECT 'Other', '', sum(t2.amount2) from (SELECT COUNT(*) AS amount2 FROM PersonOfInterest as POI2, involved AS inv2 WHERE POI2.idPersonOfInterest = inv2.idPerson GROUP BY POI2.idPersonOfInterest LIMIT 5,1000) AS t2);");
 		
-		final Scan scan2 = new Scan("Involved.txt", schemaInvolved);
-		final Scan scan3 = new Scan("Persons.txt", schemaPerson);
-		final GroupBy groupby2 = new GroupBy(scan2,"idperson",Function.Type.COUNT);
+		final Scan scan = new Scan("Involved.txt", schemaInvolved); // FROM involved AS inv,
+		final Scan scan1 = new Scan("Persons.txt", schemaPerson); // PersonOfInterest AS POI
+		final GroupBy groupby = new GroupBy(scan,"idperson",Function.Type.COUNT); // GROUP BY POI.idPersonOfInterest
+		final Join join = new Join(groupby,scan1,"idperson", new String[]{
+				"firstname","lastname","count"}); // SELECT FirstName, LastName, COUNT(*) WHERE POI.idPersonOfInterest = inv.idPerson
+		final Limit limit = new Limit(join,5); // LIMIT 5
+		
+		final Scan scan2 = new Scan("Involved.txt", schemaInvolved); // FROM involved AS inv2,
+		final Scan scan3 = new Scan("Persons.txt", schemaPerson); // PersonOfInterest as POI2
+		final GroupBy groupby2 = new GroupBy(scan2,"idperson",Function.Type.COUNT); // GROUP BY POI2.idPersonOfInterest and COUNT(*)
 		final Join join2 = new Join(groupby2,scan3,"idperson", new String[]{
-				"firstname","lastname","count"});
-		final Limit limit2 = new Limit(join2,5,1000);
+				"count"}); // SELECT COUNT(*) AS amount2 WHERE POI2.idPersonOfInterest = inv2.idPerson as t2
+		final Limit limit2 = new Limit(join2,5,1000); // LIMIT 5,1000
 		
 		List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(); 
 		while (limit.moveNext()){
@@ -697,11 +700,11 @@ public final class DatastoreInterfaceSimpleDatabase {
 		}
 		int otherInvCounter = 0;
 		while (limit2.moveNext()){
-			otherInvCounter = otherInvCounter + limit2.current().getInt(2);
+			otherInvCounter = otherInvCounter + limit2.current().getInt(0); // sum(t2.amount2) from t2
 		}
 		Pair<String, Integer> p2 = new Pair<String, Integer>
-			("Other", otherInvCounter);
-		pairs.add(p2);
+			("Other", otherInvCounter); // SELECT 'Other',
+		pairs.add(p2); // t1 UNION t2
 		return pairs;
 		
 	}
