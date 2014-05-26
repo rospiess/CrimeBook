@@ -53,7 +53,7 @@ if (u != null) {
 					<div class="menuDiv3 personal"><a href="Cases?category=Assault">Assault</a></div>
 					<div class="menuDiv3 personal"><a href="Cases?category=Murder">Murder</a></div>
 					<div class="menuDiv3 personal"><a href="Cases?category=Kidnapping">Kidnapping</a></div>
-					<div class="menuDiv3 personal"><a href="Cases?category=Otherpers">Other</a></div>
+					<div class="menuDiv3 personal"><a href="Cases?category=OtherPers">Other</a></div>
 					</div>
 					</div>
 					<div onmouseover="document.getElementsByClassName('property subcategories')[0].style.display = 'block'; document.getElementsByClassName('personal subcategories')[0].style.display = 'none';">
@@ -62,7 +62,7 @@ if (u != null) {
 					<div class="menuDiv3 property"><a href="Cases?category=Theft">Theft</a></div>
 					<div class="menuDiv3 property"><a href="Cases?category=Fraud">Fraud</a></div>
 					<div class="menuDiv3 property"><a href="Cases?category=Burglary">Burglary</a></div>
-					<div class="menuDiv3 property"><a href="Cases?category=Otherprop">Other</a></div>
+					<div class="menuDiv3 property"><a href="Cases?category=OtherProp">Other</a></div>
 					</div>
 					</div>
 					<div class="menuDiv1"><a href="PersonsOfInterest">Persons of Interest</a></div>
