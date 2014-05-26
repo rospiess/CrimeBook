@@ -6,3 +6,4 @@
 6,Bösartige Turingmaschine,Transferierte das Budget des VIS auf ausländisches Konto,2012-01-21,15:12:34,1,Fraud,false,test
 7,Daten Verkauf,ETH Daten an ausländischen Geheimdienst verkauft,null,null,2,OtherProp,true,Max Muster
 8,Mensa-Essen vergiftet,Alle Studenten bekamen Bauchweh,2014-04-20,12:15:00,1,OtherPers,true,Max Muster
+9,Massenpanik am VISKAS,Es wurde ein UFO gesichtet,2014-05-23,20:30:00,3,OtherPers,true,Max Muster

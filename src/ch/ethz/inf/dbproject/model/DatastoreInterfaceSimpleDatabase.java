@@ -682,20 +682,33 @@ public final class DatastoreInterfaceSimpleDatabase {
 		final GroupBy groupby = new GroupBy(scan,"idperson",Function.Type.COUNT); // GROUP BY POI.idPersonOfInterest
 		final Join join = new Join(groupby,scan1,"idperson", new String[]{
 				"firstname","lastname","count"}); // SELECT FirstName, LastName, COUNT(*) WHERE POI.idPersonOfInterest = inv.idPerson
+		
+		/*
+		final NestedLoopJoin join = new NestedLoopJoin(groupby,scan1,"idperson", new String[]{
+				"firstname","lastname","count"}); // using the nested loop join
+		*/
+		
 		final Limit limit = new Limit(join,5); // LIMIT 5
+		final Sort sort = new Sort(limit,"firstname",true);
 		
 		final Scan scan2 = new Scan("Involved.txt", schemaInvolved); // FROM involved AS inv2,
 		final Scan scan3 = new Scan("Persons.txt", schemaPerson); // PersonOfInterest as POI2
 		final GroupBy groupby2 = new GroupBy(scan2,"idperson",Function.Type.COUNT); // GROUP BY POI2.idPersonOfInterest and COUNT(*)
 		final Join join2 = new Join(groupby2,scan3,"idperson", new String[]{
 				"count"}); // SELECT COUNT(*) AS amount2 WHERE POI2.idPersonOfInterest = inv2.idPerson as t2
+		
+		/*
+		final NestedLoopJoin join2 = new NestedLoopJoin(groupby2,scan3,"idperson", new String[]{
+		"count"}); // using the nested loop join
+		*/
+		
 		final Limit limit2 = new Limit(join2,5,1000); // LIMIT 5,1000
 		
 		List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(); 
-		while (limit.moveNext()){
+		while (sort.moveNext()){
 			Pair<String, Integer> p = new Pair<String, Integer>
-			(limit.current().getString(0) + " "+ limit.current().getString(1),
-					limit.current().getInt(2));
+			(sort.current().getString(0) + " "+ sort.current().getString(1),
+					sort.current().getInt(2));
 			pairs.add(p);
 		}
 		int otherInvCounter = 0;
@@ -746,6 +759,11 @@ public final class DatastoreInterfaceSimpleDatabase {
 		final Scan scan1 = new Scan("Category.txt",schemaCategory);
 		final Scan scan2 = new Scan("Cases.txt", schemaCase);
 		final Join join1 = new Join(scan1,scan2, "cat", new String[] {"cat","supercat"});
+		
+		/*
+		final NestedLoopJoin join1 = new NestedLoopJoin(scan1,scan2, "cat", new String[] {"cat","supercat"}); // using the nested loop join
+		*/
+		
 		final GroupBy groupby = new GroupBy(join1,"supercat",Function.Type.COUNT);
 
 		List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(); 
@@ -767,8 +785,13 @@ public final class DatastoreInterfaceSimpleDatabase {
 		final Scan scan1 = new Scan("Convictions.txt", schemaConviction);
 		final Scan scan2 = new Scan("Cases.txt", schemaCase);
 		final Join join = new Join(scan,scan1,"idperson",new String[]{"idcase","idperson","birth"});
-
 		final Join join2 = new Join(scan2,join,"idcase",new String[]{"cat","birth"});
+		
+		/*
+		final NestedLoopJoin join = new NestedLoopJoin(scan,scan1,"idperson",new String[]{"idcase","idperson","birth"}); // using the nested loop join
+		final NestedLoopJoin join2 = new NestedLoopJoin(scan2,join,"idcase",new String[]{"cat","birth"}); // using the nested loop join
+		*/
+		
 		final GroupBy groupby = new GroupBy(join2,"cat",Function.Type.AVERAGEYEAR,"birth");
 
 		List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(); 
@@ -794,6 +817,10 @@ public final class DatastoreInterfaceSimpleDatabase {
 		final Scan scan5 = new Scan("Convictions.txt", schemaConviction);
 		final Join join3 = new Join(scan4,scan5,"idperson",new String[]{"lastname","birth"});
 		
+		/*
+		final Join join3 = new Join(scan4,scan5,"idperson",new String[]{"lastname","birth"}); // using the nested loop join
+		*/
+		
 		final GroupBy groupby3 = new GroupBy(join3,"lastname",Function.Type.AVERAGEYEAR,"birth",0);
 
 		if(groupby3.moveNext()){
@@ -808,6 +835,10 @@ public final class DatastoreInterfaceSimpleDatabase {
 	{
 		final Scan addresses = new Scan("Addresses.txt", schemaAddress);
 		final Join join = new Join(addresses, cases, "idaddress", schemaCaseAddress);
+		
+		/*
+		final NestedLoopJoin join = new NestedLoopJoin(addresses, cases, "idaddress", schemaCaseAddress); // using the nested loop join
+		*/
 		
 		final List<Case> list = new ArrayList<Case>();
 		while (join.moveNext()) {

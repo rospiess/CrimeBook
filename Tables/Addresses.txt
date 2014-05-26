@@ -1,2 +1,3 @@
 1,Switzerland,8000,Zürich,Rämistrasse,101
 2,Switzerland,8000,Zürich,null,-1
+3,Switzerland,8910,Affoltern am Albis,Holzerhurd Strasse,32

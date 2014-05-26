@@ -1,5 +1,3 @@
-
-
 				</td>
 			</tr>
 			
@@ -10,7 +8,7 @@
 		</table>
 	<script>
 		var loadTime = window.performance.timing.domLoading - window.performance.timing.fetchStart;
-		document.getElementById("Timing").innerHTML = "The page loaded in " + loadTime/1000 + " ms.";
+		document.getElementById("Timing").innerHTML = "The page loaded in " + loadTime/1000 + " s.";
 	</script>
 	</body>
 </html>
