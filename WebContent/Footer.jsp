@@ -4,7 +4,7 @@
 			</tr>
 			
 			<tr>
-				<td id="masterFooter" colspan="2"><span id="Timing"></span><span style="float:right;">Data Modeling and Databases Project 2014</span></td>
+				<td id="masterFooter" colspan="2"><span id="Timing" style="float:left;"></span><span style="float:right;">Data Modeling and Databases Project 2014</span></td>
 			</tr>
 			
 		</table>
